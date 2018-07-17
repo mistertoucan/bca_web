@@ -25,8 +25,8 @@ def query(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    rv = cur.fetchall()
-    return str(rv)
+    log_print("QUERY", db, statement, vars)
+    return cur.fetchall()
 
 def insert(db, statement, vars=""):
     cur = mysql.connection.cursor()
@@ -40,6 +40,8 @@ def insert(db, statement, vars=""):
     cur.execute(statement, vars)
     mysql.connect().commit()
 
+    log_print("INSERT", db, statement, vars)
+
 def update(db, statement, vars=""):
     cur = mysql.connection.cursor()
     use_db(cur, db)
@@ -51,6 +53,8 @@ def update(db, statement, vars=""):
 
     cur.execute(statement, vars)
     mysql.connect().commit()
+
+    log_print("UPDATED", db, statement, vars)
 
 def delete(db, statement, vars=""):
     cur = mysql.connect.cursor()
@@ -64,6 +68,11 @@ def delete(db, statement, vars=""):
     cur.execute(statement, vars)
     mysql.connect().commit()
 
+    log_print("DELETE", db, statement, vars)
+
 def use_db(cur, db):
     print("Using db, %s" % db)
     cur.execute('USE ' + db)
+
+def log_print(operation, db, statement, values):
+    print("%s @ %s: '%s', [%s] " % (operation, db, statement, ", ".join(values)))
