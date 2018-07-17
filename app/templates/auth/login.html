@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block sidebar %}{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/auth/login/styles.css') }}"/>
+    <div class="form">
+        <div class="form-toggle"></div>
+        <div class="form-panel one">
+            <div class="form-header">
+                <img src = "{{ url_for('static', filename='images/logo.png') }}">
+                <h1 class="title center-align">BCA Dashboard</h1>
+            </div>
+            <div class="form-content">
+                <form action="" method="post">
+                    <input type="hidden" name="action" value="login">
+                    <div class="form-group">
+                      <label for="username">Username</label>
+                      <input type="text" placeholder="username" id="username" name="username" required="required"/>
+                    </div>
+                    <div class="form-group">
+                      <label for="password">Password</label>
+                      <input placeholder="password" type="password" id="password" name="password" required="required"/>
+                    </div>
+                    <div class="form-group">
+                      <button type="submit">Log In</button>
+                    </div>
+                    <h3 class="center-align error-message" >
+                        {{ auth_error }}
+                    </h3>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

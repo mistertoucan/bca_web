@@ -15,7 +15,7 @@ class DB(Enum):
 
 # Executes the statemet and then returns the result
 # Statement - SQL Query
-# Vars - Tuple of variables in Query to prevent SQL Injection
+# Vars - List of variables in Query to prevent SQL Injection
 def query(db, statement, vars=""):
     cur = mysql.connection.cursor()
     use_db(cur, db)

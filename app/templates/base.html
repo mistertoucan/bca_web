@@ -2,9 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>$Title$</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>BCA - {% if title %} {{ title }} {% endif %}</title>
+
+    {% block styles %}
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}"/>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/icons.css') }}"/>
+    {% endblock %}
+
+    {% block scripts %}
+        <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+    {% endblock %}
 </head>
 <body>
-$END$
+
+{% block content %}
+    /* wrapper for content - overriden for custom views/displays */
+    {% block mainContent %}
+        /* used for default forms/displays - pre formatted */
+    {% endblock %}
+{% endblock %}
+
 </body>
 </html>

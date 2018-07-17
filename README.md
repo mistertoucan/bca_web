@@ -12,4 +12,5 @@ My rewrite of the BCA web framework in Python Flask
 * Flask
 * Flask_MySQL
 * mysqlclient
+* flask_login
 
