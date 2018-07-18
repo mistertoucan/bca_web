@@ -9,5 +9,6 @@ setup(
     install_requires=['Flask',
                       'mysqlclient',
                       'flask_mysqldb',
-                      'flask_login']
+                      'flask_login',
+                      'python-ldap']
     )
