@@ -15,7 +15,7 @@ class User(UserMixin):
         return query_one(DB.SHARED, 'SELECT usr_first_name, usr_last_name FROM user WHERE usr_id = %s', [self.__usr_id__])
 
     # returns a list of menu items the user has access to
-    def get_apps(self):
+    def load_apps(self):
         typeCode = self.get_type_code()
 
         apps = query(DB.SHARED, 'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon '
