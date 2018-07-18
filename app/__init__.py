@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, redirect, url_for
 from flask_mysqldb import MySQL
 from flask_login import LoginManager, login_required, current_user
 from flask_breadcrumbs import Breadcrumbs, register_breadcrumb
@@ -13,11 +13,12 @@ login_manager = LoginManager(app)
 login_manager.login_view = "app.auth.login"
 Breadcrumbs(app=app)
 
+from app.dashboard import board_mod
+app.register_blueprint(board_mod)
+
 from app.auth import auth_mod
 app.register_blueprint(auth_mod)
 
 @app.route('/')
-@register_breadcrumb(app, '.', 'Dashboard')
-@login_required
 def index():
-    return render_template("dashboard.html")
+    return redirect(url_for('app.dashboard.index'))

@@ -1,5 +1,4 @@
 from app import mysql
-
 from enum import Enum
 
 class DB(Enum):

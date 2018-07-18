@@ -7,6 +7,7 @@ class User(UserMixin):
 
     def __init__(self, id):
         self.__usr_id__ = id
+        self.apps = self.load_apps()
 
     def get_id(self):
         return self.__usr_id__
@@ -33,6 +34,9 @@ class User(UserMixin):
                                 'AND active = 1 '
                                 'ORDER BY sort_order ', [typeCode, self.__usr_id__])
         return apps
+
+    def get_apps(self):
+        return self.apps
 
     def get_type_code(self):
         return query_one(DB.SHARED, 'SELECT usr_type_cde FROM user WHERE usr_id = %s', [self.__usr_id__])[0]
