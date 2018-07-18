@@ -1,7 +1,7 @@
 # bca_web
 My rewrite of the BCA web framework in Python Flask
 
-# Setup
+## Setup
 1. `cd bca_web` - Navigate to the folder
 2. `python setup.py install`
 3. MAC OSX - `export FLASK_APP=bca_web.py` \
