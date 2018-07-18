@@ -1,4 +1,4 @@
-from app.db import DB, query
+from app.db import DB, query_one
 
 import ldap
 
@@ -6,9 +6,7 @@ import ldap
 # 2. If username is valid, then it connects to the local LDAP server to verify credentials
 # Will return False for any failures/invalid credentials
 def authenticate_user(username, password):
-    resultID = query(DB.SHARED, 'SELECT usr_id FROM user WHERE usr_bca_id = %s', vars=[username])
-
-    print(resultID)
+    resultID = query_one(DB.SHARED, 'SELECT usr_id FROM user WHERE usr_bca_id = %s', vars=[username])[0]
 
     if resultID:
         conn = ldap.initialize('ldap://168.229.1.240:3268')

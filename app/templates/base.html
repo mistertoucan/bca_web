@@ -3,11 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>BCA - {% if title %} {{ title }} {% endif %}</title>
+    <title>BCA - {% if title %}{{ title }}{% else %}Dashboard{% endif %}</title>
 
     {% block styles %}
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}"/>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/icons.css') }}"/>
+        <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+        <link href="https://use.fontawesome.com/668f9b8679.css" media="all" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Palanquin:100,300,400,500,600,700">
     {% endblock %}
 
     {% block scripts %}
@@ -17,11 +21,19 @@
 </head>
 <body>
 
+{% block sidebar %}
+    {% include 'partials/sidebar.html' %}
+{% endblock %}
+
+
+<main>
 {% block content %}
-    /* wrapper for content - overriden for custom views/displays */
-    {% block mainContent %}
-        /* used for default forms/displays - pre formatted */
-    {% endblock %}
+{% endblock %}
+</main>
+
+{% block footer %}
+    <script src="{{ url_for('static', filename='js/jquery.easing.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.plusanchor.min.js') }}"></script>
 {% endblock %}
 
 </body>

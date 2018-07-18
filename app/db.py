@@ -28,6 +28,20 @@ def query(db, statement, vars=""):
     log_print("QUERY", db, statement, vars)
     return cur.fetchall()
 
+
+# only searches for one return option/value
+def query_one(db, statement, vars=""):
+    cur = mysql.connection.cursor()
+    use_db(cur, db)
+
+    if vars:
+        cur.execute(statement, vars)
+    else:
+        cur.execute(statement)
+
+    log_print("QUERY", db, statement, vars)
+    return cur.fetchone()
+
 def insert(db, statement, vars=""):
     cur = mysql.connection.cursor()
     use_db(cur, db)
@@ -75,4 +89,4 @@ def use_db(cur, db):
     cur.execute('USE ' + db)
 
 def log_print(operation, db, statement, values):
-    print("%s @ %s: '%s', [%s] " % (operation, db, statement, ", ".join(values)))
+    print("%s @ %s: '%s', %s " % (operation, db, statement, values))

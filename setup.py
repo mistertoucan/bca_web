@@ -10,5 +10,6 @@ setup(
                       'mysqlclient',
                       'flask_mysqldb',
                       'flask_login',
-                      'python-ldap']
+                      'python-ldap',
+                      'flask-breadcrumbs']
     )

@@ -1,0 +1,65 @@
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard/dashboard.css') }}"/>
+<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/dashboard/main.css') }}"/>
+
+<div id="background">
+    <div class="navbar-fixed">
+        <nav>
+            <div class="nav-wrapper ">
+              <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+              <ul id="nav-mobile" class="right hide-on-med-and-down">
+              <li><i class="material-icons black-text">settings</i></li>
+                <li><a class="nav-text black-text" href="{{ url_for('app.auth.logout') }}">Log out</a></li>
+              </ul>
+            </div>
+          </nav>
+    </div>
+    <div class="navbar-fixed">
+        <div id="breadcrumb-d">
+            <nav>
+                <div class="breadcrumb-nav">
+                    <div class="col s12">
+                        {%- for breadcrumb in breadcrumbs -%}
+                            <a href="{{ breadcrumb.url }}" class="breadcrumb">{{ breadcrumb.text }}</a>
+                            {{ '/' if not loop.last }}
+                        {%- endfor -%}
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <div id="side-nav-div" class="container">
+         <ul id="slide-out" class="side-nav fixed">
+
+            <div id="nav-top-bar">
+                <li>
+                    <a id="head" href="{{ url_for('index') }}" class="center">BCA
+                        <p class="center subtext">
+
+                            {% set typeCode = current_user.get_type_code() %}
+                            {% if typeCode == 'TCH' %}
+                                {{ "Teacher " }}
+                            {% elif  typeCode == 'ADM' %}
+                                {{ "Admin " }}
+                            {% elif typeCode == 'STD' %}
+                                {{ "Student " }}
+                            {% endif %}
+                            {{ "Dashboard" }}
+
+                        </p>
+                    </a>
+                </li>
+            </div>
+            <div id="nav-wrapper-impt">
+                {%- for app in current_user.get_apps() -%}
+                    <li>
+                        <a class="nav-link" style="color: #e0e0e0;" href="{{ app[3] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
+                    </li>
+                {%- endfor -%}
+            </div>
+         </ul>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<div class="drag-target" data-sidenav="slide-out" style="left: 0px; touch-action: pan-y; -webkit-user-drag: none; -webkit-tap-highlight-color: rgba(0, 0, 0, 0);"></div>
