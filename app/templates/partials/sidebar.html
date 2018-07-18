@@ -8,7 +8,7 @@
               <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><i class="material-icons black-text">settings</i></li>
-                <li><a class="nav-text black-text" href="{{ url_for('app.auth.logout') }}">Log out</a></li>
+                <li><a class="nav-text black-text" href="{{ url_for('auth.logout') }}">Log out</a></li>
               </ul>
             </div>
           </nav>
@@ -53,7 +53,15 @@
             <div id="nav-wrapper-impt">
                 {%- for app in current_user.get_apps() -%}
                     <li>
-                        <a class="nav-link" style="color: #e0e0e0;" href="{{ app[3].split('/bca-apps/')[1].split('.php')[0] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
+{#                         Numbers used to acccess columns because MySQL client doesn't support column names in python atm. Numbers corresspond to order of fields requested in query. #}
+{#                        {% set url = app[3].split('/bca-apps/')[1] %}#}
+{#                        Not all blueprints/apps configured, so errors are called when building certain URLs #}
+{#                        {% if url.split('/') > 1 %}#}
+{#                            <a class="nav-link" style="color: #e0e0e0;" href="{{ url_for(url.replace("/", ".").replace(".php", "").replace("-", "_") ) }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>#}
+{#                        {% else %}#}
+{#                            <a class="nav-link" style="color: #e0e0e0;" href="{{ url_for(url.replace("/", ".").append("index").replace("-", "_") ) }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>#}
+{#                        {% endif %}#}
+                    <a class="nav-link" style="color: #e0e0e0;" href="http://127.0.0.1:5000/{{ app[3].split('/bca-apps/')[1].replace(".php", "").replace("-", "_") }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
                     </li>
                 {%- endfor -%}
             </div>

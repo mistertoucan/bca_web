@@ -6,9 +6,11 @@ import ldap
 # 2. If username is valid, then it connects to the local LDAP server to verify credentials
 # Will return False for any failures/invalid credentials
 def authenticate_user(username, password):
-    resultID = query_one(DB.SHARED, 'SELECT usr_id FROM user WHERE usr_bca_id = %s', vars=[username])[0]
+    resultID = query_one(DB.SHARED, 'SELECT usr_id FROM user WHERE usr_bca_id = %s', vars=[username])
 
     if resultID:
+        resultID = resultID[0]
+
         conn = ldap.initialize('ldap://168.229.1.240:3268')
         conn.protocol_version = 3
         conn.set_option(ldap.OPT_REFERRALS, 0)

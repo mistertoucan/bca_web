@@ -10,7 +10,7 @@ app.config.from_object(Config)
 
 mysql = MySQL(app)
 login_manager = LoginManager(app)
-login_manager.login_view = "app.auth.login"
+login_manager.login_view = "auth.login"
 Breadcrumbs(app=app)
 
 from app.dashboard import board_mod
@@ -21,4 +21,4 @@ app.register_blueprint(auth_mod)
 
 @app.route('/')
 def index():
-    return redirect(url_for('app.dashboard.index'))
+    return redirect(url_for('dashboard.index'))

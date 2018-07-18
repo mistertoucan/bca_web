@@ -1,9 +1,9 @@
 from flask import Blueprint
-
-from app import login_manager
 from werkzeug.contrib.cache import SimpleCache
 
-auth_mod = Blueprint(__name__, 'auth', url_prefix='/auth')
+from app import login_manager, Config
+
+auth_mod = Blueprint('auth', __name__, url_prefix='/auth')
 
 import app.auth.views
 
@@ -17,6 +17,6 @@ def load_user(user_id):
 
     if user is None:
         user = User.get(user_id)
-        cache.set(user_id, user, timeout=5*60)
+        cache.set(user_id, user, timeout=Config.CACHE_TIMEOUT)
         return User.get(user_id)
     return user
