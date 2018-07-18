@@ -1,4 +1,4 @@
-# BCA_WEB
+# bca_web
 My rewrite of the BCA web framework in Python Flask
 
 # Setup
