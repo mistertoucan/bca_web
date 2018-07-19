@@ -61,7 +61,14 @@
 {#                        {% else %}#}
 {#                            <a class="nav-link" style="color: #e0e0e0;" href="{{ url_for(url.replace("/", ".").append("index").replace("-", "_") ) }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>#}
 {#                        {% endif %}#}
-                    <a class="nav-link" style="color: #e0e0e0;" href="http://127.0.0.1:5000/{{ app[3].split('/bca-apps/')[1].replace(".php", "").replace("-", "_") }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
+                        {% set url = app[3] %}
+                        {% if "/bca-apps/" in url %}
+                            {# if matches url pattern parse #}
+                            <a class="nav-link" style="color: #e0e0e0;" href="http://127.0.0.1:5000/{{ app[3].split('/bca-apps/')[1].replace(".php", "").replace("-", "_") }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
+                        {% else %}
+                            {# other urls are treated as absolute #}
+                            <a class="nav-link" style="color: #e0e0e0;" href="{{ app[3] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
+                        {% endif  %}
                     </li>
                 {%- endfor -%}
             </div>
