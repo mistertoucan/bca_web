@@ -18,7 +18,7 @@ def login():
         if username and password:
             usr_id = authenticate_user(username, password)
 
-            if usr_id or app.config['PRODUCTION']:
+            if usr_id or app.config['DEBUG']:
                 login_user(User(usr_id))
                 next_page = request.args.get('next')
                 if not next_page or url_parse(next_page).netloc != '':

@@ -20,7 +20,6 @@
                     <div class="col s12">
                         {%- for breadcrumb in breadcrumbs -%}
                             <a href="{{ breadcrumb.url }}" class="breadcrumb">{{ breadcrumb.text }}</a>
-                            {{ '/' if not loop.last }}
                         {%- endfor -%}
                     </div>
                 </div>
@@ -64,10 +63,10 @@
                         {% set url = app[3] %}
                         {% if "/bca-apps/" in url %}
                             {# if matches url pattern parse #}
-                            <a class="nav-link" style="color: #e0e0e0;" href="http://127.0.0.1:5000/{{ app[3].split('/bca-apps/')[1].replace(".php", "").replace("-", "_") }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
+                            <a class="nav-link" style="color: #e0e0e0;" href="http://signup.bergen.org/{{ app[3].split("bca-apps/")[1] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1].replace("&nbsp", " ") }}</a>
                         {% else %}
-                            {# other urls are treated as absolute #}
-                            <a class="nav-link" style="color: #e0e0e0;" href="{{ app[3] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1] }}</a>
+                            {# other urls are  #}
+                            <a class="nav-link" style="color: #e0e0e0;" href="{{ app[3] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1].replace("&nbsp", " ") }}</a>
                         {% endif  %}
                     </li>
                 {%- endfor -%}

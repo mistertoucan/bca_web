@@ -1,0 +1,63 @@
+<html>
+    <head>
+        <title>Login</title>
+    </head>
+    <body>
+
+    <form method="post">
+        <input type="hidden" name="action" value="login">
+
+        <label>Admin</label>
+        <select name="usr_id_adm"  title="usr_id_adm">
+            <!-- Loop through each user and add them to dropdown -->
+            {% for user in admins %}
+                <option value="{{ user.id }}">
+                    {{ user.role }}<br>
+                    {{ user.year }}<br>
+                    {{ user.last_name }}<br>
+                    {{ user.first_name }}<br>
+                </option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" name="choice" value="Login ADM">
+
+        <br>
+        <br>
+        <br>
+
+        <label>Teachers</label>
+        <select name="usr_id_tch"  title="usr_id_tch">
+            <!-- Loop through each user and add them to dropdown -->
+            {% for user in teachers %}
+                <option value="{{ user.id }}">
+                    {{ user.role }}<br>
+                    {{ user.year }}<br>
+                    {{ user.last_name }}<br>
+                    {{ user.first_name }}<br>
+                </option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" name="choice" value="Login TCH">
+
+        <br>
+        <br>
+        <br>
+
+        <label>Students</label>
+        <select name="usr_id_std"  title="usr_id_std">
+            {% for user in students %}
+                <option value="{{ user.id }}">
+                    {{ user.role }}<br>
+                    {{ user.year }}<br>
+                    {{ user.last_name }}<br>
+                    {{ user.first_name }}<br>
+                </option>
+            {% endfor %}
+        </select>
+
+        <input type="submit" name="choice" value="Login STD">
+    </form>
+    </body>
+</html>

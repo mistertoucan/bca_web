@@ -8,9 +8,42 @@
             <h6 id="welcome-sub"> Welcome to your Dashboard. </h6>
             <h6> Use the links on the left to enter an application. </h6>
         </div>
-    {% elif typeCode == 'ADM' %}
-
     {% elif typeCode == 'TCH' %}
+        <div class="row">
+            <div class="col m12 l6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text" style="overflow: hidden">
+                        <span class="card-title" style="color:#c5cae9;text-align:center">Students Missing for Trips</span>
+                            <p style="text-align:center">No Students Absent!</p>
+                        <div style="display: none">
 
+                    </div>
+                    </div>
+                        <div class="center-align">
+                        <a href="{{ "/field_trip" }}" class="waves-effect waves-light btn" style="margin-top:2%;margin-bottom:3%;background-color:#78BAFC">Open Field Trip App</a>
+                        </div>
+                    </div>
+                </div>
+
+            <div class="col m12 l6">
+                <div class="card blue-grey darken-1">
+                    <div class="card-content white-text" style="overflow:hidden">
+                        <span class="card-title" style="color:#c5cae9;text-align:center">Proctoring</span>
+                        <p style="text-align:center">You have scheduled 12 of 20 hours.</p>
+
+                        <p style="text-align:center">No upcoming proctoring assignments.</p>
+                        <div class="center-align">
+                            <a href="{{ url_for("proctoring.index") }}" class="waves-effect waves-light btn" style="margin-top:2%;margin-bottom:3%;background-color:#78BAFC">Open Proctoring App</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% elif typeCode == 'ADM' %}
+        <div id="welcome-student">
+            <h6 id="welcome"> Hi {{ current_user.get_name()[0] }}, </h6>
+            <h6 id="welcome-sub"> Welcome to your Dashboard. </h6>
+            <h6> Use the links on the left to enter an application. </h6>
+        </div>
     {% endif %}
 {% endblock %}
