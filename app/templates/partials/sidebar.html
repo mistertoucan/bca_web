@@ -63,7 +63,7 @@
                         {% set url = app[3] %}
                         {% if "/bca-apps/" in url %}
                             {# if matches url pattern parse #}
-                            <a class="nav-link" style="color: #e0e0e0;" href="http://signup.bergen.org/{{ app[3].split("bca-apps/")[1] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1].replace("&nbsp", " ") }}</a>
+                            <a class="nav-link" style="color: #e0e0e0;" href="http://{{ config.PHP_DOMAIN }}/{{ app[3].split("bca-apps/")[1] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1].replace("&nbsp", " ") }}</a>
                         {% else %}
                             {# other urls are  #}
                             <a class="nav-link" style="color: #e0e0e0;" href="{{ app[3] }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1].replace("&nbsp", " ") }}</a>

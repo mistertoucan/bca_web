@@ -19,3 +19,5 @@ app.register_blueprint(board_mod)
 @app.route('/')
 def index():
     return redirect(url_for('dashboard.index'))
+
+import errors

@@ -46,6 +46,6 @@ def requires_token(f):
 @app.after_request
 def after_request(response):
     if hasattr(g, 'token') and g.token:
-        response.set_cookie('bca_token', g.token)
+        response.set_cookie('bca_token', g.token, domain=app.config['TOKEN_DOMAIN'])
 
     return response
