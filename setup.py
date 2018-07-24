@@ -12,5 +12,6 @@ setup(
                       'flask_login',
                       'python-ldap',
                       'flask-breadcrumbs',
+                      'enum',
                       'pyjwt']
     )
