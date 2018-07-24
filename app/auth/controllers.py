@@ -36,7 +36,7 @@ def validate_token(token, ip_address, decoded=True):
     if not decoded:
         token = decode_token(token)
 
-    return app.config['DEBUG'] or token['ip_address'].encode('utf-8') == ip_address
+    return app.config['DEBUG'] or (TimestampSec64()-token['last_used'] <= app.config['TOKEN_TIMEOUT'] and token['ip_address'].encode('utf-8') == ip_address)
 
 # Creates an auth token for the user
 def create_token(usr_id, ip_address):
