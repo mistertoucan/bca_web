@@ -33,19 +33,22 @@ def authenticate_user(ip_address, username, password):
     return None
 
 
+def validate_token(token, ip_address, decoded=True):
+    if not decoded:
+        token = decode_token(token)
+
+    return app.config['DEBUG'] or token['ip_address'].encode('utf-8') == ip_address
+
 # Creates an auth token for the user
 def create_token(usr_id, ip_address):
     encoded = jwt.encode({'usr_id': usr_id, 'ip_address': ip_address, 'last_used': TimestampSec64(), 'timeout_duration': app.config['TOKEN_TIMEOUT']}, app.config['SECRET_KEY'], algorithm='HS256')
     return encoded
 
-# Checks the current token & returns a new updated token if valid
-# else returns None
-def check_token(token, ip_address):
-    decoded = jwt.decode(token, app.config['SECRET_KEY'])
-    if decoded['ip_address'] == ip_address:
-        g.user = get_user(decoded['usr_id'])
-        return create_token(decoded['usr_id'], decoded['ip_address'])
-    return None
+def decode_token(token):
+    try:
+        return jwt.decode(token, app.config['SECRET_KEY'])
+    except:
+        return None
 
 def get_user(usr_id):
     user = cache.get(usr_id)

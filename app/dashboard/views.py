@@ -36,6 +36,7 @@ def test():
                     g.token =  create_token(usr_id_adm, request.remote_addr)
                 elif choice == 'Login TCH':
                     g.token = create_token(usr_id_tch, request.remote_addr)
+                    print("created token!")
                 elif choice =='Login STD':
                     g.token = create_token(usr_id_std, request.remote_addr)
                 else:

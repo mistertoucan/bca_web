@@ -1,23 +1,28 @@
 from app import app
-from app.auth.controllers import check_token, get_user
+from app.auth.controllers import decode_token, create_token, validate_token, get_user
 
-from flask import request, redirect, url_for, g
+from flask import request, redirect, url_for, g, make_response
 from functools import wraps
 
 def requires_token(f):
-
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if not 'bca_token' in request.cookies:
+        if not hasattr(g, "token") and not request.cookies.get('bca_token'):
             return redirect(url_for('auth.login', next=request.url))
 
-        token = request.cookies['bca_token']
+        token = request.cookies['bca_token'] or g.token
 
-        token = check_token(token, request.remote_addr)
+        decoded = decode_token(token)
+
+        if validate_token(decoded, request.remote_addr, decoded=True):
+
+            g.user = get_user(int(decoded['usr_id'].encode('utf-8')))
+
+            token = create_token(decoded['usr_id'].encode('utf-8'), decoded['ip_address'].encode('utf-8'))
+        else:
+            token = None
 
         # g.token is the same as the cookie
-        # set as global for simplicity
-        # token itself set after every request
         g.token = token
 
         # invalid tokens are None
@@ -26,26 +31,15 @@ def requires_token(f):
             # logs out user
             if hasattr(g, 'user'):
                 g.user = None
-            if hasattr(g, 'token'):
-                g.token = None
 
-            return redirect(url_for('auth.login', next=request.url))
+            response = make_response(redirect(url_for('auth.login', next=request.url)))
+            response.delete_cookie('bca_token')
+
+            return response
 
         return f(*args, **kwargs)
 
     return decorated_function
-
-# @app.after_request
-# def update_token(response):
-#     token = request.cookies.get('bca_token')
-#
-#     if token:
-#         updated_token = check_token(request.cookies['bca_token'], request.remote_addr)
-#
-#         if updated_token:
-#             response.set_cookie('bca_token', updated_token)
-#         else:
-#             response.delete_cookie('bca_token')
 
 @app.after_request
 def after_request(response):
