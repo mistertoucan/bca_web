@@ -35,7 +35,7 @@
                     <a id="head" href="{{ url_for('index') }}" class="center">BCA
                         <p class="center subtext">
 
-                            {% set typeCode = current_user.get_type_code() %}
+                            {% set typeCode = g.user.get_type_code() %}
                             {% if typeCode == 'TCH' %}
                                 {{ "Teacher " }}
                             {% elif  typeCode == 'ADM' %}
@@ -50,7 +50,7 @@
                 </li>
             </div>
             <div id="nav-wrapper-impt">
-                {%- for app in current_user.get_apps() -%}
+                {%- for app in g.user.get_apps() -%}
                     <li>
 {#                         Numbers used to acccess columns because MySQL client doesn't support column names in python atm. Numbers corresspond to order of fields requested in query. #}
 {#                        {% set url = app[3].split('/bca-apps/')[1] %}#}

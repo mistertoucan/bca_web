@@ -11,5 +11,6 @@ setup(
                       'flask_mysqldb',
                       'flask_login',
                       'python-ldap',
-                      'flask-breadcrumbs']
+                      'flask-breadcrumbs',
+                      'pyjwt']
     )

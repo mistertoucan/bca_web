@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% set typeCode = current_user.get_type_code() %}
+    {% set typeCode = g.user.get_type_code() %}
     {% if typeCode == 'STD' %}
         <div id="welcome-student">
-            <h6 id="welcome"> Hi {{ current_user.get_name()[0] }}, </h6>
+            <h6 id="welcome"> Hi {{ g.user.get_name()[0] }}, </h6>
             <h6 id="welcome-sub"> Welcome to your Dashboard. </h6>
             <h6> Use the links on the left to enter an application. </h6>
         </div>
@@ -20,7 +20,7 @@
                     </div>
                     </div>
                         <div class="center-align">
-                        <a href="{{ "/field_trip" }}" class="waves-effect waves-light btn" style="margin-top:2%;margin-bottom:3%;background-color:#78BAFC">Open Field Trip App</a>
+                        <a href="http://www.signup.bergen.org/bca-apps/field-trip" class="waves-effect waves-light btn" style="margin-top:2%;margin-bottom:3%;background-color:#78BAFC">Open Field Trip App</a>
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
 
                         <p style="text-align:center">No upcoming proctoring assignments.</p>
                         <div class="center-align">
-                            <a href="{{ url_for("proctoring.index") }}" class="waves-effect waves-light btn" style="margin-top:2%;margin-bottom:3%;background-color:#78BAFC">Open Proctoring App</a>
+                            <a href="http://wwww.signup.bergen.org/bca-apps/proctoring" class="waves-effect waves-light btn" style="margin-top:2%;margin-bottom:3%;background-color:#78BAFC">Open Proctoring App</a>
                         </div>
                     </div>
                 </div>
@@ -41,7 +41,7 @@
         </div>
     {% elif typeCode == 'ADM' %}
         <div id="welcome-student">
-            <h6 id="welcome"> Hi {{ current_user.get_name()[0] }}, </h6>
+            <h6 id="welcome"> Hi {{ g.user.get_name()[0] }}, </h6>
             <h6 id="welcome-sub"> Welcome to your Dashboard. </h6>
             <h6> Use the links on the left to enter an application. </h6>
         </div>

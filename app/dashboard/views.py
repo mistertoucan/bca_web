@@ -1,32 +1,30 @@
 from app.dashboard import board_mod
 from app.dashboard.controllers import *
+from app.shared.controllers import requires_token
+from app.auth.controllers import create_token
 
 from config import Config
 
-from flask import render_template, redirect, request, url_for
+from flask import render_template, redirect, request, url_for, g
 from flask_breadcrumbs import register_breadcrumb
-from flask_login import login_required, login_user, current_user
-
-from app.shared.models import User
 
 @board_mod.route('/')
 @register_breadcrumb(board_mod, '.', 'Dashboard')
-@login_required
+@requires_token
 def index():
     return render_template("dashboard/dashboard.html")
 
 @board_mod.route('/about')
 @register_breadcrumb(board_mod, '.about', 'About')
-@login_required
+@requires_token
 def about():
     return render_template("dashboard/about.html")
 
 @board_mod.route('/test', methods=['GET', 'POST'])
 def test():
     if Config.DEBUG:
-        if not current_user.is_authenticated:
+        if not request.cookies.get('bca_token'):
             if request.method == 'POST':
-                print(request.form)
 
                 usr_id_tch = request.form["usr_id_tch"]
                 usr_id_adm = request.form["usr_id_adm"]
@@ -35,11 +33,11 @@ def test():
                 choice = request.form["choice"]
 
                 if choice == 'Login ADM':
-                    login_user(User.get(usr_id_adm))
+                    g.token =  create_token(usr_id_adm, request.remote_addr)
                 elif choice == 'Login TCH':
-                    login_user(User.get(usr_id_tch))
+                    g.token = create_token(usr_id_tch, request.remote_addr)
                 elif choice =='Login STD':
-                    login_user(User.get(usr_id_std))
+                    g.token = create_token(usr_id_std, request.remote_addr)
                 else:
                     return redirect("dashboard/test.html", code=400)
 
