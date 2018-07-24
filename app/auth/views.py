@@ -35,7 +35,7 @@ def logout():
     g.user = None
     g.token = None
 
-    response = make_response(redirect('/'))
+    response = make_response(redirect(url_for('auth.login')))
     response.delete_cookie('bca_token')
 
     return response
