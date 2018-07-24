@@ -20,4 +20,4 @@ under the "bca_token" cookie.
     `bca_token: { usr_id: Int, ip_address: Str, last_used: Int (Seconds), timeout_duration: Int (Seconds)}`
   
 3. Upon every request, the cookie is verified, checked for timeout, and updated. 
-4. The current user and their corresponding JWT token can always be accessed with the global variable, g, under the attributes user and token respectively. 
+4. The current user and their corresponding JWT token can always be accessed with the request context variable, g, under the attributes user and token respectively. 

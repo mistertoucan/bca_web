@@ -8,6 +8,8 @@ def requires_token(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not hasattr(g, "token") and not request.cookies.get('bca_token'):
+            if app.config['DEBUG']:
+                return redirect(url_for('dashboard.test', next=request.url))
             return redirect(url_for('auth.login', next=request.url))
 
         token = request.cookies['bca_token'] or g.token
