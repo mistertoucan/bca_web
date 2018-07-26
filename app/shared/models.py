@@ -45,21 +45,14 @@ class User(UserMixin):
         roles = query(DB.SHARED, 'SELECT app_cde, usr_role_cde '
                                 'FROM role_application_user_xref '
                                 'WHERE usr_id = %s', [self.__usr_id__])
-        roles = dict()
+        userRoles = dict()
         for role in roles:
-            roles[role[0]] = role[1]
-        return roles
+            userRoles[role[0]] = role[1]
+        return userRoles
 
     def get_role(self, app_id):
         return self.appRoles[app_id]
 
-    # Teacher specific methods
-
-    def get_missing_students(self):
-        pass
-
-    def get_proctoring(self):
-        pass
 
     @staticmethod
     def get(id):
