@@ -1,9 +1,9 @@
-from flask_login import UserMixin
+from flask import Blueprint
 from app.db import DB, query, query_one
 
 # A simple user class holding a user's id for authentication with flask_login
 # After authentication, this class will be available in all requests
-class User(UserMixin):
+class User(object):
 
     def __init__(self, id):
         self.__usr_id__ = id
@@ -60,3 +60,27 @@ class User(UserMixin):
         if result:
             return User(id)
         return None
+
+class Teacher(User):
+    pass
+
+
+class Admin(User):
+    pass
+
+class NestableBlueprint(Blueprint):
+    """
+    Hacking in support for nesting blueprints, until hopefully https://github.com/mitsuhiko/flask/issues/593 will be resolved
+    """
+
+    def register_blueprint(self, blueprint, **options):
+        def deferred(state):
+            url_prefix = (state.url_prefix or u"") + (options.get('url_prefix', blueprint.url_prefix) or u"")
+            if 'url_prefix' in options:
+                del options['url_prefix']
+
+            blueprint.name = self.name + "_" + blueprint.name
+            print(blueprint.name)
+
+            state.app.register_blueprint(blueprint, url_prefix=url_prefix, **options)
+        self.record(deferred)
