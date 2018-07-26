@@ -50,13 +50,16 @@ def decode_token(token):
         return None
 
 def get_user(usr_id):
-    user = cache.get(usr_id)
+    if(app.config['USER_CACHE_ENABLED']):
+        user = cache.get(usr_id)
 
-    if user is None:
-        user = User.get(usr_id)
-        cache.set(usr_id, user, timeout=app.config['CACHE_TIMEOUT'])
-        return User.get(usr_id)
-    return user
+        if user is None:
+            user = User.get(usr_id)
+            cache.set(usr_id, user, timeout=app.config['CACHE_TIMEOUT'])
+            return user
+        return user
+    else:
+        return User.get(usr_id);
 
 def TimestampSec64():
     return int((datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds())
