@@ -11,6 +11,7 @@ class DB(Enum):
     PROCTORING = "actsdevb_dev_proctoring"
     PROJECTS = "atcsdevb_dev_projects"
     SEN_EXP = "atcsdevb_dev_senexp"
+    ELECTIVE="atcsdevb_dev_electives"
 
 # Executes the statemet and then returns the result
 # Statement - SQL Query

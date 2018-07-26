@@ -53,6 +53,14 @@ class User(UserMixin):
     def get_role(self, app_id):
         return self.appRoles[app_id]
 
+    # Teacher specific methods
+
+    def get_missing_students(self):
+        pass
+
+    def get_proctoring(self):
+        pass
+
     @staticmethod
     def get(id):
         result = query_one(DB.SHARED, 'SELECT * FROM user WHERE usr_id=%s LIMIT 1', [id])
