@@ -48,18 +48,17 @@ def query_one(db, statement, vars=""):
 
 
 def insert(db, statement, vars=""):
+    insertmany(db, statement, data=[vars])
+
+def insertmany(db, statement, data):
     cur = mysql.connection.cursor()
     use_db(cur, db)
 
-    if vars:
-        cur.execute(statement, vars)
-    else:
-        cur.execute(statement)
+    cur.executemany(statement, data)
 
-    cur.execute(statement, vars)
     mysql.connect().commit()
 
-    log_print("INSERT", db, statement, vars)
+    log_print("INSERT", db, statement, data)
 
 
 def update(db, statement, vars=""):
