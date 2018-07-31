@@ -22,6 +22,7 @@ def get_users(role):
 
     return roleUsers
 
+
 def list_upcoming_test_limited(self):
     tests = query(DB.PROCTORING,
                       'select t.test_name, t.test_id, CURDATE(), date_format(t.test_dt, "%b %e (%a)") as test_dt, datediff(test_dt, curdate()) as difference, reminder_sent_dt, test_time_desc, r.rm_nbr '

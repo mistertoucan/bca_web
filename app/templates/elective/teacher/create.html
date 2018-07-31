@@ -1,6 +1,61 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/main.css') }}">
+{% endblock %}
 
 {% block content %}
-    Create an elective!
+    <form action="." method="post">
+        <div id="box" class="container">
+            <div class="row">
+                <div class="col s12 center-align">
+                    <h3 class="title">Create Elective</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="elective_name" name="elective_name" type="text" class="validate">
+                    <label for="elective_name">Name</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="elective_desc" name="elective_desc" class="materialize-textarea"></textarea>
+                    <label for="elective_desc">Description</label>
+                </div>
+            </div>
+
+            <table class="centered">
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Teacher</th>
+                        <th>Tri</th>
+                        <th>Year</th>
+                        <th>Days/Mods</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a class="waves-effect waves-light btn" style="background-color: deepskyblue;">+ Section</a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s4 offset-s4">
+                <a class="waves-effect waves-light btn" style="background-color: limegreen; margin-top: 15px;">Submit</a>
+            </div>
+        </div>
+    </form>
+
 {% endblock %}
