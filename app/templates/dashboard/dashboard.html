@@ -16,9 +16,10 @@
                         <span class="card-title" style="color:#c5cae9;text-align:center">Students Missing for Trips</span>
 
                         <?php $date = ""; $count_tests = 0; $internal_count = 0; $more_absent = false; if(count($missing_students) == 0){ ?>
+
                         <p style="text-align:center">No Students Absent!</p>
                         <div style="display: none">
-                                <?php } else { ?> <div style="display: none"> <?php foreach($missing_students as $student) { ?>
+                            <?php } else { ?> <div style="display: none"> <?php foreach($missing_students as $student) { ?>
 
                             <?php
                             if($date == $student['class_dt'] && $count_tests >= 5) {
