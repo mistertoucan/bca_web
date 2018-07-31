@@ -58,15 +58,31 @@ class User(object):
     def get(id):
         result = query_one(DB.SHARED, 'SELECT * FROM user WHERE usr_id=%s LIMIT 1', [id])
         if result:
-            return User(id)
+            type_cde = query_one(DB.SHARED, 'SELECT usr_type_cde FROM user WHERE usr_id = %s', [id])[0]
+
+            if type_cde == 'ADM':
+                return Admin(id)
+            elif type_cde == 'TCH':
+                return Teacher(id)
+            elif type_cde == 'STD':
+                return Student(id)
+            else:
+                return User(id)
         return None
+
+
+
+class Student(User):
+    pass
 
 class Teacher(User):
     pass
 
-
 class Admin(User):
     pass
+
+
+
 
 class NestableBlueprint(Blueprint):
     """
