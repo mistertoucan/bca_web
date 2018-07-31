@@ -12,7 +12,14 @@ from flask_breadcrumbs import register_breadcrumb
 @register_breadcrumb(board_mod, '.', 'Dashboard')
 @requires_token
 def index():
-    return render_template("dashboard/dashboard.html")
+    user_code = g.user.get_type_code()
+
+    if user_code == 'ADM':
+        return render_template("dashboard/admin.html")
+    elif user_code == 'TCH':
+        return render_template("dashboard/teacher.html")
+    else:
+        return render_template("dashboard/student.html")
 
 @board_mod.route('/about')
 @register_breadcrumb(board_mod, '.about', 'About')
@@ -36,7 +43,6 @@ def test():
                     g.token =  create_token(usr_id_adm, request.remote_addr)
                 elif choice == 'Login TCH':
                     g.token = create_token(usr_id_tch, request.remote_addr)
-                    print("created token!")
                 elif choice =='Login STD':
                     g.token = create_token(usr_id_std, request.remote_addr)
                 else:

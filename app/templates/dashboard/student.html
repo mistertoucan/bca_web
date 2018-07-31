@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="welcome-student">
+        <h6 id="welcome"> Hi {{ g.user.get_name()[0] }}, </h6>
+        <h6 id="welcome-sub"> Welcome to your Dashboard. </h6>
+        <h6> Use the links on the left to enter an application. </h6>
+    </div>
+{% endblock %}

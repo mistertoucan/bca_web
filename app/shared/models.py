@@ -70,10 +70,8 @@ class User(object):
                 return User(id)
         return None
 
-
 class Student(User):
     pass
-
 
 class Teacher(User):
     pass
