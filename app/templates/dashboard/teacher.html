@@ -1,21 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% set typeCode = g.user.get_type_code() %}
-    {% if typeCode == 'STD' %}
-        <div id="welcome-student">
-            <h6 id="welcome"> Hi {{ g.user.get_name()[0] }}, </h6>
-            <h6 id="welcome-sub"> Welcome to your Dashboard. </h6>
-            <h6> Use the links on the left to enter an application. </h6>
-        </div>
-    {% elif typeCode == 'TCH' %}
-        <div class="row">
-            <div class="col m12 l6">
-                <div class="card blue-grey darken-1">
-                    <div class="card-content white-text" style="overflow: hidden">
-                        <span class="card-title" style="color:#c5cae9;text-align:center">Students Missing for Trips</span>
+    <div class="row">
+        <div class="col m12 l6">
+            <div class="card blue-grey darken-1">
+                <div class="card-content white-text" style="overflow: hidden">
+                    <span class="card-title" style="color:#c5cae9;text-align:center">Students Missing for Trips</span>
 
-                        <?php $date = ""; $count_tests = 0; $internal_count = 0; $more_absent = false; if(count($missing_students) == 0){ ?>
+                    <?php $date = ""; $count_tests = 0; $internal_count = 0; $more_absent = false; if(count($missing_students) == 0){ ?>
 
                         <p style="text-align:center">No Students Absent!</p>
                         <div style="display: none">
@@ -92,13 +84,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
         </div>
-    {% elif typeCode == 'ADM' %}
-        <div id="welcome-student">
-            <h6 id="welcome"> Hi {{ g.user.get_name()[0] }}, </h6>
-            <h6 id="welcome-sub"> Welcome to your Dashboard. </h6>
-            <h6> Use the links on the left to enter an application. </h6>
-        </div>
-    {% endif %}
+    </div>
 {% endblock %}

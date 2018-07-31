@@ -24,15 +24,15 @@ def get_users(role):
 
 def list_upcoming_test_limited(self):
     tests = query(DB.PROCTORING,
-                     'select t.test_name, t.test_id, CURDATE(), date_format(t.test_dt, "%b %e (%a)") as test_dt, datediff(test_dt, curdate()) as difference, reminder_sent_dt, test_time_desc, r.rm_nbr '
-                     'from test t, test_time_xref tx, test_updt_xref ux, test_time tt, room r'
-                     'where t.test_dt >= curdate()'
-                     'and t.test_id = tx.test_id'
-                     'and tx.test_id = ux.test_id'
-                     'and tx.test_time_id = ux.test_time_id'
-                     'and tx.test_time_id = tt.test_time_id'
-                     'and ux.usr_id = %s'
-                     'and t.rm_id = r.rm_id'
-                     'order by difference, tt.sort_order'
-                     'limit 4', [self.__usr_id__])
+                      'select t.test_name, t.test_id, CURDATE(), date_format(t.test_dt, "%b %e (%a)") as test_dt, datediff(test_dt, curdate()) as difference, reminder_sent_dt, test_time_desc, r.rm_nbr '
+                      'from test t, test_time_xref tx, test_updt_xref ux, test_time tt, room r'
+                      'where t.test_dt >= curdate()'
+                      'and t.test_id = tx.test_id'
+                      'and tx.test_id = ux.test_id'
+                      'and tx.test_time_id = ux.test_time_id'
+                      'and tx.test_time_id = tt.test_time_id'
+                      'and ux.usr_id = %s'
+                      'and t.rm_id = r.rm_id'
+                      'order by difference, tt.sort_order'
+                      'limit 4', [self.__usr_id__])
     return tests
