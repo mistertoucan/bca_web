@@ -12,4 +12,22 @@ def check_teacher():
 
 @teacher_mod.route('/')
 def index():
-    return "Hello world from teacher route!"
+    return "Hello world from the teacher route!"
+
+# CRUD
+
+@teacher_mod.route('/<int:id>', methods=['POST'])
+def create_elective(id):
+    pass
+
+@teacher_mod.route('/<int:id>', methods=['GET'])
+def read_elective(id):
+    pass
+
+@teacher_mod.route('/<int:id>', methods=['PUT'])
+def update_elective(id):
+    pass
+
+@teacher_mod.route('/<int:id>', methods=['DELETE'])
+def delete_elective(id):
+    pass

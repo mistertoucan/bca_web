@@ -71,17 +71,15 @@ class User(object):
         return None
 
 
-
 class Student(User):
     pass
+
 
 class Teacher(User):
     pass
 
 class Admin(User):
     pass
-
-
 
 
 class NestableBlueprint(Blueprint):
