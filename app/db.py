@@ -13,6 +13,9 @@ class DB(Enum):
     SEN_EXP = "atcsdevb_dev_senexp"
     ELECTIVE="atcsdevb_dev_electives"
 
+    def __str__(self):
+        return str(self.value)
+
 # Executes the statemet and then returns the result
 # Statement - SQL Query
 # Vars - List of variables in Query to prevent SQL Injection
@@ -86,7 +89,7 @@ def delete(db, statement, vars=""):
 
 def use_db(cur, db):
     print("Using db, %s" % db)
-    cur.execute('USE ' + db)
+    cur.execute('USE ' + str(db))
 
 def log_print(operation, db, statement, values):
     print("%s @ %s: '%s', %s " % (operation, db, statement, values))
