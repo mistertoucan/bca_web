@@ -1,6 +1,7 @@
 from app import mysql
 from enum import Enum
 
+
 class DB(Enum):
     SHARED = "atcsdevb_dev_shared"
     CAREER_DAY = "atcsdevb_dev_career_day"
@@ -13,8 +14,6 @@ class DB(Enum):
     SEN_EXP = "atcsdevb_dev_senexp"
     ELECTIVE="atcsdevb_dev_electives"
 
-    def __str__(self):
-        return str(self.value)
 
 # Executes the statemet and then returns the result
 # Statement - SQL Query
@@ -45,6 +44,7 @@ def query_one(db, statement, vars=""):
     log_print("QUERY", db, statement, vars)
     return cur.fetchone()
 
+
 def insert(db, statement, vars=""):
     cur = mysql.connection.cursor()
     use_db(cur, db)
@@ -58,6 +58,7 @@ def insert(db, statement, vars=""):
     mysql.connect().commit()
 
     log_print("INSERT", db, statement, vars)
+
 
 def update(db, statement, vars=""):
     cur = mysql.connection.cursor()
@@ -73,6 +74,7 @@ def update(db, statement, vars=""):
 
     log_print("UPDATED", db, statement, vars)
 
+
 def delete(db, statement, vars=""):
     cur = mysql.connect.cursor()
     use_db(cur, db)
@@ -87,9 +89,11 @@ def delete(db, statement, vars=""):
 
     log_print("DELETE", db, statement, vars)
 
+
 def use_db(cur, db):
     print("Using db, %s" % db)
-    cur.execute('USE ' + str(db))
+    cur.execute("USE " + db)
+
 
 def log_print(operation, db, statement, values):
     print("%s @ %s: '%s', %s " % (operation, db, statement, values))
