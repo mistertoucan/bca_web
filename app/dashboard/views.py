@@ -1,5 +1,6 @@
 from app.dashboard import board_mod
 from app.dashboard.controllers import *
+
 from app.shared.controllers import requires_token
 from app.auth.controllers import create_token
 
