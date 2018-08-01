@@ -10,6 +10,8 @@ def create_elective(name, desc):
 # uses insert many
 # sections is a list of section_time strings
 def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
+    year = "%d-%d" % (year, year+1)
+
     elective_sections = []
 
     for i in range(len(sections)):
@@ -44,6 +46,9 @@ def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
 # uses single insert
 # times is a string of the sections times
 def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
+
+    year = "%d-%d" % (year, year+1)
+
     time_ids = []
 
     for time_desc in times.split(", "):
