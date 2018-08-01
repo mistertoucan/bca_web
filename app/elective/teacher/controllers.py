@@ -64,3 +64,16 @@ def get_electives():
         electives.append(Elective(elective[0], elective[1]))
 
     return electives
+
+# returns all available times for a user
+def get_times(user_id):
+    result = query(DB.ELECTIVE, "SELECT x.time_id, day, mods"
+                                "FROM elect_user_free_xref x, elect_time e"
+                                "WHERE x.usr_id = %s"
+                                "AND x.time_id = e.time_id", [user_id])
+    times = []
+
+    for time in result:
+        times.append(ElectiveTime(time[0], time[1], time[2]))
+
+    return times

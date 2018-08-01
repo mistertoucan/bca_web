@@ -1,0 +1,11 @@
+-- TEST create section POST
+
+curl http://127.0.0.1:5000/elective_enroll/teacher/create
+-b bca_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c3JfaWQiOiIxIiwibGFzdF91c2VkIjoxNTMzMTI5MjYyLCJpcF9hZGRyZXNzIjoiMTI3LjAuMC4xIiwidGltZW91dF9kdXJhdGlvbiI6MzAwfQ.4ekdBzk0_14gDjwNGzTNp_Z6WpgFghjoibUrkOW4x-g
+-X POST
+   -F 'elective_name=Intro to Java!'
+   -F 'elective_desc=Processing! Yay!'
+   -F 'section_time=M 1-3, F 1-3'
+   -F 'section_room_nbr=138'
+   -F 'section_year=2018'
+   -F 'section_tri=1'
