@@ -3,6 +3,8 @@ from app.elective.teacher.controllers import *
 
 from app.shared.controllers import requires_token
 
+from flask_breadcrumbs import register_breadcrumb
+
 from flask import g, redirect, render_template, request, url_for
 
 @teacher_mod.before_request
@@ -14,10 +16,12 @@ def check_teacher():
 # pages
 
 @teacher_mod.route('/')
+@register_breadcrumb(teacher_mod, ".", "Elective Enroll")
 def index():
     return render_template("elective/teacher/index.html", electives=get_electives())
 
 @teacher_mod.route('/create', methods=['GET', 'POST'])
+@register_breadcrumb(teacher_mod, ".create", "Create Elective")
 def create():
     if request.method == 'POST':
         elective_name = request.form['elective_name']
@@ -41,5 +45,6 @@ def create():
     return render_template("elective/teacher/create.html", electives=get_electives())
 
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
+@register_breadcrumb(teacher_mod, ".edit", "Edit Elective")
 def edit(id):
     return render_template("elective/teacher/edit.html")

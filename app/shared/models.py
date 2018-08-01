@@ -91,7 +91,6 @@ class NestableBlueprint(Blueprint):
             if 'url_prefix' in options:
                 del options['url_prefix']
 
-            blueprint.name = self.name + "_" + blueprint.name
             print(blueprint.name)
 
             state.app.register_blueprint(blueprint, url_prefix=url_prefix, **options)
