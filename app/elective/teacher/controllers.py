@@ -68,7 +68,7 @@ def get_electives():
 # returns all available times for a user
 def get_times(user_id):
     result = query(DB.ELECTIVE, "SELECT x.time_id, day, mods "
-                                "FROM elect_user_free_xref x, elect_time e "
+                                "FROM elect_user_xref x, elect_time e "
                                 "WHERE x.usr_id = %s "
                                 "AND x.time_id = e.time_id", [user_id])
     times = []

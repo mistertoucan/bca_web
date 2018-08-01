@@ -38,7 +38,7 @@ def create():
 
             return redirect(url_for('elective_teacher.index'), 200)
 
-    return render_template("elective/teacher/create.html", electives=get_electives(), available_times=get_times(g.user.get_id()))
+    return render_template("elective/teacher/create.html", electives=get_electives())
 
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
