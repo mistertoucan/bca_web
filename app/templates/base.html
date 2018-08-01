@@ -27,7 +27,7 @@
 
 
 <main>
-{% block flash_messages %}
+{% block notifications %}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
