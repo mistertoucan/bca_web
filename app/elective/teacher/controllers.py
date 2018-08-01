@@ -47,13 +47,24 @@ def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
     time_ids = []
 
     for time_desc in times.split(", "):
-        time_id = query_one(DB.ELECTIVE, "SELECT time_id FROM elective_time WHERE time_short_desc=%s", [time_desc])
+        time_id = query_one(DB.ELECTIVE, "SELECT time_id FROM elective_time WHERE time_short_desc=%s", [time_desc])[0]
 
         time_ids.append(time_id)
 
-    section_nmbr = query_one(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_section WHERE elective_id=%s", [elective_id])
+    section_nbr = query_one(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_section WHERE elective_id=%s", [elective_id])[0]
 
-    insert(DB.ELECTIVE, "INSERT INTO elective_section (elective_id, section_nbr, teacher_id, room_nbr, course_year, tri) VALUES (%s, %s, %s, %s, %s, %s)", [elective_id, section_nmbr, teacher_id, room_nbr, year, tri])
+    insert(DB.ELECTIVE, "INSERT INTO elective_section (elective_id, section_nbr, teacher_id, room_nbr, course_year, tri) VALUES (%s, %s, %s, %s, %s, %s)", [elective_id, section_nbr, teacher_id, room_nbr, year, tri])
+
+    section_id = query_one(DB.ELECTIVE, "SELECT elective_id FROM elective_section WHERE elective_id=%s AND section_nbr=%s", [elective_id, section_nbr])[0]
+
+    data = []
+
+    for time_id in time_ids:
+        data.append([section_id, time_id])
+
+    print(data)
+
+    insertmany(DB.ELECTIVE, "INSERT INTO elective_section_time_xref (section_id, time_id) VALUES (%s, %s)", data)
 
 def get_electives():
     result = query(DB.ELECTIVE, "SELECT name, elective_id FROM elective ORDER BY name")
