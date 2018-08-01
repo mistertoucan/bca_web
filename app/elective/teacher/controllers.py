@@ -62,17 +62,15 @@ def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
     for time_id in time_ids:
         data.append([section_id, time_id])
 
-    print(data)
-
     insertmany(DB.ELECTIVE, "INSERT INTO elective_section_time_xref (section_id, time_id) VALUES (%s, %s)", data)
 
 def get_electives():
-    result = query(DB.ELECTIVE, "SELECT name, elective_id FROM elective ORDER BY name")
+    result = query(DB.ELECTIVE, "SELECT name, `desc`, elective_id FROM elective ORDER BY name")
 
     electives = []
 
     for elective in result:
-        electives.append(Elective(elective[0], elective[1]))
+        electives.append(Elective(elective[0], elective[1], elective[2]))
 
     return electives
 

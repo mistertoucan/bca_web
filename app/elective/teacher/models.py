@@ -1,7 +1,8 @@
 class Elective(object):
 
-    def __init__(self, name, id):
+    def __init__(self, name, desc, id):
         self.name = name
+        self.desc = desc
         self.id = id
 
 class ElectiveTime(object):

@@ -8,12 +8,17 @@ class User(object):
     def __init__(self, id):
         self.__usr_id__ = id
         self.apps = self.load_apps()
+        self.name = self.load_name()
 
     def get_id(self):
         return self.__usr_id__
 
     def get_name(self):
-        return query_one(DB.SHARED, 'SELECT usr_first_name, usr_last_name FROM user WHERE usr_id = %s', [self.__usr_id__])
+        return self.name
+
+    def load_name(self):
+        return query_one(DB.SHARED, 'SELECT usr_first_name, usr_last_name FROM user WHERE usr_id = %s',
+                         [self.__usr_id__])
 
     # returns a list of menu items the user has access to
     def load_apps(self):
