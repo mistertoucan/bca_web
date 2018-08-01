@@ -7,6 +7,7 @@
             <div class="nav-wrapper ">
               <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
+                  <li><a id="dash-name" class="nav-text black-text" href="#" style="float: left;">{{ "%s %s" % (g.user.get_name()[0], g.user.get_name()[1]) }}</a></li>
                 <li><i class="material-icons black-text">settings</i></li>
                 <li><a class="nav-text black-text" href="{{ url_for('auth.logout') }}">Log out</a></li>
               </ul>
