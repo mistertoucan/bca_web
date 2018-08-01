@@ -11,36 +11,32 @@
         $(document).ready(function(){
             $('.modal').modal();
             $('select').material_select();
-        });
 
-        $('.availability').click(function() {
-            if ($(this).attr('data-chosen') == 'false'){
+            $('.availability').click(function() {
+
+            if ($(this).attr('data-chosen') === 'false'){
                 $(this).css("background","#46D946");
                 $(this).attr("data-chosen", 'true');
             } else {
-                if ($(this).parents('.even').length == 1) {
-                    $(this).css("background","#d3d3d3");
+                if ($(this).parents('.even').length) {
+                    $(this).css("background","white");
                 } else {
                     $(this).css("background","#EBEBEB");
                 }
                 $(this).attr("data-chosen", "false");
             }
         });
+        });
 
-        function update_times() {
-            var ids = $("td[data-chosen='true']").map(function(index) {
-                return this.id;
-            });
-            var json = JSON.stringify(ids);
-            $('#id_field').attr("value", json);
-
+        function get_times() {
+            console.log($("td[data-chosen='true']")[0]);
         }
     </script>
 {% endblock %}
 
 {% block content %}
-    <div id="add_section" class="modal" style="width: 800px !important;">
-        <div class="modal-content" style="height: 50vh !important;">
+    <div id="add_section" class="modal" style="width: 800px !important; height: 90vh !important;">
+        <div class="modal-content" style="padding-bottom: 0;">
             <h3 class="center-align">Create Section</h3>
             
             <div class="row" style="margin-top: 15px">
@@ -72,7 +68,7 @@
                 </div>
             </div>
 
-            <div class="row">
+            <div class="row" style="margin-bottom: 10px">
                 <h4 class="center-align">Select Mods</h4>
 
                 <table class="table-fill striped centered">
@@ -97,16 +93,15 @@
                             {% if i % 2 == 1 %}
                                 <tr class="table_tr even" id="{{ mods[i] }}">
                             {% else %}
-                                <tr class="table_tr even" id="{{ mods[i] }}">
+                                <tr class="table_tr odd" id="{{ mods[i] }}">
                             {% endif %}
 
-                            {% for j in range(5) %}
-                                {% set available = false %}
+                                    {% for j in range(5) %}
+                                        <td class="availability" style="cursor: pointer" data-chosen="false" id="{{ time_ids[index] }}">{{ mods[i] }}</td>
+                                        {% set index = index + 1 %}
+                                    {% endfor %}
 
-                                {% if avaiable == false %}
-                                {%  %}
-                            {% endfor %}
-
+                                </tr>
                         {% endfor %}
                     </tbody>
                 </table>
@@ -115,7 +110,7 @@
 
         <div class="modal-footer">
             <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
-            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat">Submit</a>
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="get_times()">Submit</a>
         </div>
     </div>
 
