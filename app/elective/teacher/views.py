@@ -38,9 +38,6 @@ def create():
 
             return redirect(url_for('elective_teacher.index'), 200)
 
-    mods = ['1-3', '4-6', '7-9', '10-12', '13-15', '16-18', '19-21', '22-24']
-    time_ids = [1, 10, 17, 25, 33, 2, 11, 18, 26, 34, 3, 41, 19, 27, 35, 4, 12, 20, 28, 36, 5, 13, 21, 29, 37, 6, 14, 22, 30, 38, 7, 15, 23, 31, 39, 8, 16, 24, 32, 40]
-
     return render_template("elective/teacher/create.html", mods=mods, time_ids=time_ids, electives=get_electives())
 
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
