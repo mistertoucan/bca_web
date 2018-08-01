@@ -47,8 +47,15 @@ def query_one(db, statement, vars=""):
     return cur.fetchone()
 
 
-def insert(db, statement, vars=""):
-    insertmany(db, statement, data=[vars])
+def insert(db, statement, vars):
+    cur = mysql.connection.cursor()
+    use_db(cur, db)
+
+    cur.execute(statement, vars)
+
+    mysql.connection.commit()
+
+    log_print("INSERT", db, statement, vars)
 
 def insertmany(db, statement, data):
     cur = mysql.connection.cursor()
@@ -56,7 +63,7 @@ def insertmany(db, statement, data):
 
     cur.executemany(statement, data)
 
-    mysql.connect().commit()
+    mysql.connection.commit()
 
     log_print("INSERT", db, statement, data)
 
@@ -70,8 +77,7 @@ def update(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    cur.execute(statement, vars)
-    mysql.connect().commit()
+    mysql.connection.commit()
 
     log_print("UPDATED", db, statement, vars)
 
@@ -85,8 +91,7 @@ def delete(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    cur.execute(statement, vars)
-    mysql.connect().commit()
+    mysql.connection.commit()
 
     log_print("DELETE", db, statement, vars)
 

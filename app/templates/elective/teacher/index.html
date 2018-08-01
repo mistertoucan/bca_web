@@ -12,7 +12,10 @@
 <section class="main view">
 
     <div class="view-signup enrollment">
-
+        {% for elective in electives %}
+            {{ elective.name }}
+            {{ elective.id }}
+        {% endfor %}
 
     </div>
 

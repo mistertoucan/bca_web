@@ -15,7 +15,7 @@ def check_teacher():
 
 @teacher_mod.route('/')
 def index():
-    return render_template("elective/teacher/index.html")
+    return render_template("elective/teacher/index.html", electives=get_electives())
 
 @teacher_mod.route('/create', methods=['GET', 'POST'])
 def create():
@@ -25,8 +25,8 @@ def create():
         sections = request.form['section_time']
 
         if elective_name and elective_desc and sections:
-            id = create_elective(elective_name, elective_desc)
-            add_sections(g.user.get_id(), id, sections)
+            elective_id = create_elective(elective_name, elective_desc)
+            add_sections(elective_id, g.user.get_id(), sections, )
 
             return redirect(url_for('elective_teacher.index'), 200)
 
