@@ -9,6 +9,8 @@ from config import Config
 from flask import render_template, redirect, request, url_for, g
 from flask_breadcrumbs import register_breadcrumb
 
+from app import csrf
+
 @board_mod.route('/')
 @register_breadcrumb(board_mod, '.', 'Dashboard')
 @requires_token
@@ -29,6 +31,7 @@ def about():
     return render_template("dashboard/about.html")
 
 @board_mod.route('/test', methods=['GET', 'POST'])
+@csrf.exempt
 def test():
     if Config.DEBUG:
         if not request.cookies.get('bca_token'):
