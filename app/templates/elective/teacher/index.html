@@ -5,20 +5,100 @@
 {% block styles %}
     {{ super() }}
 
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/elective/main.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/elective/index/main.css') }}"/>
 {% endblock %}
 
 {% block content %}
 <section class="main view">
 
     <div class="view-signup enrollment">
-        {% for elective in electives %}
-            {{ elective.name }}
-            {{ elective.id }}
-        {% endfor %}
+        <div class="row">
+            <ul class="collapsible popout left-align">
+                <li class="">
+                    <h6 class="title center-align black-text" style="font-weight: bolder; padding-top: 15px;">Welcome to Elective Enroll!</h6>
+                    <div class="collapsible-header">
+                        <h6 class="blue-text center-align">New to this page?</h6>
+                    </div>
+                    <div class="collapsible-body" style="display: none; font-size: 14px;">
+                        <h6 class="grey-text text-darken-2 center-align">Instructions:</h6>
+                        <p class="flow-text"><strong>Creating an elective:</strong> Click on the red plus icon on the bottom right hand corner of the screen.</p>
+                        <p class="flow-text"><strong>Modifying an elective:</strong> Click the pencil icon and make your changes.</p>
+                        <p class="flow-text"><strong>Adding students to your elective:</strong> If you wish to pre-enroll students into your project, click the blue person icon under "Actions."</p>
+                        <p class="flow-text"><strong>Deleting/Inactivating an elective:</strong> You can either inactivate your project in "Modify" or delete an elective by clicking the trash can icon. If an elective is inactive or has been deleted, it will not show up for registration, and you cannot add students. Any students enrolled in an elective that is inactivated or deleted will be automatically unenrolled. Deleted electives cannot be recovered, however, you can re-activate inactivated electives at any time.</p>
+                        <p class="flow-text">Questions? Contact Ms. Forne-Neves.</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="row">
+            <div class="col s10 offset-l1">
+                <ul class="collapsible popout">
+                    <li style="margin-bottom: 15px;">
+                        <div class="collapsible-header" style="font-weight: bolder;">
+                            <i class="medium material-icons">list</i>
+                            My Electives
+                        </div>
+                        <div class="collapsible-body">
+                            This is a list of the elective sections you are currently signed up to teach. <br>
+                            Click on the elective section to display its time and other information. <br>
+                            Tap on the action button on the bottom right of your screen to create an elective or sign up to teach a new section for a pre-existing one.
+                        </div>
+                    </li>
+
+                    {% for elective in electives %}
+                        <li style="margin-left: 40px;">
+                            <div class="collapsible-header">
+                                <i class="medium material-icons">bookmark</i>
+                                {{ elective.name }}
+
+                                <ul class="category container pin-top right-align inline-list">
+                                    <li>
+                                        <a href="{{ url_for('elective_teacher.edit', id=elective.id) }}">
+                                            <i class="medium material-icons edit_icon">edit</i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ url_for('elective_teacher.edit', id=elective.id) }}">
+                                            <i class="medium material-icons delete_icon">delete</i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="collapsible-body">
+                                {{ elective.desc }}
+                            </div>
+                        </li>
+                    {% endfor %}
+
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-action-btn">
+      <a class="btn-floating btn-large red">
+        <i class="large material-icons">add</i>
+      </a>
     </div>
 
 </section>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".collapsible").collapsible();
+            $(".fixed-action-btn").floatingActionButton();
+
+            $(".edit_icon").on('click', function(event) {
+                event.stopPropagation();
+            });
+        });
+    </script>
 
 {% endblock %}
 
