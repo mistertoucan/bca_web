@@ -27,6 +27,15 @@
 
 
 <main>
+{% block flash_messages %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{% endblock %}
 {% block content %}
 {% endblock %}
 </main>

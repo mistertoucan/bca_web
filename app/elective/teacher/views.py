@@ -22,11 +22,19 @@ def create():
     if request.method == 'POST':
         elective_name = request.form['elective_name']
         elective_desc = request.form['elective_desc']
-        sections = request.form['section_time']
 
-        if elective_name and elective_desc and sections:
+        sections = request.form['section_time']
+        section_room_nbr = request.form['section_room_nbr']
+        section_year = request.form['section_year']
+        section_tri = request.form['section_tri']
+
+        if elective_name and elective_desc and sections and section_room_nbr and section_year and section_tri:
             elective_id = create_elective(elective_name, elective_desc)
-            add_sections(elective_id, g.user.get_id(), sections, )
+
+            if sections is list:
+                add_sections(elective_id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
+            else:
+                add_section(elective_id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
 
             return redirect(url_for('elective_teacher.index'), 200)
 

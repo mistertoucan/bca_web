@@ -7,7 +7,8 @@ def create_elective(name, desc):
     insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`) VALUES (%s, %s)", (name, desc))
     return query_one(DB.ELECTIVE, "SELECT elective_id FROM elective WHERE name=%s and `desc`=%s", [name, desc])[0]
 
-
+# uses insert many
+# sections is a list of section_time strings
 def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
     elective_sections = []
 
@@ -40,6 +41,8 @@ def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
 
         insertmany(DB.ELECTIVE, "INSERT INTO elective_section_time_xref (section_id, time_id) VALUES (%s, %s)", data)
 
+# uses single insert
+# times is a string of the sections times
 def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
     time_ids = []
 
@@ -53,8 +56,7 @@ def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
     insert(DB.ELECTIVE, "INSERT INTO elective_section (elective_id, section_nbr, teacher_id, room_nbr, course_year, tri) VALUES (%s, %s, %s, %s, %s, %s)", [elective_id, section_nmbr, teacher_id, room_nbr, year, tri])
 
 def get_electives():
-
-    result = query(DB.ELECTIVE, "SELECT name, elective_id FROM elective ORDER BY name;")
+    result = query(DB.ELECTIVE, "SELECT name, elective_id FROM elective ORDER BY name")
 
     electives = []
 
