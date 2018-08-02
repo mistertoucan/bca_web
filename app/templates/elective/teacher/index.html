@@ -9,71 +9,73 @@
 {% endblock %}
 
 {% block content %}
-<section class="main view">
+    <div class="container">
+        <section class="main view">
 
-    <div class="view-signup enrollment">
-        <div class="row">
-            <ul class="collapsible popout left-align">
-                <li class="">
-                    <h6 class="title center-align black-text" style="font-weight: bolder; padding-top: 15px;">Welcome to Elective Enroll!</h6>
-                    <div class="collapsible-header">
-                        <h6 class="blue-text center-align">New to this page?</h6>
-                    </div>
-                    <div class="collapsible-body" style="display: none; font-size: 14px;">
-                        <h6 class="grey-text text-darken-2 center-align">Instructions:</h6>
-                        <p class="flow-text"><strong>Creating an elective:</strong> Click on the red plus icon on the bottom right hand corner of the screen.</p>
-                        <p class="flow-text"><strong>Modifying an elective:</strong> Click the pencil icon and make your changes.</p>
-                        <p class="flow-text"><strong>Adding students to your elective:</strong> If you wish to pre-enroll students into your project, click the blue person icon under "Actions."</p>
-                        <p class="flow-text"><strong>Deleting/Inactivating an elective:</strong> You can either inactivate your project in "Modify" or delete an elective by clicking the trash can icon. If an elective is inactive or has been deleted, it will not show up for registration, and you cannot add students. Any students enrolled in an elective that is inactivated or deleted will be automatically unenrolled. Deleted electives cannot be recovered, however, you can re-activate inactivated electives at any time.</p>
-                        <p class="flow-text">Questions? Contact Ms. Forne-Neves.</p>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div class="row">
-            <div class="col s10 offset-l1">
-                <table>
-                    <thead>
-                      <tr>
-                          <th>Section #</th>
-                          <th>Elective</th>
-                          <th>Tri/Course Year</th>
-                          <th>Days</th>
-                          <th>Room #</th>
-                          <th>Enrolled/Max</th>
-                          <th>Actions</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {% for section in sections %}
-                          <tr>
-
-                              <td>{{ section.section_nbr }}</td>
-                            <td>{{ section.elective.name }}</td>
-                            <td>{{ "Tri: %d - %s" % (section.tri, section.course_year) }}</td>
-                            <td>{{ section.getTimes() }}</td>
-                            <td>{{ section.room_nbr }}</td>
-                            <td>{{ section.enrolled }}/{{ section.max }}</td>
-                              <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">person_add</i></a> <a href=""><i class="material-icons">delete</i></a></td>
-                          </tr>
-
-                      {% endfor %}
-                    </tbody>
-              </table>
+            <div class="view-signup enrollment">
+                <div class="row">
+                <ul class="collapsible popout left-align">
+                            <li class="">
+                        <h6 class="title center-align black-text" style="font-weight: bolder; padding-top: 15px;">Welcome to Elective Enroll!</h6>
+                        <div class="collapsible-header">
+                            <h6 class="blue-text center-align">New to this page?</h6>
+                        </div>
+                        <div class="collapsible-body" style="display: none; font-size: 14px;">
+                            <h6 class="grey-text text-darken-2 center-align">Instructions:</h6>
+                            <p class="flow-text"><strong>Creating an elective:</strong> Click on the red plus icon on the bottom right hand corner of the screen.</p>
+                            <p class="flow-text"><strong>Modifying an elective:</strong> Click the pencil icon and make your changes.</p>
+                            <p class="flow-text"><strong>Adding students to your elective:</strong> If you wish to pre-enroll students into your project, click the blue person icon under "Actions."</p>
+                            <p class="flow-text"><strong>Deleting/Inactivating an elective:</strong> You can either inactivate your project in "Modify" or delete an elective by clicking the trash can icon. If an elective is inactive or has been deleted, it will not show up for registration, and you cannot add students. Any students enrolled in an elective that is inactivated or deleted will be automatically unenrolled. Deleted electives cannot be recovered, however, you can re-activate inactivated electives at any time.</p>
+                            <p class="flow-text">Questions? Contact Ms. Forne-Neves.</p>
+                        </div>
+                    </li>
+                </ul>
             </div>
+
+            <div class="row">
+                <div class="col s10 offset-l1">
+                    <table>
+                        <thead>
+                          <tr>
+                              <th>Section #</th>
+                              <th>Elective</th>
+                              <th>Tri/Course Year</th>
+                              <th>Days</th>
+                              <th>Room #</th>
+                              <th>Enrolled/Max</th>
+                              <th>Actions</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {% for section in sections %}
+                              <tr>
+
+                                  <td>{{ section.section_nbr }}</td>
+                                <td>{{ section.elective.name }}</td>
+                                <td>{{ "Tri: %d - %s" % (section.tri, section.course_year) }}</td>
+                                <td>{{ section.getTimes() }}</td>
+                                <td>{{ section.room_nbr }}</td>
+                                <td>{{ section.enrolled }}/{{ section.max }}</td>
+                                  <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">person_add</i></a> <a href=""><i class="material-icons">delete</i></a></td>
+                              </tr>
+
+                          {% endfor %}
+                        </tbody>
+                  </table>
+                </div>
+            </div>
+
+            <div class="fixed-action-btn">
+              <a class="btn-floating btn-large red" href="{{ url_for('elective_teacher.create') }}">
+                <i class="large material-icons">add</i>
+              </a>
+            </div>
+
         </div>
 
-        <div class="fixed-action-btn">
-          <a class="btn-floating btn-large red" href="{{ url_for('elective_teacher.create') }}">
-            <i class="large material-icons">add</i>
-          </a>
-        </div>
-
+        </section>
     </div>
-
-</section>
 
 {% endblock %}
 

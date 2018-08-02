@@ -56,8 +56,8 @@
             let valid = true;
 
             for (let i = 0; i < sections.length - 1; i++) {
-                if(sections[i].innerHTML.includes(teacher) && sections[i].innerHTML.includes(mods)) {
-                    Materialize.toast('A Section Already Exists With The Given Mods.', 3000);
+                if(sections[i].innerHTML.includes(formatted_year) && sections[i].innerHTML.includes(mods)) {
+                    Materialize.toast('A Section Already Exists At The Given Time.', 3000);
                     valid = false;
                 }
             }

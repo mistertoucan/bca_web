@@ -1,9 +1,254 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/create/main.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.modal').modal();
+            $('select').material_select();
+
+            $('.availability').click(function() {
+                if ($(this).attr('data-chosen') === 'false'){
+                    $(this).css("background","#46D946");
+                    $(this).attr("data-chosen", 'true');
+                } else {
+                    if ($(this).parents('.even').length) {
+                        $(this).css("background","white");
+                    } else {
+                        $(this).css("background","#EBEBEB");
+                    }
+                    $(this).attr("data-chosen", "false");
+                }
+            });
+        });
+
+        function get_times() {
+            let selected_times = $("td[data-chosen='true']");
+            let time = "";
+
+            for (let i = 0; i < selected_times.length; i++)
+                time += (selected_times[i].id + " " + selected_times[i].innerHTML) + (i !== selected_times.length - 1 ? ', ' : '');
+
+            return time;
+        }
+
+        function edit_section() {
+            let section_nbr = $("#sections tr").length;
+
+            {% set name = g.user.get_name() %}
+            let teacher = "{{ name[1] + ', ' + name[0] }}";
+
+            let tri_nbr = $("#modal_tri_nbr option:selected").val();
+            let room_nbr = $("#modal_room_nbr").val();
+            let year = $("#modal_year option:selected").val().split('-')[0];
+
+            let formatted_year = `Tri ${tri_nbr}: ${year}`;
+
+            let mods = get_times();
+
+            // TODO: loop through all rows to see if teacher already exists then execute the following code
+            let sections = $('#sections tr');
+            let valid = true;
+
+            for (let i = 0; i < sections.length - 1; i++) {
+                if(sections[i].innerHTML.includes(teacher) && sections[i].innerHTML.includes(mods)) {
+                    Materialize.toast('A Section Already Exists With The Given Mods.', 3000);
+                    valid = false;
+                }
+            }
+
+            if (valid && (!tri_nbr || !room_nbr || !year || !mods)) {
+                valid = false;
+                Materialize.toast('Please Make Sure All Fields Have Been Filled Out.', 3000)
+            }
+
+            if (valid) {
+                $('input[name="section_time"]').val(mods);
+                $('input[name="section_year"]').val(year);
+                $('input[name="section_tri"]').val(tri_nbr);
+                $('input[name="section_room_nbr"]').val(room_nbr);
+
+                $('#sections_info tr').eq(-1).before(`
+                    <tr>
+                        <td>${section_nbr}</td>
+                        <td>${teacher}</td>
+                        <td>${formatted_year}</td>
+                        <td>${room_nbr}</td>
+                        <td>${mods}</td>
+                    </tr>
+                `);
+            }
+        }
+
+        function submit_form() {
+            let a = $('input[name="section_time"]').val();
+            let b = $('input[name="section_year"]').val();
+            let c = $('input[name="section_tri"]').val();
+            let d = $('input[name="section_room_nbr"]').val();
+
+            let e = $('input[name="elective_name').val();
+            let f = $('textarea[name="elective_desc').val();
+
+            if (!a || !b || !c || !d || !e || !f)
+                Materialize.toast('Please Fill Out All Fields Before Submitting (Including the Section)', 3000);
+            else
+                $('#create_elective').submit();
+        }
+
+    </script>
+{% endblock %}
+
 {% block content %}
-    Edit an elective!
-    {{ elective.__str__() }}
-    {% for section in elective.sections %}
-        {{ section }}
-    {% endfor %}
+    <div id="edit_section" class="modal" style="width: 800px !important; height: 90vh !important;">
+        <div class="modal-content" style="padding-bottom: 0;">
+            <h3 class="center-align">Create Section</h3>
+
+            <div class="row" style="margin-top: 15px">
+                <div class="input-field col s3 offset-s1">
+                    <input type="text" id="modal_room_nbr" placeholder="Enter a Room #">
+                    <label for="modal_room_nbr">Rm #</label>
+                </div>
+
+                <div class="input-field col s3">
+                    <select id="modal_tri_nbr">
+                        <option value="" disabled selected>Select a Trimester</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+
+                    <label for="modal_tri_nbr">Trimester #</label>
+                </div>
+
+                <div class="input-field col s4">
+                    <select id="modal_year">
+                        <option value="" disabled selected>Select a Year</option>
+                        <option value="2018-2019">2018-2019</option>
+                        <option value="2019-2020">2019-2020</option>
+                        <option value="2020-2021">2020-2021</option>
+                    </select>
+
+                    <label for="modal_tri_nbr">Year</label>
+                </div>
+            </div>
+
+            <div class="row" style="margin-bottom: 10px">
+                <h4 class="center-align">Select Mods</h4>
+
+                <table class="table-fill striped centered">
+                    <thead id="days">
+                        <tr class="table_tr">
+                            <th class="table_th">M</th>
+                            <th class="table_th">T</th>
+                            <th class="table_th">W</th>
+                            <th class="table_th">R</th>
+                            <th class="table_th">F</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% set mods = ['1-3', '4-6', '7-9', '10-12', '13-15', '16-18', '19-21', '22-24'] %}
+
+                        {%  for i in range(8) %}
+
+                            {% if i % 2 == 1 %}
+                                <tr class="table_tr even" id="{{ mods[i] }}">
+                            {% else %}
+                                <tr class="table_tr odd" id="{{ mods[i] }}">
+                            {% endif %}
+
+                                    {% for j in range(5) %}
+
+                                        {% set days = { 0: 'M', 1: 'T', 2: 'W', 3: 'R', 4: 'F' } %}
+
+                                        <td class="availability" style="cursor: pointer" data-chosen="false" id="{{ days[j % 5] }}">{{ mods[i] }}</td>
+
+                                    {% endfor %}
+                                </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="edit_section()">Submit</a>
+        </div>
+    </div>
+
+    <form id="create_elective" method="post">
+
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        <input type="hidden" name="section_time">
+        <input type="hidden" name="section_year">
+        <input type="hidden" name="section_tri">
+        <input type="hidden" name="section_room_nbr">
+
+        <div id="box" class="container">
+            <div class="row">
+                <div class="col s12 center-align">
+                    <h3 class="title">Edit Elective</h3>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s4">
+                    <input id="elective_name" name="elective_name" type="text" class="validate" value="{{ elective.name }}">
+                    <label for="elective_name">Name</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <textarea id="elective_desc" name="elective_desc" class="materialize-textarea">{{ elective.desc }}</textarea>
+                    <label for="elective_desc">Description</label>
+                </div>
+            </div>
+
+            <table class="centered" id="sections_info">
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Teacher</th>
+                        <th>Tri / Year</th>
+                        <th>Rm #</th>
+                        <th>Days/Mods</th>
+                    </tr>
+                </thead>
+
+                <tbody id="sections">
+                    {% for section in elective.sections %}
+                        <tr>
+                            <td>{{ section.section_nbr }}</td>
+                            <td>{{ "%s, %s" % (section.teacher.name[1], section.teacher.name[0]) }}</td>
+                            <td>{{ "Tri %d: %d" % (section.tri, section.course_year) }}</td>
+                            <td>{{ section.room_nbr }}</td>
+                            <td>{{ section.getTimes() }}</td>
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <a class="waves-effect waves-light btn modal-trigger" href="#edit_section" style="background-color: deepskyblue;">+ Section</a>
+                        </td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="col s4 offset-s4">
+                <a onclick="submit_form()" class="waves-effect waves-light btn" style="background-color: limegreen; margin-top: 15px;">Submit</a>
+            </div>
+        </div>
+    </form>
+
 {% endblock %}
