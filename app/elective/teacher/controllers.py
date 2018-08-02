@@ -61,7 +61,7 @@ def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
 
     insert(DB.ELECTIVE, "INSERT INTO elective_section (elective_id, section_nbr, teacher_id, room_nbr, course_year, tri) VALUES (%s, %s, %s, %s, %s, %s)", [elective_id, section_nbr, teacher_id, room_nbr, year, tri])
 
-    section_id = query_one(DB.ELECTIVE, "SELECT elective_id FROM elective_section WHERE elective_id=%s AND section_nbr=%s", [elective_id, section_nbr])[0]
+    section_id = query_one(DB.ELECTIVE, "SELECT section_id FROM elective_section WHERE elective_id=%s AND section_nbr=%s", [elective_id, section_nbr])[0]
 
     data = []
 
