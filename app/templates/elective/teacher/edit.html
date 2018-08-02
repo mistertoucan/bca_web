@@ -2,4 +2,8 @@
 
 {% block content %}
     Edit an elective!
+    {{ elective.__str__() }}
+    {% for section in elective.sections %}
+        {{ section }}
+    {% endfor %}
 {% endblock %}

@@ -153,7 +153,7 @@ def get_elective(id):
                                     "WHERE elective_id = %s", [elective.id])
 
         for section in sections:
-            section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], result[6])
+            section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], section[6])
             section.times = get_times(section_id=section.id)
 
             elective.sections.append(section)
