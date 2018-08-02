@@ -18,7 +18,7 @@ def check_teacher():
 @teacher_mod.route('/')
 @register_breadcrumb(teacher_mod, ".", "Elective Enroll")
 def index():
-    return render_template("elective/teacher/index.html", electives=get_sections(g.user.get_id()))
+    return render_template("elective/teacher/index.html", sections=get_sections(g.user.get_id()))
 
 @teacher_mod.route('/create', methods=['GET', 'POST'])
 @register_breadcrumb(teacher_mod, ".create", "Create Elective")

@@ -31,7 +31,7 @@ def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
     for i in range(len(elective_sections)):
         section_time_ids = elective_sections[i]
 
-        section_nbr = query(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_section WHERE elective_id=%s", [elective_id])
+        section_nbr = query(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_section WHERE elective_id=%s", [elective_id])+1
 
         insert(DB.ELECTIVE, "INSERT INTO elective_section (elective_id, section_nbr, teacher_id, room_nbr, course_year, tri) VALUES (%s, %s, %s, %s, %s, %s)", [elective_id, section_nbr, teacher_id, room_nbr, year, tri])
 
@@ -57,7 +57,7 @@ def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
 
         time_ids.append(time_id)
 
-    section_nbr = query_one(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_section WHERE elective_id=%s", [elective_id])[0]
+    section_nbr = query_one(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_section WHERE elective_id=%s", [elective_id])[0]+1
 
     insert(DB.ELECTIVE, "INSERT INTO elective_section (elective_id, section_nbr, teacher_id, room_nbr, course_year, tri) VALUES (%s, %s, %s, %s, %s, %s)", [elective_id, section_nbr, teacher_id, room_nbr, year, tri])
 
@@ -81,7 +81,7 @@ def get_electives():
     return electives
 
 def get_sections(user_id):
-    elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, e.elective_id, e.name, e.desc "
+    elective_sections = query(DB.ELECTIVE, "SELECT DISTINCT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, e.elective_id, e.name, e.desc "
                                            "FROM elective_section es, elective e, elective_section_time_xref x "
                                            "WHERE es.teacher_id = %s "
                                            "AND es.elective_id = e.elective_id "
@@ -107,7 +107,7 @@ def get_sections(user_id):
 
         section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, section_room_nbr)
 
-        section.times.append(get_times(section_id=section_id))
+        section.times = get_times(section_id)
 
         sections.append(section)
 
@@ -139,6 +139,10 @@ def get_times(section_id):
 
         times.append(time)
 
+    print('\n\n\n')
+    print(times)
+    print('\n\n\n')
+
     return times
 
 def get_elective(id):
@@ -153,6 +157,7 @@ def get_elective(id):
                                     "WHERE elective_id = %s", [elective.id])
 
         for section in sections:
+            print(section[0])
             section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], section[6])
             section.times = get_times(section_id=section.id)
 

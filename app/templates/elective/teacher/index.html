@@ -52,7 +52,7 @@
                             <td>{{ section.elective.name }}</td>
                             <td>{{ section.section_nbr }}</td>
                             <td>{{ "Tri: %d - %s" % (section.tri, section.course_year) }}</td>
-                            <td>{{ section.time.days }}</td>
+                            <td>{{ section.getTimes() }}</td>
                             <td>{{ section.room_nbr }}</td>
                             <td>{{ section.enrolled }}/{{ section.max }}</td>
                             <td> <i class="material-icons">edit</i> <i class="material-icons">person_add</i> <i class="material-icons">delete</i></td>

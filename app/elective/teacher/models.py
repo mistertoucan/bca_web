@@ -10,6 +10,13 @@ class Elective(object):
     def __str__(self):
         return "<%s: %s, %s/>" % (self.id, self.name, self.desc)
 
+class ElectiveTeacher(object):
+
+    def __init__(self, teacher_id, teacher_name):
+        self.teacher_id = teacher_id
+        self.teacher_name = teacher_name
+
+
 class ElectiveSection(object):
 
     def __init__(self, id, elective, section_nbr, tri, course_year, max, room_nbr):
@@ -31,6 +38,17 @@ class ElectiveSection(object):
     def __str__(self):
         return "\n<%s: %s, %s, %s, %s, %s %s, %s, %s/>" % (self.id, self.elective, self.section_nbr, self.tri, self.course_year, self.max, self.enrolled, self.room_nbr, ', '.join([str(x) for x in self.times]))
 
+    def getTimes(self):
+        s = ' '
+
+        for i in range(len(self.times)):
+            s += self.times[i].__str__()
+
+            if i < len(self.times)-1:
+                s += ', '
+
+        return s
+
 
 class ElectiveTime(object):
 
@@ -40,4 +58,4 @@ class ElectiveTime(object):
         self.desc = desc
 
     def __str__(self):
-        return "\n<%s: %s, %s" % (self.id, self.day, self.desc)
+        return self.desc
