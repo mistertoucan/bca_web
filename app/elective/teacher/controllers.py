@@ -12,9 +12,7 @@ def create_elective(name, desc):
 # uses insert many
 # sections is a list of section_time strings
 def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
-    year = int(year)
-    year = "%d-%s" % (year, str(year+1)[2:])
-
+    print(year)
     elective_sections = []
 
     for i in range(len(sections)):
@@ -49,9 +47,7 @@ def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
 # uses single insert
 # times is a string of the sections times
 def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
-    year = int(year)
-    year = "%d-%s" % (year, str(year + 1)[2:])
-
+    print(year)
     time_ids = []
 
     for time_desc in times.split(", "):
@@ -83,31 +79,35 @@ def get_electives():
     return electives
 
 def get_sections(user_id):
-    elective_sections = query(DB.ELECTIVE, "SELECT DISTINCT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, e.elective_id, e.name, e.desc, es.teacher_id "
-                                           "FROM elective_section es, elective e, elective_section_time_xref x "
+    elective_sections = query(DB.ELECTIVE, "SELECT es.elective_id, es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id "
+                                           "FROM elective_section es  "
                                            "WHERE es.teacher_id = %s "
-                                           "AND es.elective_id = e.elective_id "
-                                           "AND x.section_id = es.section_id "
                                            "ORDER BY es.course_year DESC", [user_id])
 
     sections = []
 
     for result in elective_sections:
-        elective_id = result[6]
-        elective_name = result[7]
-        elective_desc = result[8]
+
+        elective_id = result[0]
+
+        elective_result = query_one(DB.ELECTIVE, "SELECT name, `desc` "
+                                          "FROM elective "
+                                          "WHERE elective_id = %s", [elective_id])
+
+        elective_name = elective_result[0]
+        elective_desc = elective_result[1]
 
 
         elective = Elective(elective_id, elective_name, elective_desc)
 
-        section_id = result[0]
-        section_nbr = result[1]
-        section_tri = result[2]
-        section_year = result[3]
-        section_max = result[4]
-        section_room_nbr = result[5]
+        section_id = result[1]
+        section_nbr = result[2]
+        section_tri = result[3]
+        section_year = result[4]
+        section_max = result[5]
+        section_room_nbr = result[6]
 
-        section_teacher_id = result[9]
+        section_teacher_id = result[6]
 
         teacher = get_teacher(section_teacher_id)
 
