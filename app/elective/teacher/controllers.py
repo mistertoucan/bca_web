@@ -142,7 +142,7 @@ def get_times(section_id):
     return times
 
 def get_elective(id):
-    result = query_one(DB.ELECTIVE, "SELECT elective_id, name, desc "
+    result = query_one(DB.ELECTIVE, "SELECT elective_id, name, `desc` "
                                   "FROM elective "
                                   "WHERE elective_id = %s", [id])
     if result:
