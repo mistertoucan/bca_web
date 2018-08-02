@@ -119,7 +119,6 @@ def get_sections(user_id):
 
     return sections
 
-
 def get_teacher(id):
 
     teacher = User.get(id)
@@ -181,3 +180,5 @@ def get_elective(id):
         return elective
 
     return None
+
+# def update_section(section_id, elective_name, elective_desc, section_time, section_year, )

@@ -5,7 +5,7 @@ from app.shared.controllers import requires_token
 
 from flask_breadcrumbs import register_breadcrumb
 
-from flask import g, redirect, render_template, request, url_for
+from flask import g, redirect, render_template, request, url_for, jsonify
 
 @teacher_mod.before_request
 @requires_token
@@ -44,9 +44,29 @@ def create():
 
     return render_template("elective/teacher/create.html", electives=get_sections(g.user.get_id()))
 
+@teacher_mod.route('/edit/<int:id>/section', methods=['GET', 'POST', 'PUT', 'DELETE'])
+def section(id):
+
+    if request.method == 'POST':
+        data = request.json['data']
+
+        section_time = data['section_time']
+        section_year = data['section_year']
+        section_tri = data['section_tri']
+        section_room_nbr = data['section_room_nbr']
+
+        if section_time and section_year and section_tri and section_room_nbr:
+            add_section(id, g.user.get_id(), section_time, section_room_nbr, section_year, section_tri)
+            return jsonify({"success": True})
+
+        return jsonify({"success": False})
+
+    return jsonify({"error": "Invalid route"})
+
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
 @register_breadcrumb(teacher_mod, ".edit", "Edit Elective")
 def edit(id):
+    print("HIT ELECTIVE!")
     elective = get_elective(id)
 
     if elective:
