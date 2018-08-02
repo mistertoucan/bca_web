@@ -19,7 +19,7 @@ class ElectiveTeacher(object):
 
 class ElectiveSection(object):
 
-    def __init__(self, id, elective, section_nbr, tri, course_year, max, room_nbr):
+    def __init__(self, id, elective, section_nbr, tri, course_year, max, room_nbr, teacher):
         self.id = id
 
         self.elective = elective
@@ -34,6 +34,8 @@ class ElectiveSection(object):
         self.room_nbr = room_nbr
 
         self.times = []
+
+        self.teacher = teacher
 
     def __str__(self):
         return "\n<%s: %s, %s, %s, %s, %s %s, %s, %s/>" % (self.id, self.elective, self.section_nbr, self.tri, self.course_year, self.max, self.enrolled, self.room_nbr, ', '.join([str(x) for x in self.times]))

@@ -36,12 +36,12 @@
                 <table>
                     <thead>
                       <tr>
-                          <th>Elective</th>
                           <th>Section #</th>
+                          <th>Elective</th>
                           <th>Tri/Course Year</th>
                           <th>Days</th>
                           <th>Room #</th>
-                          <th>Enrolled/Max Students</th>
+                          <th>Enrolled/Max</th>
                           <th>Actions</th>
                       </tr>
                     </thead>
@@ -49,8 +49,9 @@
                     <tbody>
                       {% for section in sections %}
                           <tr>
+
+                              <td>{{ section.section_nbr }}</td>
                             <td>{{ section.elective.name }}</td>
-                            <td>{{ section.section_nbr }}</td>
                             <td>{{ "Tri: %d - %s" % (section.tri, section.course_year) }}</td>
                             <td>{{ section.getTimes() }}</td>
                             <td>{{ section.room_nbr }}</td>
@@ -64,10 +65,12 @@
             </div>
         </div>
 
-    <div class="fixed-action-btn">
-      <a class="btn-floating btn-large red">
-        <i class="large material-icons">add</i>
-      </a>
+        <div class="fixed-action-btn">
+          <a class="btn-floating btn-large red">
+            <i class="large material-icons">add</i>
+          </a>
+        </div>
+
     </div>
 
 </section>

@@ -2,6 +2,8 @@ from app.db import DB, insert, insertmany, query_one, query
 
 from app.elective.teacher.models import *
 
+from app.shared.models import User
+
 # creates an elective and returns its id
 def create_elective(name, desc):
     insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`) VALUES (%s, %s)", (name, desc))
@@ -81,12 +83,12 @@ def get_electives():
     return electives
 
 def get_sections(user_id):
-    elective_sections = query(DB.ELECTIVE, "SELECT DISTINCT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, e.elective_id, e.name, e.desc "
+    elective_sections = query(DB.ELECTIVE, "SELECT DISTINCT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, e.elective_id, e.name, e.desc, es.teacher_id "
                                            "FROM elective_section es, elective e, elective_section_time_xref x "
                                            "WHERE es.teacher_id = %s "
                                            "AND es.elective_id = e.elective_id "
                                            "AND x.section_id = es.section_id "
-                                           "ORDER BY es.course_year", [user_id])
+                                           "ORDER BY es.course_year DESC", [user_id])
 
     sections = []
 
@@ -105,7 +107,11 @@ def get_sections(user_id):
         section_max = result[4]
         section_room_nbr = result[5]
 
-        section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, section_room_nbr)
+        section_teacher_id = result[9]
+
+        teacher = get_teacher(section_teacher_id)
+
+        section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, section_room_nbr, teacher)
 
         section.times = get_times(section_id)
 
@@ -113,6 +119,14 @@ def get_sections(user_id):
 
     return sections
 
+
+def get_teacher(id):
+
+    teacher = User.get(id)
+
+    if teacher:
+        return ElectiveTeacher(id, teacher.get_name())
+    return None
 
 # returns all available times for a user
 def get_times(user_id):
@@ -152,13 +166,14 @@ def get_elective(id):
     if result:
         elective = Elective(result[0], result[1], result[2])
 
-        sections = query(DB.ELECTIVE, "SELECT section_id, section_nbr, teacher_id, course_year, tri, max, room_nbr "
+        sections = query(DB.ELECTIVE, "SELECT section_id, section_nbr, teacher_id, course_year, tri, max, room_nbr, teacher_id "
                                     "FROM elective_section "
                                     "WHERE elective_id = %s", [elective.id])
 
         for section in sections:
-            print(section[0])
-            section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], section[6])
+            teacher_id = sections[7]
+
+            section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], section[6], get_teacher(teacher_id))
             section.times = get_times(section_id=section.id)
 
             elective.sections.append(section)
