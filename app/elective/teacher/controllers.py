@@ -171,7 +171,7 @@ def get_elective(id):
                                     "WHERE elective_id = %s", [elective.id])
 
         for section in sections:
-            teacher_id = sections[7]
+            teacher_id = section[7]
 
             section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], section[6], get_teacher(teacher_id))
             section.times = get_times(section_id=section.id)
