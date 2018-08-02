@@ -47,4 +47,9 @@ def create():
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
 @register_breadcrumb(teacher_mod, ".edit", "Edit Elective")
 def edit(id):
-    return render_template("elective/teacher/edit.html")
+    elective = get_elective(id)
+
+    if elective:
+        return render_template("elective/teacher/edit.html", elective=elective)
+    else:
+        return redirect(url_for('elective_teacher.index'))

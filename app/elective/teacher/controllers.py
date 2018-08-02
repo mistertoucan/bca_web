@@ -81,36 +81,33 @@ def get_electives():
     return electives
 
 def get_sections(user_id):
-    elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, e.elective_id, e.name, e.desc, time.time_id, time.day, time.time_short_desc "
-                                           "FROM elective_section es, elective e, elective_section_time_xref x, elective_time time "
+    elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, e.elective_id, e.name, e.desc "
+                                           "FROM elective_section es, elective e, elective_section_time_xref x "
                                            "WHERE es.teacher_id = %s "
                                            "AND es.elective_id = e.elective_id "
                                            "AND x.section_id = es.section_id "
-                                           "AND x.time_id = time.time_id ", [user_id])
+                                           "ORDER BY es.course_year", [user_id])
 
     sections = []
 
     for result in elective_sections:
-        elective_id = result[5]
-        elective_name = result[6]
-        elective_desc = result[7]
+        elective_id = result[6]
+        elective_name = result[7]
+        elective_desc = result[8]
 
 
         elective = Elective(elective_id, elective_name, elective_desc)
-
-        time_id = result[8]
-        time_day = result[9]
-        time_desc = result[10]
-
-        elective_time = ElectiveTime(time_id, time_day, time_desc)
 
         section_id = result[0]
         section_nbr = result[1]
         section_tri = result[2]
         section_year = result[3]
         section_max = result[4]
+        section_room_nbr = result[5]
 
-        section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, elective_time)
+        section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, section_room_nbr)
+
+        section.times.append(get_times(section_id=section_id))
 
         sections.append(section)
 
@@ -129,3 +126,38 @@ def get_times(user_id):
         times.append(ElectiveTime(time[0], time[1], time[2]))
 
     return times
+
+def get_times(section_id):
+    times = []
+
+    for result in query(DB.ELECTIVE, "SELECT time.time_id, time.day, time.time_short_desc "
+                                   "FROM elective_time time, elective_section_time_xref x, elective_section es "
+                                   "WHERE es.section_id = %s "
+                                   "AND x.section_id = es.section_id "
+                                   "AND x.time_id = time.time_id ", [section_id]):
+        time = ElectiveTime(result[0], result[1], result[2])
+
+        times.append(time)
+
+    return times
+
+def get_elective(id):
+    result = query_one(DB.ELECTIVE, "SELECT elective_id, name, desc "
+                                  "FROM elective "
+                                  "WHERE elective_id = %s", [id])
+    if result:
+        elective = Elective(result[0], result[1], result[2])
+
+        sections = query(DB.ELECTIVE, "SELECT section_id, section_nbr, teacher_id, course_year, tri, max, room_nbr "
+                                    "FROM elective_section "
+                                    "WHERE elective_id = %s", [elective.id])
+
+        for section in sections:
+            section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], result[6])
+            section.times = get_times(section_id=section.id)
+
+            elective.sections.append(section)
+
+        return elective
+
+    return None
