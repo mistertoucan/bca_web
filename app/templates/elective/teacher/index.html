@@ -33,48 +33,33 @@
 
         <div class="row">
             <div class="col s10 offset-l1">
-                <ul class="collapsible popout">
-                    <li style="margin-bottom: 15px;">
-                        <div class="collapsible-header" style="font-weight: bolder;">
-                            <i class="medium material-icons">list</i>
-                            My Electives
-                        </div>
-                        <div class="collapsible-body">
-                            This is a list of the elective sections you are currently signed up to teach. <br>
-                            Click on the elective section to display its time and other information. <br>
-                            Tap on the action button on the bottom right of your screen to create an elective or sign up to teach a new section for a pre-existing one.
-                        </div>
-                    </li>
+                <table>
+                    <thead>
+                      <tr>
+                          <th>Elective</th>
+                          <th>Section #</th>
+                          <th>Tri/Course Year</th>
+                          <th>Days</th>
+                          <th>Room #</th>
+                          <th>Enrolled/Max Students</th>
+                          <th>Actions</th>
+                      </tr>
+                    </thead>
 
-                    {% for elective in electives %}
-                        <li style="margin-left: 40px;">
-                            <div class="collapsible-header">
-                                <i class="medium material-icons">bookmark</i>
-                                {{ elective.name }}
+                    <tbody>
+                      {% for section in sections %}
+                          <tr>
+                            <td>{{ section.elective.name }}</td>
+                            <td>{{ section.section_nbr }}</td>
+                            <td>{{ "Tri: %d - %s" % (section.tri, section.course_year) }}</td>
+                            <td>{{  }}</td>
+                          </tr>
 
-                                <ul class="category container pin-top right-align inline-list">
-                                    <li>
-                                        <a href="{{ url_for('elective_teacher.edit', id=elective.id) }}">
-                                            <i class="medium material-icons edit_icon">edit</i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="{{ url_for('elective_teacher.edit', id=elective.id) }}">
-                                            <i class="medium material-icons delete_icon">delete</i>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="collapsible-body">
-                                {{ elective.desc }}
-                            </div>
-                        </li>
-                    {% endfor %}
-
-                </ul>
+                      {% endfor %}
+                    </tbody>
+              </table>
             </div>
         </div>
-    </div>
 
     <div class="fixed-action-btn">
       <a class="btn-floating btn-large red">

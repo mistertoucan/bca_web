@@ -81,7 +81,7 @@ def get_electives():
 
 def get_sections(user_id):
     elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, e.elective_id, e.name, e.desc, time.time_id, time.day, time.time_short_desc "
-                                           "FROM elective_section es, elective e, elective_section_time_xref x, elective_time time"
+                                           "FROM elective_section es, elective e, elective_section_time_xref x, elective_time time "
                                            "WHERE es.teacher_id = %s "
                                            "AND es.elective_id = e.elective_id "
                                            "AND x.section_id = es.section_id "
