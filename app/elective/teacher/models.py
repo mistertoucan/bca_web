@@ -12,9 +12,9 @@ class Elective(object):
 
 class ElectiveTeacher(object):
 
-    def __init__(self, teacher_id, teacher_name):
-        self.teacher_id = teacher_id
-        self.teacher_name = teacher_name
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
 
 
 class ElectiveSection(object):
