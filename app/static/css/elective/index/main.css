@@ -834,3 +834,7 @@ nav.navbar {
     color: coral;
 }
 
+thead > tr > th {
+    font-weight: bold;
+}
+
