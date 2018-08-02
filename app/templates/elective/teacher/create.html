@@ -43,16 +43,6 @@
             {% set name = g.user.get_name() %}
             let teacher = "{{ name[1] + ', ' + name[0] }}";
 
-            // TODO: loop through all rows to see if teacher already exists then execute the following code
-            let sections = $('#sections tr');
-            let valid = true;
-
-            for (let i = 0; i < sections.length - 1; i++) {
-                if(sections[i].innerHTML.includes(teacher))
-                    Materialize.toast('Your Section Already Exists!<br />Edit Your Section By Clicking the Edit Icon.', 3000)
-                    valid = false;
-            }
-
             let tri_nbr = $("#modal_tri_nbr option:selected").val();
             let room_nbr = $("#modal_room_nbr").val();
             let year = $("#modal_year option:selected").val().split('-')[0];
@@ -60,6 +50,17 @@
             let formatted_year = `Tri ${tri_nbr}: ${year}`;
 
             let mods = get_times();
+
+            // TODO: loop through all rows to see if teacher already exists then execute the following code
+            let sections = $('#sections tr');
+            let valid = true;
+
+            for (let i = 0; i < sections.length - 1; i++) {
+                if(sections[i].innerHTML.includes(teacher) && sections[i].innerHTML.includes(mods)) {
+                    Materialize.toast('A Section Already Exists With The Given Mods.', 3000);
+                    valid = false;
+                }
+            }
 
             if (valid && (!tri_nbr || !room_nbr || !year || !mods)) {
                 valid = false;
