@@ -82,6 +82,19 @@
                         <td>${mods}</td>
                     </tr>
                 `);
+
+                $.ajax({
+                    type : 'POST',
+                    url : "/section",
+                    contentType: 'application/json;charset=UTF-8',
+                    data : {
+                        'elective_id': {{ elective.id }},
+                        'section_time': mods,
+                        'section_year': year,
+                        'section_tri': tri_nbr,
+                        'section_room_nbr': room_nbr
+                    }
+                });
             }
         }
 
