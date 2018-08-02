@@ -31,7 +31,7 @@
             let selected_times = $("td[data-chosen='true']");
             let time = "";
 
-            for (i = 0; i < selected_times.length; i++)
+            for (let i = 0; i < selected_times.length; i++)
                 time += (selected_times[i].id + " " + selected_times[i].innerHTML) + (i !== selected_times.length - 1 ? ', ' : '');
 
             return time;
@@ -44,6 +44,14 @@
             let teacher = "{{ name[1] + ', ' + name[0] }}";
 
             // TODO: loop through all rows to see if teacher already exists then execute the following code
+            let sections = $('#sections tr');
+            let valid = true;
+
+            for (let i = 0; i < sections.length - 1; i++) {
+                if(sections[i].innerHTML.includes(teacher))
+                    Materialize.toast('Your Section Already Exists!<br />Edit Your Section By Clicking the Edit Icon.', 3000)
+                    valid = false;
+            }
 
             let tri_nbr = $("#modal_tri_nbr option:selected").val();
             let room_nbr = $("#modal_room_nbr").val();
@@ -53,15 +61,42 @@
 
             let mods = get_times();
 
-            $('#sections_info tr').eq(-1).before(`
-                <tr>
-                    <td>${section_nbr}</td>
-                    <td>${teacher}</td>
-                    <td>${formatted_year}</td>
-                    <td>${room_nbr}</td>
-                    <td>${mods}</td>
-                </tr>
-            `);
+            if (valid && (!tri_nbr || !room_nbr || !year || !mods)) {
+                valid = false;
+                Materialize.toast('Please Make Sure All Fields Have Been Filled Out.', 3000)
+            }
+
+            if (valid) {
+                $('input[name="section_time"]').val(mods);
+                $('input[name="section_year"]').val(year);
+                $('input[name="section_tri"]').val(tri_nbr);
+                $('input[name="section_room_nbr"]').val(room_nbr);
+
+                $('#sections_info tr').eq(-1).before(`
+                    <tr>
+                        <td>${section_nbr}</td>
+                        <td>${teacher}</td>
+                        <td>${formatted_year}</td>
+                        <td>${room_nbr}</td>
+                        <td>${mods}</td>
+                    </tr>
+                `);
+            }
+        }
+
+        function submit_form() {
+            let a = $('input[name="section_time"]').val();
+            let b = $('input[name="section_year"]').val();
+            let c = $('input[name="section_tri"]').val();
+            let d = $('input[name="section_room_nbr"]').val();
+
+            let e = $('input[name="elective_name').val();
+            let f = $('textarea[name="elective_desc').val();
+
+            if (!a || !b || !c || !d || !e || !f)
+                Materialize.toast('Please Fill Out All Fields Before Submitting (Including the Section)', 3000);
+            else
+                $('#create_elective').submit();
         }
 
     </script>
@@ -146,9 +181,14 @@
         </div>
     </div>
 
-    <form action="." method="post">
+    <form id="create_elective" method="post">
 
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+
+        <input type="hidden" name="section_time">
+        <input type="hidden" name="section_year">
+        <input type="hidden" name="section_tri">
+        <input type="hidden" name="section_room_nbr">
 
         <div id="box" class="container">
             <div class="row">
@@ -196,7 +236,7 @@
             </table>
 
             <div class="col s4 offset-s4">
-                <a class="waves-effect waves-light btn" style="background-color: limegreen; margin-top: 15px;">Submit</a>
+                <a onclick="submit_form()" class="waves-effect waves-light btn" style="background-color: limegreen; margin-top: 15px;">Submit</a>
             </div>
         </div>
     </form>

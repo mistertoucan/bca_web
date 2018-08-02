@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
 
 #box {
-    display: block;
+    display: table;
     background-color: #fefefe;
     margin: auto auto 20px;
     width: 900px !important;
