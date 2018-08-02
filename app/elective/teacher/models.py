@@ -16,7 +16,6 @@ class ElectiveSection(object):
         self.tri = tri
         self.course_year = course_year
 
-        self.enrolled = enrolled
         self.max = max
 
         self.time = time
