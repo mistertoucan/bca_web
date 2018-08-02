@@ -40,7 +40,7 @@ def create():
             else:
                 add_section(elective_id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
 
-            return redirect(url_for('elective_teacher.index'), 200)
+            return redirect(url_for('elective_teacher.index'))
 
     return render_template("elective/teacher/create.html", electives=get_sections(g.user.get_id()))
 
