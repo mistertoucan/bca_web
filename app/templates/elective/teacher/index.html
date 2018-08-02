@@ -56,7 +56,7 @@
                             <td>{{ section.getTimes() }}</td>
                             <td>{{ section.room_nbr }}</td>
                             <td>{{ section.enrolled }}/{{ section.max }}</td>
-                            <td> <i class="material-icons">edit</i> <i class="material-icons">person_add</i> <i class="material-icons">delete</i></td>
+                              <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">person_add</i></a> <a href=""><i class="material-icons">delete</i></a></td>
                           </tr>
 
                       {% endfor %}
