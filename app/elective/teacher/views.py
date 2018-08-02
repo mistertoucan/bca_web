@@ -42,7 +42,7 @@ def create():
 
             return redirect(url_for('elective_teacher.index'), 200)
 
-    return render_template("elective/teacher/create.html", electives=get_electives())
+    return render_template("elective/teacher/create.html", electives=get_sections(g.user.get_id()))
 
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
 @register_breadcrumb(teacher_mod, ".edit", "Edit Elective")

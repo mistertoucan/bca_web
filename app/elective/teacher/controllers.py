@@ -10,7 +10,7 @@ def create_elective(name, desc):
 # uses insert many
 # sections is a list of section_time strings
 def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
-    year = "%d-%d" % (year, year+1)
+    year = "%d-%s" % (year, str(year+1)[2:])
 
     elective_sections = []
 
@@ -47,7 +47,7 @@ def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
 # times is a string of the sections times
 def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
 
-    year = "%d-%d" % (year, year+1)
+    year = "%d-%s" % (year, str(year + 1)[2:])
 
     time_ids = []
 
@@ -70,7 +70,7 @@ def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
     insertmany(DB.ELECTIVE, "INSERT INTO elective_section_time_xref (section_id, time_id) VALUES (%s, %s)", data)
 
 def get_electives():
-    result = query(DB.ELECTIVE, "SELECT name, `desc`, elective_id FROM elective ORDER BY name")
+    result = query(DB.ELECTIVE, "SELECT elective_id, name, `desc` FROM elective ORDER BY name")
 
     electives = []
 
@@ -78,6 +78,43 @@ def get_electives():
         electives.append(Elective(elective[0], elective[1], elective[2]))
 
     return electives
+
+def get_sections(user_id):
+    elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.section_nbr, es.tri, es.course_year, es.max, e.elective_id, e.name, e.desc, time.time_id, time.day, time.time_short_desc "
+                                           "FROM elective_section es, elective e, elective_section_time_xref x, elective_time time"
+                                           "WHERE es.teacher_id = %s "
+                                           "AND es.elective_id = e.elective_id "
+                                           "AND x.section_id = es.section_id "
+                                           "AND x.time_id = time.time_id ", [user_id])
+
+    sections = []
+
+    for result in elective_sections:
+        elective_id = result[5]
+        elective_name = result[6]
+        elective_desc = result[7]
+
+
+        elective = Elective(elective_id, elective_name, elective_desc)
+
+        time_id = result[8]
+        time_day = result[9]
+        time_desc = result[10]
+
+        elective_time = ElectiveTime(time_id, time_day, time_desc)
+
+        section_id = result[0]
+        section_nbr = result[1]
+        section_tri = result[2]
+        section_year = result[3]
+        section_max = result[4]
+
+        section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, elective_time)
+
+        sections.append(section)
+
+    return sections
+
 
 # returns all available times for a user
 def get_times(user_id):
