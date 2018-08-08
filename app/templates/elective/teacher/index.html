@@ -6,6 +6,8 @@
     {{ super() }}
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/elective/index/main.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='alertifyjs/css/alertify.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='alertifyjs/css/themes/default.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -48,7 +50,7 @@
 
                         <tbody>
                           {% for section in sections %}
-                              <tr>
+                              <tr id="{{ section.id }}">
 
                                     <td>{{ section.section_nbr }}</td>
                                     <td>{{ section.elective.name }}</td>
@@ -56,7 +58,7 @@
                                     <td>{{ section.getTimes() }}</td>
                                     <td>{{ section.room_nbr }}</td>
                                     <td>{{ section.enrolled }}/{{ section.max }}</td>
-                                    <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">person_add</i></a> <a href=""><i class="material-icons">delete</i></a></td>
+                                    <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">person_add</i></a> <a href="#" onclick="deleteSection('{{ section.elective.name + "| " + section.getTimes() }}',{{ section.id }})"><i class="material-icons">delete</i></a></td>
                               </tr>
 
                           {% endfor %}
@@ -80,6 +82,8 @@
 {% block scripts %}
     {{ super() }}
 
+    <script type="text/javascript" src="{{ url_for('static', filename='alertifyjs/alertify.min.js') }}"></script>
+
     <script type="text/javascript">
         $(document).ready(function() {
             $(".collapsible").collapsible();
@@ -89,6 +93,19 @@
                 event.stopPropagation();
             });
         });
+
+
+        function deleteSection(section_name, section_id) {
+            alertify.confirm("Are you sure you want to delete section " + section_name + "?", function() {
+                $.ajax({
+                    url: 'http://' + {{ config.LOCAL_DOMAIN }} + '/elective_teacher/delete/' + section_id
+                }).done(function(data) {
+                    console.log(data);
+                    alertify.success("Deleted " + section_name);
+                    $("#section.id").slideToggle();
+                });
+            })
+        }
     </script>
 
 {% endblock %}

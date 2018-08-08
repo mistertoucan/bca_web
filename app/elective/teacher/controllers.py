@@ -1,4 +1,4 @@
-from app.db import DB, insert, insertmany, query_one, query
+from app.db import DB, insert, insertmany, query_one, query, delete
 
 from app.elective.teacher.models import *
 
@@ -11,37 +11,13 @@ def create_elective(name, desc):
 
 # uses insert many
 # sections is a list of section_time strings
-def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
-    elective_sections = []
-
-    for i in range(len(sections)):
-        cs_times = sections[i]
-
-        cs_ids = []
-
-        for time_desc in cs_times.split(", "):
-            time_id = query_one(DB.ELECTIVE, "SELECT time_id FROM elective_time WHERE time_short_desc=%s", [time_desc])[
-                0]
-
-            cs_ids.append(time_id)
-
-        elective_sections.append(cs_ids)
-
-    for i in range(len(elective_sections)):
-        section_time_ids = elective_sections[i]
-
-        section_nbr = query(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_section WHERE elective_id=%s", [elective_id])+1
-
-        insert(DB.ELECTIVE, "INSERT INTO elective_section (elective_id, section_nbr, teacher_id, room_nbr, course_year, tri) VALUES (%s, %s, %s, %s, %s, %s)", [elective_id, section_nbr, teacher_id, room_nbr, year, tri])
-
-        section_id = query_one(DB.ELECTIVE, "SELECT section_id FROM elective_section WHERE elective_id=%s AND section_nbr=%s", [elective_id, section_nbr])
-
-        data = []
-
-        for time_id in section_time_ids:
-            data.append([section_id, time_id])
-
-        insertmany(DB.ELECTIVE, "INSERT INTO elective_section_time_xref (section_id, time_id) VALUES (%s, %s)", data)
+def add_sections(elective_id, teacher_id, times, room_nbrs, years, tris):
+    for i in range(len(times)):
+        time = times[i]
+        room = room_nbrs[i]
+        year = years[i]
+        tri = tris[i]
+        add_section(elective_id, teacher_id, time, room, year, tri)
 
 # uses single insert
 # times is a string of the sections times
@@ -174,5 +150,13 @@ def get_elective(id):
         return elective
 
     return None
+
+def delete_section(teacher_id, section_id):
+    can_delete = query_one(DB.ELECTIVE, "SELECT elective_id FROM elective_section WHERE section_id=%s AND teacher_id=%s", [teacher_id, section_id]) != None
+
+    if can_delete:
+        delete(DB.ELECTIVE, "DELETE FROM elective_section WHERE section_id=%s", [section_id])
+        return True
+    return False
 
 # def update_section(section_id, elective_name, elective_desc, section_time, section_year, )

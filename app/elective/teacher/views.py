@@ -7,6 +7,8 @@ from flask_breadcrumbs import register_breadcrumb
 
 from flask import g, redirect, render_template, request, url_for, jsonify
 
+import collections
+
 @teacher_mod.before_request
 @requires_token
 def check_teacher():
@@ -27,15 +29,16 @@ def create():
         elective_name = request.form['elective_name']
         elective_desc = request.form['elective_desc']
 
-        sections = request.form['section_time']
-        section_room_nbr = request.form['section_room_nbr']
-        section_year = request.form['section_year']
-        section_tri = request.form['section_tri']
+        sections = request.form.getlist('section_time')
+        section_room_nbr = request.form.getlist('section_room_nbr')
+        section_year = request.form.getlist('section_year')
+        section_tri = request.form.getlist('section_tri')
+
 
         if elective_name and elective_desc and sections and section_room_nbr and section_year and section_tri:
             elective_id = create_elective(elective_name, elective_desc)
 
-            if sections is list:
+            if isinstance(sections, collections.Iterable):
                 add_sections(elective_id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
             else:
                 add_section(elective_id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
@@ -72,3 +75,11 @@ def edit(id):
         return render_template("elective/teacher/edit.html", elective=elective)
     else:
         return redirect(url_for('elective_teacher.index'))
+
+@teacher_mod.route('/delete/<int:section_id>', methods=['POST'])
+def delete(section_id):
+    deleted = delete_section(g.user.get_id(), section_id)
+
+    if deleted:
+        return jsonify({"Response": "Success"}), 200
+    return jsonify({"Error": "You don't have permission to delete this section!"}), 403
