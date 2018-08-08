@@ -15,7 +15,11 @@ from app import csrf
 @register_breadcrumb(board_mod, '.', 'Dashboard')
 @requires_token
 def index():
-    return redirect('http://' + Config.PHP_DOMAIN)
+
+    if Config.DEBUG:
+        return redirect(url_for('dashboard.about'))
+    else:
+        return redirect('http://' + Config.PHP_DOMAIN + "/bca-apps")
     # user_code = g.user.get_type_code()
     # if user_code == 'ADM':
     #     return render_template("dashboard/admin.html")
@@ -57,4 +61,5 @@ def test():
                 teachers = get_teachers()
                 students = get_students()
                 return render_template("dashboard/test.html", admins=admins, teachers=teachers, students=students)
-    return redirect("http://" + Config.PHP_DOMAIN)
+        return redirect(url_for('dashboard.about'))
+    return redirect('http://' + Config.PHP_DOMAIN + "/bca-apps")
