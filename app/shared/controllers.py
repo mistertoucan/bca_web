@@ -18,9 +18,9 @@ def requires_token(f):
 
         if validate_token(decoded, request.remote_addr, decoded=True):
 
-            g.user = get_user(int(decoded['usr_id'].encode('utf-8')))
+            g.user = get_user(int(decoded['usr_id']))
 
-            token = create_token(decoded['usr_id'].encode('utf-8'), decoded['ip_address'].encode('utf-8'))
+            token = create_token(decoded['usr_id'], decoded['ip_address'].encode('utf-8'))
         else:
             token = None
 

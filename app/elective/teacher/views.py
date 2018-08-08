@@ -66,7 +66,6 @@ def section(id):
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
 @register_breadcrumb(teacher_mod, ".edit", "Edit Elective")
 def edit(id):
-    print("HIT ELECTIVE!")
     elective = get_elective(id)
 
     if elective:

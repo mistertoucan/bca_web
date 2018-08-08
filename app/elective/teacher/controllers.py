@@ -12,7 +12,6 @@ def create_elective(name, desc):
 # uses insert many
 # sections is a list of section_time strings
 def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
-    print(year)
     elective_sections = []
 
     for i in range(len(sections)):
@@ -47,7 +46,6 @@ def add_sections(elective_id, teacher_id, sections, room_nbr, year, tri):
 # uses single insert
 # times is a string of the sections times
 def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
-    print(year)
     time_ids = []
 
     for time_desc in times.split(", "):
@@ -113,7 +111,7 @@ def get_sections(user_id):
 
         section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, section_room_nbr, teacher)
 
-        section.times = get_times(section_id)
+        section.times = get_times_by_section_id(section_id)
 
         sections.append(section)
 
@@ -140,7 +138,7 @@ def get_times(user_id):
 
     return times
 
-def get_times(section_id):
+def get_times_by_section_id(section_id):
     times = []
 
     for result in query(DB.ELECTIVE, "SELECT time.time_id, time.day, time.time_short_desc "
@@ -151,10 +149,6 @@ def get_times(section_id):
         time = ElectiveTime(result[0], result[1], result[2])
 
         times.append(time)
-
-    print('\n\n\n')
-    print(times)
-    print('\n\n\n')
 
     return times
 
@@ -173,7 +167,7 @@ def get_elective(id):
             teacher_id = section[7]
 
             section = ElectiveSection(section[0], None, section[1], section[4], section[3], section[5], section[6], get_teacher(teacher_id))
-            section.times = get_times(section_id=section.id)
+            section.times = get_times_by_section_id(section.id)
 
             elective.sections.append(section)
 

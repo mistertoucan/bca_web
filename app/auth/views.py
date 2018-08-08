@@ -14,7 +14,7 @@ def login():
             password = request.form['password']
 
             if username and password:
-                token = authenticate_user(username, password, request.remote_addr)
+                token = authenticate_user(request.remote_addr, username, password)
                 if token:
                     next_page = request.args.get('next')
                     if not next_page or url_parse(next_page).netloc != '':
