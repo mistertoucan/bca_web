@@ -49,7 +49,7 @@ def create():
 
 @teacher_mod.route('/edit/<int:id>/section', methods=['POST', 'DELETE'])
 def section(id):
-
+    print("section!")
     if request.method == 'POST':
         data = request.json['data']
         section_time = data['section_time']
@@ -67,6 +67,7 @@ def section(id):
         data = request.json['data']
         if delete_section(g.user.get_id(), data['section_id']):
             return jsonify({"Info": "Successfully deleted Section"}), 200
+
         return jsonify({"Info": "You don't have permission to delete this elective!"}), 403
 
     return jsonify({"error": "Invalid route"})
@@ -90,7 +91,6 @@ def edit_students(elective_id, section_id):
         return jsonify({"Info": True})
 
     return render_template("elective/teacher/students.html", students=get_students())
-
 
 @teacher_mod.route('/electives', methods=['GET'])
 def query_elective():
