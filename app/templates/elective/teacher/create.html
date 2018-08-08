@@ -68,10 +68,13 @@
             }
 
             if (valid) {
-                $('input[name="section_time"]').val(mods);
-                $('input[name="section_year"]').val(year);
-                $('input[name="section_tri"]').val(tri_nbr);
-                $('input[name="section_room_nbr"]').val(room_nbr);
+                $('#create_elective').append(`
+                    <input type="hidden" name="section_time" value="${mods}" />
+                    <input type="hidden" name="section_year" value="${year}" />
+                    <input type="hidden" name="section_tri" value="${tri_nbr}" />
+                    <input type="hidden" name="section_room_nbr" value="${room_nbr}" />
+
+                `);
 
                 $('#sections_info tr').eq(-1).before(`
                     <tr>
@@ -185,11 +188,6 @@
     <form id="create_elective" method="post">
 
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
-
-        <input type="hidden" name="section_time">
-        <input type="hidden" name="section_year">
-        <input type="hidden" name="section_tri">
-        <input type="hidden" name="section_room_nbr">
 
         <div id="box" class="container">
             <div class="row">
