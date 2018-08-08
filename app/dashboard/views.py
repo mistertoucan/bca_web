@@ -15,14 +15,14 @@ from app import csrf
 @register_breadcrumb(board_mod, '.', 'Dashboard')
 @requires_token
 def index():
-    user_code = g.user.get_type_code()
-
-    if user_code == 'ADM':
-        return render_template("dashboard/admin.html")
-    elif user_code == 'TCH':
-        return render_template("dashboard/teacher.html")
-    else:
-        return render_template("dashboard/student.html")
+    return redirect('http://' + Config.PHP_DOMAIN)
+    # user_code = g.user.get_type_code()
+    # if user_code == 'ADM':
+    #     return render_template("dashboard/admin.html")
+    # elif user_code == 'TCH':
+    #     return render_template("dashboard/teacher.html")
+    # else:
+    #     return render_template("dashboard/student.html")
 
 @board_mod.route('/about')
 @register_breadcrumb(board_mod, '.about', 'About')
@@ -57,4 +57,4 @@ def test():
                 teachers = get_teachers()
                 students = get_students()
                 return render_template("dashboard/test.html", admins=admins, teachers=teachers, students=students)
-    return redirect(url_for("dashboard.index"))
+    return redirect("http://" + Config.PHP_DOMAIN)
