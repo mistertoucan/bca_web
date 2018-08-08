@@ -4,6 +4,8 @@ from app.elective.teacher.models import *
 
 from app.shared.models import User
 
+from datetime import datetime
+
 # creates an elective and returns its id
 def create_elective(name, desc):
     insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`) VALUES (%s, %s)", (name, desc))
@@ -82,6 +84,9 @@ def get_sections(user_id):
         section_room_nbr = result[6]
 
         section_teacher_id = result[6]
+
+        if int(section_year.split("-")[0]) < datetime.utcnow().year:
+            continue
 
         teacher = get_teacher(section_teacher_id)
 
