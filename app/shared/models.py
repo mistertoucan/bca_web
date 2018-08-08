@@ -24,13 +24,13 @@ class User(object):
     def load_apps(self):
         typeCode = self.get_type_code()
 
-        apps = query(DB.SHARED, 'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon '
+        apps = query(DB.SHARED, 'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon, app_type '
                                 'FROM menu_item m, menu_item_user_type_xref ux '
                                 'WHERE m.menu_id = ux.menu_id '
                                 'AND ux.usr_type_cde = %s '
                                 'AND active = 1 '
                                 'union '
-                                'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon '
+                                'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon, app_type '
                                 'FROM menu_item m, menu_item_user_role_xref ur, role_application_user_xref ax '
                                 'WHERE m.menu_id = ur.menu_id '
                                 'and ur.usr_role_cde = ax.usr_role_cde '
