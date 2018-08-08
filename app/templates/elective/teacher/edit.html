@@ -85,7 +85,7 @@
 
                 $.ajax({
                     type : 'POST',
-                    url : "./{{ elective.id }}/section",
+                    url : "/{{ elective.id }}/section",
                     contentType: 'application/json;charset=UTF-8',
                     data : {
                         'elective_id': {{ elective.id }},

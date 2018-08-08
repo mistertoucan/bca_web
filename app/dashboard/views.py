@@ -32,6 +32,7 @@ def index():
 @register_breadcrumb(board_mod, '.about', 'About')
 @requires_token
 def about():
+
     return render_template("dashboard/about.html")
 
 @board_mod.route('/test', methods=['GET', 'POST'])

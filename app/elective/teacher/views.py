@@ -47,12 +47,11 @@ def create():
 
     return render_template("elective/teacher/create.html", electives=get_sections(g.user.get_id()))
 
-@teacher_mod.route('/edit/<int:id>/section', methods=['GET', 'POST', 'PUT', 'DELETE'])
+@teacher_mod.route('/edit/<int:id>/section', methods=['POST', 'DELETE'])
 def section(id):
 
     if request.method == 'POST':
         data = request.json['data']
-
         section_time = data['section_time']
         section_year = data['section_year']
         section_tri = data['section_tri']
@@ -60,11 +59,28 @@ def section(id):
 
         if section_time and section_year and section_tri and section_room_nbr:
             add_section(id, g.user.get_id(), section_time, section_room_nbr, section_year, section_tri)
-            return jsonify({"success": True})
+            return jsonify({"Info": True})
 
-        return jsonify({"success": False})
+        return jsonify({"Info": False})
+
+    elif request.method == 'DELETE':
+        data = request.json['data']
+        if delete_section(g.user.get_id(), data['section_id']):
+            return jsonify({"Info": "Successfully deleted Section"}), 200
+        return jsonify({"Info": "You don't have permission to delete this elective!"}), 403
 
     return jsonify({"error": "Invalid route"})
+
+@teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
+def add_students(elective_id, section_id):
+
+    if request.method == 'GET':
+        return render_template("elective/teacher/students.html", students=get_students())
+
+
+@teacher_mod.route('/electives', methods=['GET'])
+def query_elective():
+    return render_template("elective/teacher/electives.html", electives=get_electives())
 
 @teacher_mod.route('/edit/<int:id>', methods=['GET', 'POST'])
 @register_breadcrumb(teacher_mod, ".edit", "Edit Elective")
@@ -75,11 +91,3 @@ def edit(id):
         return render_template("elective/teacher/edit.html", elective=elective)
     else:
         return redirect(url_for('elective_teacher.index'))
-
-@teacher_mod.route('/delete/<int:section_id>', methods=['POST'])
-def delete(section_id):
-    deleted = delete_section(g.user.get_id(), section_id)
-
-    if deleted:
-        return jsonify({"Response": "Success"}), 200
-    return jsonify({"Error": "You don't have permission to delete this section!"}), 403

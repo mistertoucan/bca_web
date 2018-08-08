@@ -58,7 +58,7 @@
                                     <td>{{ section.getTimes() }}</td>
                                     <td>{{ section.room_nbr }}</td>
                                     <td>{{ section.enrolled }}/{{ section.max }}</td>
-                                    <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">person_add</i></a> <a href="#" onclick="deleteSection('{{ section.elective.name + "| " + section.getTimes() }}',{{ section.id }})"><i class="material-icons">delete</i></a></td>
+                                    <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">person_add</i></a> <a href="#" onclick="deleteSection('{{ section.elective.name + "| " + section.getTimes() }}', {{ section.elective.id }},{{ section.id }})"><i class="material-icons">delete</i></a></td>
                               </tr>
 
                           {% endfor %}
@@ -95,10 +95,15 @@
         });
 
 
-        function deleteSection(section_name, section_id) {
+        function deleteSection(section_name, elective_id, section_id) {
             alertify.confirm("Are you sure you want to delete section " + section_name + "?", function() {
                 $.ajax({
-                    url: 'http://' + {{ config.LOCAL_DOMAIN }} + '/elective_teacher/delete/' + section_id
+                    type: 'DELETE',
+                    url: 'http://' + {{ config.LOCAL_DOMAIN }} + '/elective_teacher/delete/' + section_id,
+                    contentType: 'application/json;charset=UTF-8',
+                    data: {
+                        'section_id': section_id
+                    }
                 }).done(function(data) {
                     console.log(data);
                     alertify.success("Deleted " + section_name);
