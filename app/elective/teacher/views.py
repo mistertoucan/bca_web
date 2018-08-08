@@ -80,12 +80,14 @@ def edit_students(elective_id, section_id):
         user_id = data['usr_id']
 
         remove_student(section_id, user_id)
+        return jsonify({"Info": True})
     elif request.method == 'DELETE':
         data = request.json['data']
 
         user_id = data['usr_id']
 
         remove_student(section_id, user_id)
+        return jsonify({"Info": True})
 
     return render_template("elective/teacher/students.html", students=get_students())
 
