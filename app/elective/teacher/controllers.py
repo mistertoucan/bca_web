@@ -54,6 +54,18 @@ def get_electives():
 
     return electives
 
+def get_students():
+
+    users = query(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name "
+                             "FROM user ", [])
+
+    students = []
+
+    for user in users:
+        students.append(Student(user[0], user[1], user[2]))
+
+    return students
+
 def get_sections(user_id):
     elective_sections = query(DB.ELECTIVE, "SELECT es.elective_id, es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id "
                                            "FROM elective_section es  "
