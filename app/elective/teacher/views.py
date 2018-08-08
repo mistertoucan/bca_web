@@ -72,10 +72,17 @@ def section(id):
     return jsonify({"error": "Invalid route"})
 
 @teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
-def add_students(elective_id, section_id):
+def edit_students(elective_id, section_id):
 
     if request.method == 'GET':
         return render_template("elective/teacher/students.html", students=get_students())
+    # elif request.method == 'POST':
+    #     data = request.json['data']
+    #
+    #     user_id = data['usr_id']
+    return ""
+
+
 
 
 @teacher_mod.route('/electives', methods=['GET'])
