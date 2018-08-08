@@ -66,6 +66,13 @@ def get_students():
 
     return students
 
+def add_student(section_id, user_id):
+    insert(DB.ELECTIVE, "INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%s, %s)", [section_id, user_id])
+
+def remove_student(section_id, user_id):
+    delete(DB.ELECTIVE, "DELETE FROM elective_user_xref "
+                        "WHERE section_id=%s "
+                        "AND usr_id=%s", [section_id, user_id])
 
 def get_sections(user_id):
     elective_sections = query(DB.ELECTIVE, "SELECT es.elective_id, es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id "
