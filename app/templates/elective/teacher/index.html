@@ -96,14 +96,15 @@
 
 
         function deleteSection(section_name, elective_id, section_id) {
+
+            var requestData = {'section_id': section_id};
+
             alertify.confirm("Are you sure you want to delete section " + section_name + "?", function() {
-                $.ajax({
-                    type: 'DELETE',
+                $.ajax( {
                     url: 'http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/' + elective_id + '/section',
+                    type: 'DELETE',
+                    data: JSON.stringify(requestData),
                     contentType: 'application/json',
-                    data: {
-                        'section_id': section_id
-                    },
                     dataType: "json"
                 }).done(function(data) {
                     console.log(data);

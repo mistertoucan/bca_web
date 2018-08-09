@@ -54,7 +54,8 @@ def get_electives():
 
     return electives
 
-def get_students():
+# Exclude is a list of user ids which should be excluded from the query
+def get_students(exclude=[]):
     users = query(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
                              "FROM user "
                              "WHERE usr_type_cde='STD'", [])
@@ -62,9 +63,25 @@ def get_students():
     students = []
 
     for user in users:
-        students.append(Student(user[0], user[1], user[2], user[3], user[4]))
+        if not user[0] in exclude:
+            students.append(Student(user[0], user[1], user[2], user[3], user[4]))
 
     return students
+
+def get_section_students(section_id):
+    users = query(DB.ELECTIVE, "SELECT usr_id FROM elective_user_xref WHERE section_id=%s", [section_id])
+
+    students = []
+
+    for user in users:
+        info = query_one(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
+                             "FROM user "
+                             "WHERE usr_type_cde='STD' "
+                             "AND usr_id=%s", [user[0]])
+        students.append(Student(info[0], info[1], info[2], info[3], info[4]))
+
+    return students
+
 
 def add_student(section_id, user_id):
     insert(DB.ELECTIVE, "INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%s, %s)", [section_id, user_id])
@@ -177,9 +194,11 @@ def get_elective(id):
     return None
 
 def delete_section(teacher_id, section_id):
-    can_delete = query_one(DB.ELECTIVE, "SELECT elective_id FROM elective_section WHERE section_id=%s AND teacher_id=%s", [teacher_id, section_id]) != None
+    can_delete = query_one(DB.ELECTIVE, "SELECT * FROM elective_section WHERE section_id=%s AND teacher_id=%s", [section_id, teacher_id]) != None
 
     if can_delete:
+        delete(DB.ELECTIVE, "DELETE FROM elective_user_xref WHERE section_id=%s", [section_id])
+        delete(DB.ELECTIVE, "DELETE FROM elective_section_time_xref WHERE section_id=%s", [section_id])
         delete(DB.ELECTIVE, "DELETE FROM elective_section WHERE section_id=%s", [section_id])
         return True
     return False
