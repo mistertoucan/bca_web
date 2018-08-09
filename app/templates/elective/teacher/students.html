@@ -1,1 +1,89 @@
 {% extends "base.html" %}
+
+{% block styles %}
+
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('static', filename="css/elective/create/main.css") }}">
+
+{% endblock %}
+
+{% block content %}
+
+    <form id="add_form" action="./students" method="post" style="display: none;">
+        <input type="hidden" name="action" value="add">
+        <input type="hidden" name="usr_id" id="add_student">
+    </form>
+
+    <form action="./students" method="post" id="delete_form" style="display: none;">
+        <input type="hidden" name="action" value="delete">
+        <input type="hidden" name="usr_id" id="delete_student">
+    </form>
+
+<div id="box">
+    <div class="container center-align">
+        <h3 class="title">Add Students</h3>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="material-icons prefix">group_add</i>
+                <input id="student" type="text" class="autocomplete" placeholder="">
+                <label for="student">Add Students</label>
+            </div>
+        </div>
+
+        <table class="centered">
+            <thead>
+                <tr>
+                    <th>Last Name</th>
+                    <th>First Name</th>
+                    <th>Academy</th>
+                    <th>Class Year</th>
+                    <th></th> {# Delete #}
+                </tr>
+            </thead>
+            <tbody>
+            {% for student in elective_students %}
+                <tr>
+                    <td>{{ student.last_name }}</td>
+                    <td>{{ student.first_name }}</td>
+                    <td>{{ student.academy }}</td>
+                    <td>{{ student.class_year }}</td>
+                    <td style="cursor: pointer" onclick="$('#delete_student').val({{ student.id }}); $('#delete_form').submit()">
+                        <i class="material-icons">delete</i>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script>
+
+    ids = {
+        {% for student in global_students %}
+            "{{ "%s, %s (%s %d)" % (student.last_name, student.first_name, student.academy, student.class_year) }}": {{ student.id }},
+        {% endfor %}
+    };
+
+    $(document).ready(function() {
+        $('#student.autocomplete').autocomplete({
+            data: {
+                {% for student in global_students %}
+                    "{{ "%s, %s (%s %d)" % (student.last_name, student.first_name, student.academy, student.class_year) }}": null,
+                {% endfor %}
+            },
+            onAutocomplete: function(val) {
+                student_id = ids[val];
+                $("#add_student").val(student_id);
+                $("#add_form").submit();
+            },
+            minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
+        });
+    });
+
+    </script>
+{% endblock %}

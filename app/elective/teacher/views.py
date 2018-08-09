@@ -75,7 +75,6 @@ def section(id):
 
 @teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
 def edit_students(elective_id, section_id):
-
     if request.method == 'POST':
         data = request.form
         if 'usr_id' in data and 'action' in data:
