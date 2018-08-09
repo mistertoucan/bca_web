@@ -74,6 +74,7 @@ def section(id):
     return jsonify({"error": "Invalid route"})
 
 @teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
+@register_breadcrumb(teacher_mod, '.edit_students', "Edit Students")
 def edit_students(elective_id, section_id):
     if request.method == 'POST':
         data = request.form
@@ -92,6 +93,7 @@ def edit_students(elective_id, section_id):
     return render_template("elective/teacher/students.html", elective_students=section_students, global_students=get_students(ids))
 
 @teacher_mod.route('/electives', methods=['GET'])
+@register_breadcrumb(teacher_mod, '.query_elective', "Electives")
 def query_elective():
     return render_template("elective/teacher/electives.html", electives=get_electives())
 
