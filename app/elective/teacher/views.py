@@ -74,7 +74,7 @@ def section(id):
     return jsonify({"error": "Invalid route"})
 
 @teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
-@register_breadcrumb(teacher_mod, '.edit_students', "Edit Students")
+@register_breadcrumb(teacher_mod, '.edit_students', "Add Students")
 def edit_students(elective_id, section_id):
     if request.method == 'POST':
         data = request.form
