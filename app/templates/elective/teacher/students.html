@@ -21,7 +21,6 @@
 
 <div id="box">
     <div class="container center-align">
-        <h3 class="title">Add Students</h3>
         <div class="row">
             <div class="input-field col s12">
                 <i class="material-icons prefix">group_add</i>
@@ -81,7 +80,7 @@
                 $("#add_student").val(student_id);
                 $("#add_form").submit();
             },
-            minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
+            minLength: 1, // The minimum length of the input for the autocomplete to start. Default: 1.
         });
     });
 
