@@ -85,15 +85,15 @@
 
                 $.ajax({
                     type : 'POST',
-                    url : "/{{ elective.id }}/section",
-                    contentType: 'application/json;charset=UTF-8',
+                    url : "http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/{{ elective.id }}/section",
+                    contentType: 'application/json',
                     data : JSON.stringify({
-                        'elective_id': {{ elective.id }},
                         'section_time': mods,
                         'section_year': year,
                         'section_tri': tri_nbr,
                         'section_room_nbr': room_nbr
-                    })
+                    }),
+                    dataType: "json"
                 });
             }
         }

@@ -18,6 +18,23 @@
         <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='jquery-ui/jquery-ui.js') }}"></script>
         <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+
+{#        <script type="text/javascript">#}
+{##}
+{#            $(document).ready(function() {#}
+{##}
+{#                {% with messages = get_flashed_messages() %}#}
+{#                    {% if messages %}#}
+{#                        alertify.notify({{ message }}, 'success', 5, function() {#}
+{#                            #}
+{#                        });#}
+{#                    {% endif %}#}
+{#                {% endwith %}#}
+{##}
+{#            });#}
+{##}
+{#        </script>#}
+
     {% endblock %}
 </head>
 <body>

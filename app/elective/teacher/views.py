@@ -5,7 +5,7 @@ from app.shared.controllers import requires_token
 
 from flask_breadcrumbs import register_breadcrumb
 
-from flask import g, redirect, render_template, request, url_for, jsonify
+from flask import g, redirect, render_template, request, url_for, jsonify, flash
 
 import collections
 
@@ -28,6 +28,7 @@ def create():
     if request.method == 'POST':
         elective_name = request.form['elective_name']
         elective_desc = request.form['elective_desc']
+        elective_course_id = request.form.get['elective_course_id']
 
         sections = request.form.getlist('section_time')
         section_room_nbr = request.form.getlist('section_room_nbr')
@@ -36,7 +37,7 @@ def create():
 
 
         if elective_name and elective_desc and sections and section_room_nbr and section_year and section_tri:
-            elective_id = create_elective(elective_name, elective_desc)
+            elective_id = create_elective(elective_name, elective_desc, course_id=elective_course_id)
 
             if isinstance(sections, collections.Iterable):
                 add_sections(elective_id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
@@ -51,7 +52,7 @@ def create():
 def section(id):
     data = request.get_json(force=True, silent=True)
 
-    if request.method == 'PUT':
+    if request.method == 'POST':
         section_time = data['section_time']
         section_year = data['section_year']
         section_tri = data['section_tri']
@@ -103,6 +104,15 @@ def edit(id):
     elective = get_elective(id)
 
     if elective:
-        return render_template("elective/teacher/edit.html", elective=elective)
+
+        if request.method == 'POST':
+
+            name = request.form['elective_name']
+            desc = request.form['elective_desc']
+
+
+            return redirect('elective_teacher.index')
+        else:
+            return render_template("elective/teacher/edit.html", elective=elective)
     else:
         return redirect(url_for('elective_teacher.index'))

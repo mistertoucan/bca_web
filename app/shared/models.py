@@ -57,7 +57,7 @@ class User(object):
 
     @staticmethod
     def get(id):
-        result = query_one(DB.SHARED, 'SELECT * FROM user WHERE usr_id=%s LIMIT 1', [id])
+        result = query_one(DB.SHARED, 'SELECT * FROM user WHERE usr_id=%s AND usr_active=1 LIMIT 1', [id])
         if result:
             type_cde = query_one(DB.SHARED, 'SELECT usr_type_cde FROM user WHERE usr_id = %s', [id])[0]
 

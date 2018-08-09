@@ -7,9 +7,20 @@ from app.shared.models import User
 from datetime import datetime
 
 # creates an elective and returns its id
-def create_elective(name, desc):
-    insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`) VALUES (%s, %s)", (name, desc))
-    return query_one(DB.ELECTIVE, "SELECT elective_id FROM elective WHERE name=%s and `desc`=%s", [name, desc])[0]
+def create_elective(name, desc, course_id, prereq):
+    if not course_id:
+        if prereq:
+            insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`, course_id, prereq) VALUES (%s, %s, %s, %s)", (name, desc, course_id, prereq))
+        else:
+            insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`, course_id) VALUES (%s, %s, %s, %s)",
+                   (name, desc, course_id))
+    else:
+        if prereq:
+            insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`, prereq) VALUES (%s, %s, %s)", (name, desc, prereq))
+        else:
+            insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`) VALUES (%s, %s)", (name, desc))
+
+    return query_one(DB.ELECTIVE, "SELECT elective_id FROM elective WHERE name=%s AND `desc`=%s", [name, desc])[0]
 
 # uses insert many
 # sections is a list of section_time strings
@@ -56,7 +67,7 @@ def get_electives():
 
 # Exclude is a list of user ids which should be excluded from the query
 def get_students(exclude=[]):
-    users = query(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
+    users = query(DB.ELECTIVE, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
                              "FROM user "
                              "WHERE usr_type_cde='STD'", [])
 
@@ -74,7 +85,7 @@ def get_section_students(section_id):
     students = []
 
     for user in users:
-        info = query_one(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
+        info = query_one(DB.ELECTIVE, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
                              "FROM user "
                              "WHERE usr_type_cde='STD' "
                              "AND usr_id=%s", [user[0]])
