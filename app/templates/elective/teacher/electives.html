@@ -1,7 +1,59 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    {{ super() }}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/elective/main.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript">
+        let electives = {
+            {% for elective in electives %}
+                "{{ "%s : %d" % (elective.name, elective.id) }}" : null,
+            {% endfor %}
+        };
+
+        let ids = {
+            {% for elective in electives %}
+                "{{ elective.name }}" : {{ elective.id }},
+            {% endfor %}
+        };
+
+        $(document).ready(function() {
+            $('input.autocomplete').autocomplete({
+                data: electives,
+                limit: Infinity, // The max amount of results that can be shown at once. Default: Infinity.
+                onAutocomplete: function(val) {
+                  location.href = `http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/${ids[val]}`;
+                },
+                minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
+            });
+        });
+
+    </script>
+{% endblock %}
+
 {% block content %}
 
+    <div id="box" class="container">
 
+        <div class="row">
+            <div class="col s12 center-align">
+                <h3 class="title">Edit Existing Elective</h3>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s6 offset-s3" style="margin-top: 25px">
+                <i class="material-icons prefix">search</i>
+                <input type="text" id="search" class="autocomplete" placeholder="Enter an Elective Name...">
+                <label for="search">Elective Search</label>
+            </div>
+        </div>
+
+    </div>
 
 {% endblock %}
