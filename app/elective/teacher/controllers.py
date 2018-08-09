@@ -82,7 +82,6 @@ def get_section_students(section_id):
 
     return students
 
-
 def add_student(section_id, user_id):
     insert(DB.ELECTIVE, "INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%s, %s)", [section_id, user_id])
 
@@ -131,6 +130,9 @@ def get_sections(user_id):
         section = ElectiveSection(section_id, elective, section_nbr, section_tri, section_year, section_max, section_room_nbr, teacher)
 
         section.times = get_times_by_section_id(section_id)
+
+        section.enrolled = query_one(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_user_xref "
+                                                  "WHERE section_id=%s", [section_id])[0]
 
         sections.append(section)
 
