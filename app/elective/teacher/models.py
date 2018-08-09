@@ -1,9 +1,10 @@
 class Elective(object):
 
-    def __init__(self, id, name, desc):
+    def __init__(self, id, name, desc, course_id):
+        self.id = id
         self.name = name
         self.desc = desc
-        self.id = id
+        self.course_id = course_id
 
         self.sections = []
 
