@@ -87,7 +87,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $(".collapsible").collapsible();
-            $(".fixed-action-btn").floatingActionButton();
+            {#$(".fixed-action-btn").floatingActionButton();#}
 
             $(".edit_icon").on('click', function(event) {
                 event.stopPropagation();
@@ -99,16 +99,22 @@
             alertify.confirm("Are you sure you want to delete section " + section_name + "?", function() {
                 $.ajax({
                     type: 'DELETE',
-                    url: 'http://' + {{ config.LOCAL_DOMAIN }} + '/elective_teacher/delete/' + section_id,
-                    contentType: 'application/json;charset=UTF-8',
+                    url: 'http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/' + elective_id + '/section',
+                    contentType: 'application/json',
                     data: {
                         'section_id': section_id
-                    }
+                    },
+                    dataType: "json"
                 }).done(function(data) {
                     console.log(data);
+                    console.log("Returned");
                     alertify.success("Deleted " + section_name);
                     $("#section.id").slideToggle();
+                }).fail(function(data) {
+                    console.log(data);
+                    alertify.error("Server Error! Please try again later.")
                 });
+
             })
         }
     </script>
