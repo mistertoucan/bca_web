@@ -78,15 +78,14 @@ def edit_students(elective_id, section_id):
 
     if request.method == 'POST':
         data = request.form
-        if 'usr_id' in data:
+        if 'usr_id' in data and 'action':
             usr_id = data['usr_id']
-            add_student(section_id, usr_id)
+            action = data['action']
 
-    elif request.method == 'DELETE':
-        data = request.form
-        if 'usr_id' in data:
-            usr_id = data['usr_id']
-            remove_student(section_id, usr_id)
+            if action.lower() == 'add':
+                add_student(section_id, usr_id)
+            elif action.lower() == 'delete':
+                remove_student(section_id, usr_id)
 
     section_students = get_section_students(section_id)
     ids = [x.id for x in section_students]
