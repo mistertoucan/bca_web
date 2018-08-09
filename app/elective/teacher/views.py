@@ -80,7 +80,8 @@ def edit_students(elective_id, section_id):
         data = request.form
         if 'usr_id' in data:
             usr_id = data['usr_id']
-            remove_student(section_id, usr_id)
+            add_student(section_id, usr_id)
+
     elif request.method == 'DELETE':
         data = request.form
         if 'usr_id' in data:
