@@ -64,7 +64,9 @@ class ElectiveTime(object):
 
 class Student(object):
 
-    def __init__(self, id, first_name, last_name):
+    def __init__(self, id, first_name, last_name, academy, class_year):
         self.id = id
         self.first_name = first_name
         self.last_name = last_name
+        self.academy = academy
+        self.class_year = class_year

@@ -56,14 +56,14 @@ def get_electives():
 
 def get_students():
 
-    users = query(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name "
+    users = query(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
                              "FROM user "
                              "WHERE usr_type_cde='STD'", [])
 
     students = []
 
     for user in users:
-        students.append(Student(user[0], user[1], user[2]))
+        students.append(Student(user[0], user[1], user[2], user[3], user[4]))
 
     return students
 
