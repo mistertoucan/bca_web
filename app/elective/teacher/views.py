@@ -78,7 +78,7 @@ def edit_students(elective_id, section_id):
 
     if request.method == 'POST':
         data = request.form
-        if 'usr_id' in data and 'action':
+        if 'usr_id' in data and 'action' in data:
             usr_id = data['usr_id']
             action = data['action']
 
