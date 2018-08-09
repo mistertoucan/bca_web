@@ -77,19 +77,15 @@ def section(id):
 def edit_students(elective_id, section_id):
 
     if request.method == 'POST':
-        data = request.json['data']
-
-        user_id = data['usr_id']
-
-        remove_student(section_id, user_id)
-        return jsonify({"Info": True})
+        data = request.form
+        if 'usr_id' in data:
+            usr_id = data['usr_id']
+            remove_student(section_id, usr_id)
     elif request.method == 'DELETE':
-        data = request.json['data']
-
-        user_id = data['usr_id']
-
-        remove_student(section_id, user_id)
-        return jsonify({"Info": True})
+        data = request.form
+        if 'usr_id' in data:
+            usr_id = data['usr_id']
+            remove_student(section_id, usr_id)
 
     section_students = get_section_students(section_id)
     ids = [x.id for x in section_students]
