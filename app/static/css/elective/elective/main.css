@@ -1,0 +1,49 @@
+#box {
+    display: table;
+    background-color: #fefefe;
+    margin: auto auto 20px;
+    width: 900px !important;
+    height: 80vh !important;
+    -moz-box-shadow: 1px 1px 1px #a8a8a8;
+    -webkit-box-shadow: 1px 1px 1px #a8a8a8;
+    /*box-shadow: 3px 2px 3px 2px #a8a8a8;*/
+    box-shadow: 1px 3px 10px 2px #a8a8a8;
+    padding: 30px 30px 30px 30px;
+}
+
+ul.autocomplete-content.dropdown-content {
+    max-height: 350px;
+}
+
+/* label color */
+.input-field label {
+ color: #000;
+}
+
+/* label focus color */
+.input-field input[type=text]:focus + label {
+ color: #000;
+}
+
+/* label underline focus color */
+.input-field input[type=text]:focus {
+ border-bottom: 1px solid #000;
+ box-shadow: 0 1px 0 0 #000;
+}
+
+/* valid color */
+.input-field input[type=text].valid {
+ border-bottom: 1px solid #000;
+ box-shadow: 0 1px 0 0 #000;
+}
+
+/* invalid color */
+.input-field input[type=text].invalid {
+ border-bottom: 1px solid #000;
+ box-shadow: 0 1px 0 0 #000;
+}
+
+/* icon prefix focus color */
+.input-field .prefix.active {
+ color: #000;
+}
