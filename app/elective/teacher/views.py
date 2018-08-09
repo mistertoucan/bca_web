@@ -49,7 +49,8 @@ def create():
 
 @teacher_mod.route('/edit/<int:id>/section', methods=['GET', 'POST', 'DELETE'])
 def section(id):
-    print(request.data)
+    print(request.json)
+    print(request)
     if request.method == 'POST':
         data = request.data
         section_time = data['section_time']
@@ -64,8 +65,7 @@ def section(id):
         return jsonify({"Info": False})
 
     elif request.method == 'DELETE':
-        data = request.get_json()
-        section_id = data.get('section_id')
+        section_id = 1
         if delete_section(g.user.get_id(), section_id):
             return jsonify({"Info": "Successfully deleted Section"}), 200
 

@@ -55,7 +55,6 @@ def get_electives():
     return electives
 
 def get_students():
-
     users = query(DB.SHARED, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
                              "FROM user "
                              "WHERE usr_type_cde='STD'", [])

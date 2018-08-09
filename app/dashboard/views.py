@@ -30,8 +30,9 @@ def index():
 @register_breadcrumb(board_mod, '.about', 'About')
 @requires_token
 def about():
-
-    return render_template("dashboard/about.html")
+    if Config.DEBUG:
+        return render_template('dashboard/about.html')
+    return redirect('http://' + Config.PHP_DOMAIN + "/bca-apps/")
 
 @board_mod.route('/test', methods=['GET', 'POST'])
 def test():
