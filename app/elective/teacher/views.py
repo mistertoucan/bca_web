@@ -47,11 +47,11 @@ def create():
 
     return render_template("elective/teacher/create.html", electives=get_sections(g.user.get_id()))
 
-@teacher_mod.route('/edit/<int:id>/section', methods=['POST', 'DELETE'])
+@teacher_mod.route('/edit/<int:id>/section/', methods=['GET', 'POST', 'DELETE'])
 def section(id):
-    print("section!")
+    data = request.get_json(force=True, silent=True)
+
     if request.method == 'POST':
-        data = request.json['data']
         section_time = data['section_time']
         section_year = data['section_year']
         section_tri = data['section_tri']
@@ -64,33 +64,33 @@ def section(id):
         return jsonify({"Info": False})
 
     elif request.method == 'DELETE':
-        data = request.json['data']
-        if delete_section(g.user.get_id(), data['section_id']):
+
+        section_id = data['section_id']
+
+        if delete_section(g.user.get_id(), section_id):
             return jsonify({"Info": "Successfully deleted Section"}), 200
 
         return jsonify({"Info": "You don't have permission to delete this elective!"}), 403
-
     return jsonify({"error": "Invalid route"})
 
 @teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
 def edit_students(elective_id, section_id):
 
     if request.method == 'POST':
-        data = request.json['data']
-
-        user_id = data['usr_id']
-
-        remove_student(section_id, user_id)
-        return jsonify({"Info": True})
+        data = request.form
+        if 'usr_id' in data:
+            usr_id = data['usr_id']
+            remove_student(section_id, usr_id)
     elif request.method == 'DELETE':
-        data = request.json['data']
+        data = request.form
+        if 'usr_id' in data:
+            usr_id = data['usr_id']
+            remove_student(section_id, usr_id)
 
-        user_id = data['usr_id']
+    section_students = get_section_students(section_id)
+    ids = [x.id for x in section_students]
 
-        remove_student(section_id, user_id)
-        return jsonify({"Info": True})
-
-    return render_template("elective/teacher/students.html", students=get_students())
+    return render_template("elective/teacher/students.html", elective_students=section_students, global_students=get_students(ids))
 
 @teacher_mod.route('/electives', methods=['GET'])
 def query_elective():

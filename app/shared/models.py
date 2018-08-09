@@ -7,7 +7,6 @@ class User(object):
 
     def __init__(self, id):
         self.__usr_id__ = id
-        self.apps = self.load_apps()
         self.name = self.load_name()
 
     def get_id(self):
@@ -21,7 +20,7 @@ class User(object):
                          [self.__usr_id__])
 
     # returns a list of menu items the user has access to
-    def load_apps(self):
+    def get_apps(self):
         typeCode = self.get_type_code()
 
         apps = query(DB.SHARED, 'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon, app_type '
@@ -39,9 +38,6 @@ class User(object):
                                 'AND active = 1 '
                                 'ORDER BY sort_order ', [typeCode, self.__usr_id__])
         return apps
-
-    def get_apps(self):
-        return self.apps
 
     def get_type_code(self):
         return query_one(DB.SHARED, 'SELECT usr_type_cde FROM user WHERE usr_id = %s', [self.__usr_id__])[0]

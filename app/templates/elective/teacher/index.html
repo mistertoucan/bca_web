@@ -42,8 +42,8 @@
                               <th>Elective</th>
                               <th>Tri/Course Year</th>
                               <th>Days</th>
-                              <th>Room #</th>
-                              <th>Students #</th>
+                              <th>Room</th>
+                              <th>Students</th>
                               <th>Actions</th>
                           </tr>
                         </thead>
@@ -58,7 +58,7 @@
                                     <td>{{ section.getTimes() }}</td>
                                     <td>{{ section.room_nbr }}</td>
                                     <td>{{ section.enrolled }}/{{ section.max }}</td>
-                                    <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit_students', elective_id=section.elective.id, section_id=section.id) }}"><i class="material-icons">person_add</i></a> <a href="#" onclick="deleteSection('{{ section.elective.name + "| " + section.getTimes() }}', {{ section.elective.id }},{{ section.id }})"><i class="material-icons">delete</i></a></td>
+                                    <td> <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a> <a href="{{ url_for('elective_teacher.edit_students', elective_id=section.elective.id, section_id=section.id) }}"><i class="material-icons">person_add</i></a> <a href="#" onclick="deleteSection({{ "\"" + section.elective.name + "| " + section.getTimes() + "\"" }}, {{ section.elective.id }},{{ section.id }})"><i class="material-icons">delete</i></a></td>
                               </tr>
 
                           {% endfor %}
@@ -87,7 +87,7 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $(".collapsible").collapsible();
-            $(".fixed-action-btn").floatingActionButton();
+            {#$(".fixed-action-btn").floatingActionButton();#}
 
             $(".edit_icon").on('click', function(event) {
                 event.stopPropagation();
@@ -96,18 +96,24 @@
 
 
         function deleteSection(section_name, elective_id, section_id) {
+
+            var requestData = {'section_id': section_id};
+
             alertify.confirm("Are you sure you want to delete section " + section_name + "?", function() {
                 $.ajax({
+                    url: 'http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/' + elective_id + '/section',
                     type: 'DELETE',
-                    url: 'http://' + {{ config.LOCAL_DOMAIN }} + '/elective_teacher/delete/' + section_id,
-                    contentType: 'application/json;charset=UTF-8',
-                    data: {
-                        'section_id': section_id
-                    }
+                    data: JSON.stringify(requestData),
+                    contentType: 'application/json',
+                    dataType: "json"
                 }).done(function(data) {
                     console.log(data);
+                    console.log("Returned");
                     alertify.success("Deleted " + section_name);
-                    $("#section.id").slideToggle();
+                    $("#" + section_id).hide('fade');
+                }).fail(function(data) {
+                    console.log(data);
+                    alertify.error("Server Error! Please try again later.")
                 });
             })
         }

@@ -13,6 +13,5 @@ setup(
                       'python-ldap',
                       'flask-breadcrumbs',
                       'enum',
-                      'pyjwt',
-                      'flask_wtf']
+                      'pyjwt']
     )
