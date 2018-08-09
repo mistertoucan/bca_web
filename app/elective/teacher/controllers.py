@@ -195,6 +195,9 @@ def get_elective(id):
 
 def delete_section(teacher_id, section_id):
     can_delete = query_one(DB.ELECTIVE, "SELECT * FROM elective_section WHERE section_id=%s AND teacher_id=%s", [section_id, teacher_id]) != None
+    print(can_delete)
+    print(teacher_id)
+    print(section_id)
 
     if can_delete:
         delete(DB.ELECTIVE, "DELETE FROM elective_user_xref WHERE section_id=%s", [section_id])

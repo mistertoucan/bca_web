@@ -53,7 +53,7 @@ def insert(db, statement, vars):
 
     cur.execute(statement, vars)
 
-    mysql.connection.commit()
+    cur.connection.commit()
 
     log_print("INSERT", db, statement, vars)
 
@@ -63,7 +63,7 @@ def insertmany(db, statement, data):
 
     cur.executemany(statement, data)
 
-    mysql.connection.commit()
+    cur.connection.commit()
 
     log_print("INSERT", db, statement, data)
 
@@ -77,7 +77,7 @@ def update(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    mysql.connection.commit()
+    cur.connection.commit()
 
     log_print("UPDATED", db, statement, vars)
 
@@ -91,7 +91,7 @@ def delete(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    mysql.connection.commit()
+    cur.connection.commit()
 
     log_print("DELETE", db, statement, vars)
 
