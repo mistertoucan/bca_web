@@ -51,7 +51,7 @@ def create():
 def section(id):
     data = request.get_json(force=True, silent=True)
 
-    if request.method == 'POST':
+    if request.method == 'PUT':
         section_time = data['section_time']
         section_year = data['section_year']
         section_tri = data['section_tri']

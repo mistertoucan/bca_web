@@ -30,7 +30,10 @@ def query(db, statement, vars=""):
         cur.execute(statement)
 
     log_print("QUERY", db, statement, vars)
-    return cur.fetchall()
+
+    result = cur.fetchall()
+    cur.connection.commit()
+    return result
 
 
 # only searches for one return option/value
@@ -44,8 +47,12 @@ def query_one(db, statement, vars=""):
         cur.execute(statement)
 
     log_print("QUERY", db, statement, vars)
-    return cur.fetchone()
 
+    result = cur.fetchone()
+
+    cur.connection.commit()
+
+    return result
 
 def insert(db, statement, vars):
     cur = mysql.connection.cursor()
