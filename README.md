@@ -1,5 +1,6 @@
 # bca_web
 My rewrite of the BCA web framework in Python Flask
+*Please use Python 2.7 to avoid version issues
 
 ## Setup
 1. `cd bca_web` - Navigate to the folder
