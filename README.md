@@ -4,7 +4,7 @@ My rewrite of the BCA web framework in Python Flask
 ## Setup
 1. `cd bca_web` - Navigate to the folder
 2. MAC OSX - `brew install mysql` \
-   Windows - `https://dev.mysql.com/doc/workbench/en/wb-installing-windows.html`
+   Windows - `https://dev.mysql.com/downloads/windows/installer/8.0.html`
 3. `python setup.py install`
 4. MAC OSX - `export FLASK_APP=bca_web.py` \
    Windows - `set FLASK_APP=bca_web.py`
