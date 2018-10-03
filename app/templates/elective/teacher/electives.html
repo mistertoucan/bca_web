@@ -18,7 +18,7 @@
 
         let ids = {
             {% for elective in electives %}
-                "{{ elective.name }}" : {{ elective.id }},
+                "{{ elective.name }} : {{ elective.id }}" : {{ elective.id }},
             {% endfor %}
         };
 

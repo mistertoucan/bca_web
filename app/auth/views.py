@@ -22,7 +22,7 @@ def login():
 
                         response = make_response(redirect(next_page))
                         response.set_cookie('bca_token', token)
-                    return response
+                        return response
 
             return render_template('auth/login.html', auth_error='Username, password combination is not correct.')
         return render_template('auth/login.html')
