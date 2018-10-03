@@ -12,22 +12,31 @@
     <script type="text/javascript">
         let electives = {
             {% for elective in electives %}
-                "{{ "%s : %d" % (elective.name, elective.id) }}" : null,
+                {% if elective.course_id != None %}
+                    "{{ "%s : %d" % (elective.name, elective.course_id) }}" : null,
+                {% else %}
+                    "{{ "%s" % (elective.name) }}" : null,
+                {% endif %}
             {% endfor %}
         };
 
         let ids = {
             {% for elective in electives %}
-                "{{ elective.name }} : {{ elective.id }}" : {{ elective.id }},
+                {% if elective.course_id != None %}
+                    "{{ "%s : PowerSchool ID: %d" % (elective.name, elective.course_id) }}" : {{ elective.id }},
+                {% else %}
+                    "{{ "%s" % (elective.name) }}" : {{ elective.id }},
+                {% endif %}
             {% endfor %}
         };
 
         $(document).ready(function() {
-            $('input.autocomplete').autocomplete({
+            $('#search.autocomplete').autocomplete({
                 data: electives,
-                limit: Infinity, // The max amount of results that can be shown at once. Default: Infinity.
+                minLength: 1,
                 onAutocomplete: function(val) {
-                  location.href = `http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/${ids[val]}`;
+                    console.log('called');
+                    location.href = `http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/${ids[val]}`;
                 },
                 minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
             });
@@ -46,11 +55,17 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="input-field col s6 offset-s3" style="margin-top: 25px">
+        <div class="row" style="margin-bottom: 0;">
+            <div class="input-field col s8 offset-s2" style="margin-top: 25px">
                 <i class="material-icons prefix">search</i>
-                <input type="text" id="search" class="autocomplete" placeholder="Enter an Elective Name...">
+                <input autocomplete="off" type="text" id="search" class="autocomplete" placeholder="Enter an Elective Name...">
                 <label for="search">Elective Search</label>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 0">
+            <div class="col s6 offset-s3">
+                <p>Don't See An Elective? Create Your Own <a href="http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/create">Here</a></p>
             </div>
         </div>
 

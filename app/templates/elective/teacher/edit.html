@@ -205,14 +205,30 @@
         <div id="box" class="container">
             <div class="row">
                 <div class="col s12 center-align">
-                    <h3 class="title">Edit Elective</h3>
+                    <h3 class="title" style="margin-bottom: 25px">Edit Elective</h3>
                 </div>
             </div>
 
             <div class="row">
-                <div class="input-field col s4">
+                <div class="input-field col s8">
                     <input id="elective_name" name="elective_name" type="text" class="validate" value="{{ elective.name }}">
                     <label for="elective_name">Name</label>
+                </div>
+
+                <div class="input-field col s4">
+                    {% if elective.course_id != None %}
+                        <input id="elective_course_id" name="elective_course_id" type="text" class="validate" value="{{ elective.course_id }}">
+                    {% else %}
+                        <input id="elective_course_id" name="elective_course_id" type="text" class="validate" placeholder="">
+                    {% endif %}
+                    <label for="elective_course_id">Course ID (Optional)</label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <input id="elective_prereqs" type="text" name="elective_prereqs" class="validate" value="{{ elective.desc }}" />
+                    <label for="elective_prereqs">Prerequisites</label>
                 </div>
             </div>
 
@@ -236,7 +252,7 @@
 
                 <tbody id="sections">
                     {% for section in elective.sections %}
-                        <tr>
+                        <tr>`
                             <td>{{ section.section_nbr }}</td>
                             <td>{{ "%s, %s" % (section.teacher.name[1], section.teacher.name[0]) }}</td>
                             <td>{{ "Tri %d: %s" % (section.tri, section.course_year) }}</td>

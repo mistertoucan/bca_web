@@ -169,6 +169,8 @@
 
                                         {% set days = { 0: 'M', 1: 'T', 2: 'W', 3: 'R', 4: 'F' } %}
 
+
+
                                         <td class="availability" style="cursor: pointer" data-chosen="false" id="{{ days[j % 5] }}">{{ mods[i] }}</td>
 
                                     {% endfor %}
@@ -187,6 +189,11 @@
 
     <form id="create_elective" method="post">
 
+        <input type="hidden" name="section_time">
+        <input type="hidden" name="section_year">
+        <input type="hidden" name="section_tri">
+        <input type="hidden" name="section_room_nbr">
+
         <div id="box" class="container">
             <div class="row">
                 <div class="col s12 center-align">
@@ -195,9 +202,14 @@
             </div>
 
             <div class="row">
-                <div class="input-field col s4">
+                <div class="input-field col s4 offset-s2">
                     <input id="elective_name" name="elective_name" type="text" class="validate">
                     <label for="elective_name">Name</label>
+                </div>
+
+                <div class="input-field col s4">
+                    <input id="elective_course_id" name="elective_course_id" type="text" class="validate">
+                    <label for="elective_course_id">Course ID (Optional)</label>
                 </div>
             </div>
 
