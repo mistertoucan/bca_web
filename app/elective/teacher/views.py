@@ -28,7 +28,8 @@ def create():
     if request.method == 'POST':
         elective_name = request.form['elective_name']
         elective_desc = request.form['elective_desc']
-        elective_course_id = request.form.get['elective_course_id']
+        elective_course_id = request.form.get('elective_course_id', None)
+        elective_prereq = request.form.get('elective_prereq', None)
 
         sections = request.form.getlist('section_time')
         section_room_nbr = request.form.getlist('section_room_nbr')
@@ -37,7 +38,7 @@ def create():
 
 
         if elective_name and elective_desc and sections and section_room_nbr and section_year and section_tri:
-            elective_id = create_elective(elective_name, elective_desc, course_id=elective_course_id)
+            elective_id = create_elective(elective_name, elective_desc, elective_course_id, elective_prereq)
 
             if isinstance(sections, collections.Iterable):
                 add_sections(elective_id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
@@ -110,8 +111,19 @@ def edit(id):
             name = request.form['elective_name']
             desc = request.form['elective_desc']
 
+            elective_course_id = request.form.get('elective_course_id')
 
-            return redirect('elective_teacher.index')
+            section_times = request.form.getlist('section_time')
+            section_room_nbrs = request.form.getlist('section_room_nbr')
+            section_years = request.form.getlist('section_year')
+            section_tris = request.form.getlist('section_tri')
+
+            if section_times and section_room_nbrs and section_years and section_tris:
+                add_sections(elective.id, g.user.get_id(), section_times, section_room_nbrs, section_years, section_tris)
+
+            if
+
+            return redirect(url_for('elective_teacher.index'))
         else:
             return render_template("elective/teacher/edit.html", elective=elective)
     else:
