@@ -1,4 +1,4 @@
-from app.db import DB, insert, insertmany, query_one, query, delete
+from app.db import DB, insert, insertmany, query_one, query, delete, update
 
 from app.elective.teacher.models import *
 
@@ -220,6 +220,19 @@ def delete_section(teacher_id, section_id):
         return True
     return False
 
-def edit_elective(elective_id, name, desc, )
+def edit_elective(elective_id, name="", desc="", course_id="", prereq=""):
+
+    if name or desc or course_id or prereq:
+
+        elective = get_elective(elective_id)
+
+        if elective:
+
+            update(DB.ELECTIVE, '')
+
+
+
+    return False
+
 
 # def update_section(section_id, elective_name, elective_desc, section_time, section_year, )

@@ -108,10 +108,11 @@ def edit(id):
 
         if request.method == 'POST':
 
-            name = request.form['elective_name']
-            desc = request.form['elective_desc']
+            name = request.form.get('elective_name', None)
+            desc = request.form.get('elective_desc', None)
 
-            elective_course_id = request.form.get('elective_course_id')
+            elective_course_id = request.form.get('elective_course_id', None)
+            elective_preqreq = request.form.get('elective_prereq', None)
 
             section_times = request.form.getlist('section_time')
             section_room_nbrs = request.form.getlist('section_room_nbr')
@@ -121,7 +122,9 @@ def edit(id):
             if section_times and section_room_nbrs and section_years and section_tris:
                 add_sections(elective.id, g.user.get_id(), section_times, section_room_nbrs, section_years, section_tris)
 
-            if
+            if name or desc or elective_course_id or elective_preqreq:
+                edit_elective()
+
 
             return redirect(url_for('elective_teacher.index'))
         else:
