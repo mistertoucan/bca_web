@@ -38,6 +38,8 @@
         }
 
         function add_section() {
+            // TODO: ADD DELETE SECTION FUNCIOINALITY
+
             let section_nbr = $("#sections tr").length;
 
             {% set name = g.user.get_name() %}
@@ -84,6 +86,7 @@
                         <td>${formatted_year}</td>
                         <td>${room_nbr}</td>
                         <td>${mods}</td>
+                        <td><i class="material-icons" style="cursor: pointer; color: red">delete</i></td>
                     </tr>
                 `);
             }
