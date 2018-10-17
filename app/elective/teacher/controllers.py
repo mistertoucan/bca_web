@@ -220,4 +220,6 @@ def delete_section(teacher_id, section_id):
         return True
     return False
 
+def edit_elective(elective_id, name, desc, )
+
 # def update_section(section_id, elective_name, elective_desc, section_time, section_year, )
