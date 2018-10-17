@@ -28,7 +28,7 @@ def create():
     if request.method == 'POST':
         elective_name = request.form['elective_name']
         elective_desc = request.form['elective_desc']
-        elective_course_id = request.form.get['elective_course_id']
+        elective_course_id = request.form.get('elective_course_id', None)
 
         sections = request.form.getlist('section_time')
         section_room_nbr = request.form.getlist('section_room_nbr')
