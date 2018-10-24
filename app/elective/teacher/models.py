@@ -9,6 +9,9 @@ class Elective(object):
 
         self.sections = []
 
+        print(self.course_id)
+        print(self.prereqs)
+
     def __str__(self):
         return "<%s: %s, %s/>" % (self.id, self.name, self.desc)
 

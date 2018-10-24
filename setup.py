@@ -1,4 +1,4 @@
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='bca_web',
@@ -7,7 +7,8 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=['Flask',
-                      'mysql-connector',
+                      'mysqlclient',
+                      'flask_mysqldb',
                       'flask_login',
                       'python-ldap',
                       'flask-breadcrumbs',
