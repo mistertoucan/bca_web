@@ -71,6 +71,7 @@
             }
 
             if (valid) {
+
                 $('#create_elective').append(`
                     <input type="hidden" name="section_time" value="${mods}" />
                     <input type="hidden" name="section_year" value="${year}" />
@@ -79,6 +80,7 @@
 
                 `);
 
+
                 $('#sections_info tr').eq(-1).before(`
                     <tr>
                         <td>${section_nbr}</td>
@@ -86,7 +88,6 @@
                         <td>${formatted_year}</td>
                         <td>${room_nbr}</td>
                         <td>${mods}</td>
-                        <td><i class="material-icons" style="cursor: pointer; color: red">delete</i></td>
                     </tr>
                 `);
             }
