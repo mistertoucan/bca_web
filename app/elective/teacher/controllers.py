@@ -12,7 +12,7 @@ def create_elective(name, desc, course_id, prereq):
         if prereq:
             insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`, course_id, prereq) VALUES (%s, %s, %s, %s)", (name, desc, course_id, prereq))
         else:
-            insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`, course_id) VALUES (%s, %s, %s, %s)",
+            insert(DB.ELECTIVE, "INSERT INTO elective (name, `desc`, course_id) VALUES (%s, %s, %s)",
                    (name, desc, course_id))
     else:
         if prereq:
@@ -56,12 +56,12 @@ def add_section(elective_id, teacher_id, times, room_nbr, year, tri):
     insertmany(DB.ELECTIVE, "INSERT INTO elective_section_time_xref (section_id, time_id) VALUES (%s, %s)", data)
 
 def get_electives():
-    result = query(DB.ELECTIVE, "SELECT elective_id, name, `desc`, course_id FROM elective ORDER BY name")
+    result = query(DB.ELECTIVE, "SELECT elective_id, name, `desc`, course_id, prereq, FROM elective ORDER BY name")
 
     electives = []
 
     for elective in result:
-        electives.append(Elective(elective[0], elective[1], elective[2], elective[3]))
+        electives.append(Elective(elective[0], elective[1], elective[2], elective[3], elective[4]))
 
     return electives
 
@@ -113,16 +113,17 @@ def get_sections(user_id):
 
         elective_id = result[0]
 
-        elective_result = query_one(DB.ELECTIVE, "SELECT name, `desc`, course_id "
+        elective_result = query_one(DB.ELECTIVE, "SELECT name, `desc`, course_id, prereq, "
                                           "FROM elective "
                                           "WHERE elective_id = %s", [elective_id])
 
         elective_name = elective_result[0]
         elective_desc = elective_result[1]
         elective_course_id = elective_result[2]
+        elective_prereqs = elective_result[3]
 
 
-        elective = Elective(elective_id, elective_name, elective_desc, elective_course_id)
+        elective = Elective(elective_id, elective_name, elective_desc, elective_course_id, elective_prereqs)
 
         section_id = result[1]
         section_nbr = result[2]
@@ -185,11 +186,11 @@ def get_times_by_section_id(section_id):
     return times
 
 def get_elective(id):
-    result = query_one(DB.ELECTIVE, "SELECT elective_id, name, `desc`, course_id "
+    result = query_one(DB.ELECTIVE, "SELECT elective_id, name, `desc`, course_id, prereq "
                                   "FROM elective "
                                   "WHERE elective_id = %s", [id])
     if result:
-        elective = Elective(result[0], result[1], result[2], result[3])
+        elective = Elective(result[0], result[1], result[2], result[3], result[4])
 
         sections = query(DB.ELECTIVE, "SELECT section_id, section_nbr, teacher_id, course_year, tri, max, room_nbr, teacher_id "
                                     "FROM elective_section "
