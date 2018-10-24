@@ -8,7 +8,7 @@ setup(
     zip_safe=False,
     install_requires=['Flask',
                       'mysqlclient',
-                      'flask_mysqldb',
+                      'flask-mysql',
                       'flask_login',
                       'python-ldap',
                       'flask-breadcrumbs',

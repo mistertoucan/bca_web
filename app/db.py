@@ -21,7 +21,7 @@ class DB(Enum):
 # Statement - SQL Query
 # Vars - List of variables in Query to prevent SQL Injection
 def query(db, statement, vars=""):
-    cur = mysql.connection.cursor()
+    cur = mysql.get_db().cursor()
     use_db(cur, db)
 
     if vars:
@@ -38,7 +38,7 @@ def query(db, statement, vars=""):
 
 # only searches for one return option/value
 def query_one(db, statement, vars=""):
-    cur = mysql.connection.cursor()
+    cur = mysql.get_db().cursor()
     use_db(cur, db)
 
     if vars:
@@ -51,7 +51,7 @@ def query_one(db, statement, vars=""):
 
 
 def insert(db, statement, vars):
-    cur = mysql.connection.cursor()
+    cur = mysql.get_db().cursor()
     use_db(cur, db)
 
     cur.execute(statement, vars)
@@ -61,7 +61,7 @@ def insert(db, statement, vars):
     log_print("INSERT", db, statement, vars)
 
 def insertmany(db, statement, data):
-    cur = mysql.connection.cursor()
+    cur = mysql.get_db().cursor()
     use_db(cur, db)
 
     cur.executemany(statement, data)
@@ -72,7 +72,7 @@ def insertmany(db, statement, data):
 
 
 def update(db, statement, vars=""):
-    cur = mysql.connection.cursor()
+    cur = mysql.get_db().cursor()
     use_db(cur, db)
 
     if vars:
@@ -86,7 +86,7 @@ def update(db, statement, vars=""):
 
 
 def delete(db, statement, vars=""):
-    cur = mysql.connect.cursor()
+    cur = mysql.get_db().cursor()
     use_db(cur, db)
 
     if vars:

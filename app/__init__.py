@@ -1,5 +1,5 @@
 from flask import Flask, redirect, url_for
-from flask_mysqldb import MySQL
+from flaskext.mysql import MySQL
 from flask_breadcrumbs import Breadcrumbs
 
 from config import Config
