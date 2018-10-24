@@ -228,7 +228,23 @@ def edit_elective(elective_id, name="", desc="", course_id="", prereq=""):
 
         if elective:
 
-            update(DB.ELECTIVE, '')
+            updates = {}
+
+            if name:
+                updates['NAME'] = name
+
+            if desc:
+                updates['DESC'] = desc
+
+            if course_id:
+                updates['COURSE_ID'] = str(course_id)
+
+            if prereq:
+                updates['PREREQ'] = str(prereq)
+
+            query = "UPDATE elective " + " ".join(["SET %s = %s" % (x, updates[x]) for x in updates]) + " WHERE elective_id=%s" % (elective_id)
+
+            update(DB.ELECTIVE, query, [])
 
 
 

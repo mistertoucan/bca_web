@@ -1,6 +1,13 @@
-from app import mysql
+from app import Config
+
+import mysql.connector
 from enum import Enum
 
+mysql = mysql.connector.connect(
+    host=Config.MYSQL_HOST,
+    user=Config.MYSQL_USER,
+    password=Config.MYSQL_PASSWORD
+)
 
 class DB(Enum):
     SHARED = "atcsdevb_dev_shared"
@@ -21,7 +28,7 @@ class DB(Enum):
 # Statement - SQL Query
 # Vars - List of variables in Query to prevent SQL Injection
 def query(db, statement, vars=""):
-    cur = mysql.connection.cursor()
+    cur = mysql.cursor()
     use_db(cur, db)
 
     if vars:
@@ -32,13 +39,13 @@ def query(db, statement, vars=""):
     log_print("QUERY", db, statement, vars)
 
     result = cur.fetchall()
-    cur.connection.commit()
+    mysql.commit()
     return result
 
 
 # only searches for one return option/value
 def query_one(db, statement, vars=""):
-    cur = mysql.connection.cursor()
+    cur = mysql.cursor()
     use_db(cur, db)
 
     if vars:
@@ -50,33 +57,33 @@ def query_one(db, statement, vars=""):
 
     result = cur.fetchone()
 
-    cur.connection.commit()
+    mysql.commit()
 
     return result
 
 def insert(db, statement, vars):
-    cur = mysql.connection.cursor()
+    cur = mysql.cursor()
     use_db(cur, db)
 
     cur.execute(statement, vars)
 
-    cur.connection.commit()
+    mysql.commit()
 
     log_print("INSERT", db, statement, vars)
 
 def insertmany(db, statement, data):
-    cur = mysql.connection.cursor()
+    cur = mysql.cursor()
     use_db(cur, db)
 
     cur.executemany(statement, data)
 
-    cur.connection.commit()
+    mysql.commit()
 
     log_print("INSERT", db, statement, data)
 
 
 def update(db, statement, vars=""):
-    cur = mysql.connection.cursor()
+    cur = mysql.cursor()
     use_db(cur, db)
 
     if vars:
@@ -84,13 +91,13 @@ def update(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    cur.connection.commit()
+    mysql.commit()
 
     log_print("UPDATED", db, statement, vars)
 
 
 def delete(db, statement, vars=""):
-    cur = mysql.connect.cursor()
+    cur = mysql.cursor()
     use_db(cur, db)
 
     if vars:
@@ -98,7 +105,7 @@ def delete(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    cur.connection.commit()
+    mysql.commit()
 
     log_print("DELETE", db, statement, vars)
 
