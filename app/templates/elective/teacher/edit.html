@@ -99,18 +99,13 @@
         }
 
         function submit_form() {
-            let a = $('input[name="section_time"]').val();
-            let b = $('input[name="section_year"]').val();
-            let c = $('input[name="section_tri"]').val();
-            let d = $('input[name="section_room_nbr"]').val();
+            let elec_name = $('input[name="elective_name').val();
+            let elec_desc = $('textarea[name="elective_desc').val();
 
-            let e = $('input[name="elective_name').val();
-            let f = $('textarea[name="elective_desc').val();
-
-            if (!a || !b || !c || !d || !e || !f)
-                Materialize.toast('Please Fill Out All Fields Before Submitting (Including the Section)', 3000);
+            if (!elec_name || !elec_desc)
+                Materialize.toast('Please Fill Out All Fields Before Submitting', 3000);
             else
-                $('#create_elective').submit();
+                $('#edit_elective').submit();
         }
 
     </script>
@@ -195,7 +190,7 @@
         </div>
     </div>
 
-    <form id="create_elective" method="post" action>
+    <form id="edit_elective" method="post" action>
 
         <input type="hidden" name="section_time">
         <input type="hidden" name="section_year">
