@@ -113,10 +113,10 @@ def get_sections(user_id):
     for result in elective_sections:
 
         elective_id = result[1]
-        elective_name = result[7]
-        elective_desc = result[8]
-        elective_course_id = result[9]
-        elective_prereqs = result[10]
+        elective_name = result[8]
+        elective_desc = result[9]
+        elective_course_id = result[10]
+        elective_prereqs = result[11]
 
         elective = Elective(elective_id, elective_name, elective_desc, elective_course_id, elective_prereqs)
 

@@ -50,7 +50,6 @@ class ElectiveSection(object):
 
             if i < len(self.times)-1:
                 s += ', '
-
         return s
 
 
