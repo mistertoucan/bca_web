@@ -114,17 +114,20 @@ def edit(id):
             elective_course_id = request.form.get('elective_course_id', None)
             elective_preqreq = request.form.get('elective_prereq', None)
 
+            print("=================================")
+            print(elective_preqreq)
+            print("=================================")
+
             section_times = request.form.getlist('section_time')
             section_room_nbrs = request.form.getlist('section_room_nbr')
             section_years = request.form.getlist('section_year')
             section_tris = request.form.getlist('section_tri')
 
-            if section_times and section_room_nbrs and section_years and section_tris:
+            if section_times != [''] and section_room_nbrs != [''] and section_years != [''] and section_tris != ['']:
                 add_sections(elective.id, g.user.get_id(), section_times, section_room_nbrs, section_years, section_tris)
 
             if name or desc or elective_course_id or elective_preqreq:
-                edit_elective()
-
+                edit_elective(id, name, desc, elective_course_id, elective_preqreq)
 
             return redirect(url_for('elective_teacher.index'))
         else:
