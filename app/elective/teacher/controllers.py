@@ -102,30 +102,25 @@ def remove_student(section_id, user_id):
                         "AND usr_id=%s", [section_id, user_id])
 
 def get_sections(user_id):
-    elective_sections = query(DB.ELECTIVE, "SELECT es.elective_id, es.section_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id "
-                                           "FROM elective_section es  "
+    elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.elective_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id, e.name, e.desc, e.course_id, e.prereq "
+                                           "FROM elective_section es, elective e "
                                            "WHERE es.teacher_id = %s "
-                                           "ORDER BY es.course_year DESC", [user_id])
+                                           "AND e.elective_id = es.section_id "
+                                           "ORDER BY es.course_year DESC ", [user_id])
 
     sections = []
 
     for result in elective_sections:
 
-        elective_id = result[0]
-
-        elective_result = query_one(DB.ELECTIVE, "SELECT name, `desc`, course_id, prereq "
-                                          "FROM elective "
-                                          "WHERE elective_id = %s", [elective_id])
-
-        elective_name = elective_result[0]
-        elective_desc = elective_result[1]
-        elective_course_id = elective_result[2]
-        elective_prereqs = elective_result[3]
-
+        elective_id = result[1]
+        elective_name = result[7]
+        elective_desc = result[8]
+        elective_course_id = result[9]
+        elective_prereqs = result[10]
 
         elective = Elective(elective_id, elective_name, elective_desc, elective_course_id, elective_prereqs)
 
-        section_id = result[1]
+        section_id = result[0]
         section_nbr = result[2]
         section_tri = result[3]
         section_year = result[4]
