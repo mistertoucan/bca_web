@@ -232,7 +232,7 @@ def edit_elective(elective_id, name="", desc="", course_id="", prereq=""):
             if desc:
                 updates['`DESC`'] = desc
 
-            if course_id:
+            if not course_id is None or course_id == ' ':
                 updates['COURSE_ID'] = str(course_id)
 
             if prereq:
