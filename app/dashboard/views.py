@@ -18,13 +18,6 @@ def index():
         return redirect(url_for('dashboard.about'))
     else:
         return redirect('http://' + Config.PHP_DOMAIN + "/bca-apps")
-    # user_code = g.user.get_type_code()
-    # if user_code == 'ADM':
-    #     return render_template("dashboard/admin.html")
-    # elif user_code == 'TCH':
-    #     return render_template("dashboard/teacher.html")
-    # else:
-    #     return render_template("dashboard/student.html")
 
 @board_mod.route('/about')
 @register_breadcrumb(board_mod, '.about', 'About')

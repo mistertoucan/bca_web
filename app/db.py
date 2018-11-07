@@ -20,7 +20,7 @@ class DB(Enum):
 # Executes the statemet and then returns the result
 # Statement - SQL Query
 # Vars - List of variables in Query to prevent SQL Injection
-def query(db, statement, vars=""):
+def query(db, statement, vars="", display=False):
     cur = mysql.get_db().cursor()
     use_db(cur, db)
 
@@ -29,7 +29,8 @@ def query(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    log_print("QUERY", db, statement, vars)
+    if display:
+        log_print("QUERY", db, statement, vars)
 
     result = cur.fetchall()
     cur.connection.commit()
@@ -37,7 +38,7 @@ def query(db, statement, vars=""):
 
 
 # only searches for one return option/value
-def query_one(db, statement, vars=""):
+def query_one(db, statement, vars="", display=False):
     cur = mysql.get_db().cursor()
     use_db(cur, db)
 
@@ -46,11 +47,12 @@ def query_one(db, statement, vars=""):
     else:
         cur.execute(statement)
 
-    log_print("QUERY", db, statement, vars)
+    if display:
+        log_print("QUERY", db, statement, vars)
     return cur.fetchone()
 
 
-def insert(db, statement, vars):
+def insert(db, statement, vars, display=False):
     cur = mysql.get_db().cursor()
     use_db(cur, db)
 
@@ -58,9 +60,10 @@ def insert(db, statement, vars):
 
     cur.connection.commit()
 
-    log_print("INSERT", db, statement, vars)
+    if display:
+        log_print("INSERT", db, statement, vars)
 
-def insertmany(db, statement, data):
+def insertmany(db, statement, data, display=False):
     cur = mysql.get_db().cursor()
     use_db(cur, db)
 
@@ -68,10 +71,11 @@ def insertmany(db, statement, data):
 
     cur.connection.commit()
 
-    log_print("INSERT", db, statement, data)
+    if display:
+        log_print("INSERT", db, statement, data)
 
 
-def update(db, statement, vars=""):
+def update(db, statement, vars="", display=False):
     cur = mysql.get_db().cursor()
     use_db(cur, db)
 
@@ -82,10 +86,11 @@ def update(db, statement, vars=""):
 
     cur.connection.commit()
 
-    log_print("UPDATED", db, statement, vars)
+    if display:
+        log_print("UPDATED", db, statement, vars)
 
 
-def delete(db, statement, vars=""):
+def delete(db, statement, vars="", display=False):
     cur = mysql.get_db().cursor()
     use_db(cur, db)
 
@@ -96,11 +101,13 @@ def delete(db, statement, vars=""):
 
     cur.connection.commit()
 
-    log_print("DELETE", db, statement, vars)
+    if display:
+        log_print("DELETE", db, statement, vars)
 
 
-def use_db(cur, db):
-    print("Using db, %s" % db)
+def use_db(cur, db, display=False):
+    if display:
+        print("Using db, %s" % db)
     cur.execute('USE ' + str(db))
 
 def log_print(operation, db, statement, values):
