@@ -37,7 +37,7 @@
             return time;
         }
 
-        function edit_section() {
+        function add_section() {
             let section_nbr = $("#sections tr").length;
 
             {% set name = g.user.get_name() %}
@@ -74,7 +74,7 @@
                 $('input[name="section_room_nbr"]').val(room_nbr);
 
                 $('#sections_info tr').eq(-1).before(`
-                    <tr style = "background-color: #00BB00;" = >
+                    <tr style = "background-color: #00BB00;">
                         <td>${section_nbr}</td>
                         <td>${teacher}</td>
                         <td>${formatted_year}</td>
@@ -191,7 +191,6 @@
     </div>
 
     <form id="edit_elective" method="post" action>
-
         <input type="hidden" name="section_time">
         <input type="hidden" name="section_year">
         <input type="hidden" name="section_tri">
@@ -222,8 +221,8 @@
 
             <div class="row">
                 <div class="input-field col s12">
-                    <textarea id="elective_prereqs" name="elective_prereqs" class="materialize-textarea">{{ elective.prereqs }}</textarea>
-                    <label for="elective_prereqs">Prerequisites</label>
+                    <textarea id="elective_prereq" name="elective_prereq" class="materialize-textarea">{{ elective.prereq }}</textarea>
+                    <label for="elective_prereq">Prerequisites</label>
                 </div>
             </div>
 
