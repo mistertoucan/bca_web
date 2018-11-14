@@ -38,6 +38,8 @@
         }
 
         function add_section() {
+            // TODO: ADD DELETE SECTION FUNCTIONALITY
+
             let section_nbr = $("#sections tr").length;
 
             {% set name = g.user.get_name() %}
@@ -45,7 +47,7 @@
 
             let tri_nbr = $("#modal_tri_nbr option:selected").val();
             let room_nbr = $("#modal_room_nbr").val();
-            let year = $("#modal_year option:selected").val().split('-')[0];
+            let year = $("#modal_year option:selected").val();
 
             let formatted_year = `Tri ${tri_nbr}: ${year}`;
 
@@ -56,8 +58,9 @@
             let valid = true;
 
             for (let i = 0; i < sections.length - 1; i++) {
-                if(sections[i].innerHTML.includes(teacher) && sections[i].innerHTML.includes(mods)) {
-                    Materialize.toast('A Section Already Exists With The Given Mods.', 3000);
+
+                if(sections[i].innerHTML.includes(formatted_year) && sections[i].innerHTML.includes(mods)) {
+                    Materialize.toast('A Section Already Exists At The Given Time.', 3000);
                     valid = false;
                 }
             }
@@ -68,13 +71,18 @@
             }
 
             if (valid) {
-                $('input[name="section_time"]').val(mods);
-                $('input[name="section_year"]').val(year);
-                $('input[name="section_tri"]').val(tri_nbr);
-                $('input[name="section_room_nbr"]').val(room_nbr);
+
+                $('#edit_elective').append(`
+                    <input type="hidden" name="section_time" value="${mods}" />
+                    <input type="hidden" name="section_year" value="${year}" />
+                    <input type="hidden" name="section_tri" value="${tri_nbr}" />
+                    <input type="hidden" name="section_room_nbr" value="${room_nbr}" />
+
+                `);
+
 
                 $('#sections_info tr').eq(-1).before(`
-                    <tr style = "background-color: #00BB00;">
+                    <tr>
                         <td>${section_nbr}</td>
                         <td>${teacher}</td>
                         <td>${formatted_year}</td>
@@ -82,19 +90,6 @@
                         <td>${mods}</td>
                     </tr>
                 `);
-
-                $.ajax({
-                    type : 'POST',
-                    url : "http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/{{ elective.id }}/section",
-                    contentType: 'application/json',
-                    data : JSON.stringify({
-                        'section_time': mods,
-                        'section_year': year,
-                        'section_tri': tri_nbr,
-                        'section_room_nbr': room_nbr
-                    }),
-                    dataType: "json"
-                });
             }
         }
 
@@ -112,7 +107,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id="edit_section" class="modal" style="width: 800px !important; height: 90vh !important;">
+    <div id="add_section" class="modal" style="width: 800px !important; height: 90vh !important;">
         <div class="modal-content" style="padding-bottom: 0;">
             <h3 class="center-align">Create Section</h3>
 
@@ -186,16 +181,11 @@
 
         <div class="modal-footer">
             <a href="#" class="modal-action modal-close waves-effect waves-red btn-flat">Cancel</a>
-            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="edit_section()">Submit</a>
+            <a href="#" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="add_section()">Submit</a>
         </div>
     </div>
 
-    <form id="edit_elective" method="post" action>
-        <input type="hidden" name="section_time">
-        <input type="hidden" name="section_year">
-        <input type="hidden" name="section_tri">
-        <input type="hidden" name="section_room_nbr">
-
+    <form id="edit_elective" method="post">
         <div id="box" class="container">
             <div class="row">
                 <div class="col s12 center-align">
@@ -258,7 +248,7 @@
                         <td></td>
                         <td></td>
                         <td>
-                            <a class="waves-effect waves-light btn modal-trigger" href="#edit_section" style="background-color: deepskyblue;">+ Section</a>
+                            <a class="waves-effect waves-light btn modal-trigger" href="#add_section" style="background-color: deepskyblue;">+ Section</a>
                         </td>
                         <td></td>
                         <td></td>

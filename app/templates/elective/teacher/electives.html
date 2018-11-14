@@ -13,7 +13,7 @@
         let electives = {
             {% for elective in electives %}
                 {% if elective.course_id %}
-                    "{{ "%s : %d" % (elective.name, elective.course_id) }}" : null,
+                    "{{ "%s : %s" % (elective.name, elective.course_id) }}" : null,
                 {% else %}
                     "{{ "%s" % (elective.name) }}" : null,
                 {% endif %}
@@ -23,7 +23,7 @@
         let ids = {
             {% for elective in electives %}
                 {% if elective.course_id %}
-                    "{{ "%s : PowerSchool ID: %d" % (elective.name, elective.course_id) }}" : {{ elective.id }},
+                    "{{ "%s : PowerSchool ID: %s" % (elective.name, elective.course_id) }}" : {{ elective.id }},
                 {% else %}
                     "{{ "%s" % (elective.name) }}" : {{ elective.id }},
                 {% endif %}

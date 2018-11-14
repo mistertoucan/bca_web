@@ -114,15 +114,20 @@ def edit(id):
             elective_course_id = request.form.get('elective_course_id', None)
             elective_preqreq = request.form.get('elective_prereq', None)
 
-            section_times = request.form.getlist('section_time')
-            section_room_nbrs = request.form.getlist('section_room_nbr')
-            section_years = request.form.getlist('section_year')
-            section_tris = request.form.getlist('section_tri')
+            sections = request.form.getlist('section_time')[1:]
+            section_room_nbr = request.form.getlist('section_room_nbr')[1:]
+            section_year = request.form.getlist('section_year')[1:]
+            section_tri = request.form.getlist('section_tri')[1:]
 
-            if section_times != [u''] and section_room_nbrs != [u''] and section_years != [u''] and section_tris != [u'']:
-                add_sections(elective.id, g.user.get_id(), section_times, section_room_nbrs, section_years, section_tris)
+            if sections and section_room_nbr and section_year and section_tri:
+                if isinstance(sections, collections.Iterable):
+                    add_sections(id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
+                else:
+                    add_section(id, g.user.get_id(), sections, section_room_nbr, section_year, section_tri)
 
-            if name or desc or (elective_course_id == None and not elective_course_id is ' ') or elective_preqreq:
+                return redirect(url_for('elective_teacher.index'))
+
+            if name or desc or (elective_course_id is None and not elective_course_id is ' ') or elective_preqreq:
                 edit_elective(id, name, desc, elective_course_id, elective_preqreq)
 
             return redirect(url_for('elective_teacher.index'))
