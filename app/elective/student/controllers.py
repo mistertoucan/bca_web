@@ -30,3 +30,4 @@ def get_sections(year, tri):
 def get_current_info():
     current_year = '%d-%d' % (datetime.utcnow().year, datetime.utcnow().year + 1)
     current_tri = query_one(DB.ELECTIVE, 'SELECT trimester FROM ')
+    return []
