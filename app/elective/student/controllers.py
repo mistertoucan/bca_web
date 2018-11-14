@@ -24,8 +24,9 @@ def get_user_sections(usr_id, year, tri):
 # TODO:
 # Get all current elective sections for a tri/year
 def get_sections(year, tri):
-    pass
+    return []
 
 # Returns the current '%d-%d' year string and trimester
 def get_current_info():
     current_year = '%d-%d' % (datetime.utcnow().year, datetime.utcnow().year + 1)
+    current_tri = query_one(DB.ELECTIVE, 'SELECT trimester FROM ')
