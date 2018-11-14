@@ -35,6 +35,7 @@ def index():
 
 @student_mod.route('/enroll/<int:id>', methods=['PUT'])
 def enroll(id):
+    # TODO:
     # PUT:
     # Accepts JSON param: section_id: Int, enroll: Boolean
     # Then checks whether elective enroll is open and section is valid
@@ -44,6 +45,7 @@ def enroll(id):
 
 @student_mod.route('/enroll/update', methods=['PUT'])
 def ping():
+    # TODO:
     # PUT:
     # section_ids: []
     # Pings server to check whether any elective_enrollment counts have changed/closed
