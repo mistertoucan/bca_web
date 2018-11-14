@@ -59,7 +59,7 @@
                                     <td>{{ section.room_nbr }}</td>
                                     <td>{{ section.enrolled }}/{{ section.max }}</td>
                                     <td>
-                                        <a href="{{ url_for('elective_teacher.edit', id=section.elective.id) }}"><i class="material-icons">edit</i></a>
+                                        <a href="{{ url_for('elective_teacher.edit', id=section.id) }}"><i class="material-icons">edit</i></a>
                                         <a href="{{ url_for('elective_teacher.edit_students', elective_id=section.elective.id, section_id=section.id) }}"><i class="material-icons orange-text">person_add</i></a>
                                         <a href="#" onclick="deleteSection({{ "\"" + section.elective.name + " | " + section.getTimes() + "\"" }}, {{ section.elective.id }},{{ section.id }})"><i class="material-icons red-text">delete</i></a>
                                     </td>
