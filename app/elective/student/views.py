@@ -1,8 +1,9 @@
 from app.elective.student import student_mod
 
 from app.shared.controllers import requires_token
+from app.elective.student.controllers import *
 
-from flask import g, redirect, url_for
+from flask import g, redirect, url_for, render_template
 
 # Explanation:
 # This file is a sub app for the elective enroll application
@@ -23,9 +24,23 @@ def check_teacher():
     if g.user.get_type_code() != 'STD':
         return redirect(url_for('elective'))
 
+# pages
+
 # A route for the student_mod app
 @student_mod.route('/')
 def index():
+
+    current_info = get_current_info()
+
+    if enrollment_open(g.user.get_grade_level()):
+        sections = get_sections(current_info[0], current_info[1])
+
+        return render_template('elective/student/enroll.html', sections=sections)
+    else:
+        sections = get_user_sections(g.user._id, current_info[0], current_info[1])
+
+        return render_template('elective/student/enroll_closed.html', sections=sections)
+
     # TODO:
     # GET:
     # make a query to the SHARED db to table Variable to check whether variable ELECTIVE_ENROLLMENT_OPEN is true

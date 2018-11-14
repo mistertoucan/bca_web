@@ -15,6 +15,9 @@ class User(object):
     def get_name(self):
         return self.name
 
+    def get_grade_level(self):
+        return query_one(DB.SHARED, 'SELECT usr_grade_level FROM usr WHERE usr_id=%s', [self.__usr_id__])[0]
+
     def load_name(self):
         return query_one(DB.SHARED, 'SELECT usr_first_name, usr_last_name FROM user WHERE usr_id = %s',
                          [self.__usr_id__])
