@@ -26,4 +26,26 @@ def check_teacher():
 # A route for the student_mod app
 @student_mod.route('/')
 def index():
-    return "Hello world from teacher route!"
+    # TODO:
+    # GET:
+    # make a query to the SHARED db to table Variable to check whether variable ELECTIVE_ENROLLMENT_OPEN is true
+    # If true, render the template elective/student/enroll.html and display all currently open elective section
+    # Otherwise, render the template elective/student/enroll_closed.html and display the user's current electives
+    pass
+
+@student_mod.route('/enroll/<int:id>', methods=['PUT'])
+def enroll(id):
+    # PUT:
+    # Accepts JSON param: section_id: Int, enroll: Boolean
+    # Then checks whether elective enroll is open and section is valid
+    # If section isn't full and valid
+    # If enroll, adds user to section otherwise removes user from section
+    pass
+
+@student_mod.route('/enroll/update', methods=['PUT'])
+def ping():
+    # PUT:
+    # section_ids: []
+    # Pings server to check whether any elective_enrollment counts have changed/closed
+    # If so returns the ids of the ones that have been fulled up
+    pass
