@@ -30,3 +30,22 @@ class ElectiveSection(object):
             if i < len(self.times)-1:
                 s += ', '
         return s
+
+
+class Elective(object):
+
+    def __init__(self, id, name, desc, req):
+        self.id = id
+        self.name = name
+        self.desc = desc
+        self.prereq = req
+
+    def __str__(self):
+        return "<%s: %s, %s/>" % (self.id, self.name, self.desc)
+
+
+class ElectiveTeacher(object):
+
+    def __init__(self, id, name):
+        self.id = id
+        self.name = name
