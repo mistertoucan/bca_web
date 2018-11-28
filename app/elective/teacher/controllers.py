@@ -65,6 +65,10 @@ def get_electives():
 
     return electives
 
+
+# Update Students in Elective Section Queries
+
+
 # Exclude is a list of user ids which should be excluded from the query
 def get_students(exclude=[]):
     users = query(DB.ELECTIVE, "SELECT usr_id, usr_first_name, usr_last_name, academy_cde, usr_class_year "
@@ -101,6 +105,7 @@ def remove_student(section_id, user_id):
                         "WHERE section_id=%s "
                         "AND usr_id=%s", [section_id, user_id])
 
+
 def get_sections(user_id):
     elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.elective_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id, e.name, e.desc, e.course_id, e.prereq "
                                            "FROM elective_section es, elective e "
@@ -123,7 +128,7 @@ def get_sections(user_id):
         section_id = result[0]
         section_nbr = result[2]
         section_tri = result[3]
-        section_year = result[4]
+        section_year = result[4][:5] + result[4][-2:]
         section_max = result[5]
         section_room_nbr = result[6]
 
@@ -245,6 +250,3 @@ def edit_elective(elective_id, name="", desc="", course_id="", prereq=""):
 
 
     return False
-
-
-# def update_section(section_id, elective_name, elective_desc, section_time, section_year, )

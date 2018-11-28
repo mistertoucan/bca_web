@@ -7,12 +7,13 @@ from datetime import datetime
 # TODO: Add enrollment_open table with start/end dates/times
 # Make Query to DB to check whether enrollment is open for grade level
 def enrollment_open(grade_level):
-    return True
+    pass
 
 
 # Enroll a user in an elective section
 def enroll(usr_id, section_id):
     insert(DB.ELECTIVE, 'INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%d, %d)', [section_id, usr_id])
+
     return True
 
 
@@ -26,7 +27,6 @@ def drop_section(usr_id, section_id):
 # TODO: Check whether a section is full by adding enroll_count field to section
 # Get all of a users elective sections
 def get_user_sections(usr_id, year, tri):
-
     sections = query(DB.ELECTIVE,
                      'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, t.usr_first_name, t.usr_last_name '
                      'FROM elective_section section, elective e, user t, elective_user_xref x '
@@ -61,11 +61,10 @@ def get_sections(year, tri):
     e_sections = []
 
     for section in sections:
-
         elective = Elective(section[1], section[2], section[3], section[4])
         e_sections.append(ElectiveSection(section[0], elective, section[5], tri, year, False, section[7], ElectiveTeacher(section[8], (section[9], section[10])), False))
 
-    return sections
+    return e_sections
 
 
 # Returns the current school year formatted in "YEAR-END_YEAR" form
@@ -76,9 +75,15 @@ def get_current_year():
 # Returns the current '%d-%d' year string and trimester
 def get_current_info():
     current_year = get_current_year()
+
+    formatted_year = str(current_year.split('-')[0])
+
+    # ps_year format - Ex: 2018 = 28
+    formatted_year = formatted_year[0] + formatted_year[-1]
+
     current_tri = query_one(DB.ELECTIVE, 'SELECT tri_nbr FROM atcsdevb_dev_shared.trimester ' +
                                          'WHERE NOW() <= end_dt ' +
                                          'AND NOW() >= start_dt' +
                                          'AND ps_year = %d' +
-                                         'ORDER BY end_dt', [current_year.split('-')[0]])[0]
+                                         'ORDER BY end_dt', [formatted_year])[0]
     return [current_year, current_tri]

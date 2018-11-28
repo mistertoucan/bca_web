@@ -43,7 +43,7 @@ def index():
 
     # TODO:
     # GET:
-    # make a query to the SHARED db to table Variable to check whether variable ELECTIVE_ENROLLMENT_OPEN is true
+    # Make a query to the SHARED db to table Variable to check whether variable ELECTIVE_ENROLLMENT_OPEN is true
     # If true, render the template elective/student/enroll.html and display all currently open elective section
     # Otherwise, render the template elective/student/enroll_closed.html and display the user's current electives
     pass
