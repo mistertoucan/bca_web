@@ -30,12 +30,12 @@ def get_user_sections(usr_id, year, tri):
     sections = query(DB.ELECTIVE,
                      'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, t.usr_first_name, t.usr_last_name '
                      'FROM elective_section section, elective e, user t, elective_user_xref x '
-                     'WHERE x.usr_id = %d '
+                     'WHERE x.usr_id = %s '
                      'AND x.section_id = section.section_id '
                      'AND course_year = %s '
-                     'AND tri = %d '
+                     'AND tri = %s '
                      'AND e.elective_id = section.elective_id '
-                     'AND t.usr_id = section.teacher_id', [usr_id, year, tri])
+                     'AND t.usr_id = section.teacher_id', [int(usr_id), year, int(tri)])
 
 
     formatted_sections = []
@@ -84,6 +84,6 @@ def get_current_info():
     current_tri = query_one(DB.ELECTIVE, 'SELECT tri_nbr FROM atcsdevb_dev_shared.trimester ' +
                                          'WHERE NOW() <= end_dt ' +
                                          'AND NOW() >= start_dt ' +
-                                         'AND ps_year = %d ' +
+                                         'AND ps_year = %s ' +
                                          'ORDER BY end_dt', [formatted_year])[0]
     return [current_year, current_tri]
