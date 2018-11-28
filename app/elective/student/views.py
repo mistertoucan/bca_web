@@ -32,7 +32,6 @@ def index():
 
     current_info = get_current_info()
 
-    print("USER ID IS" + g.user.get_id())
 
     if enrollment_open(g.user.get_grade_level()):
         sections = get_sections(current_info[0], current_info[1])

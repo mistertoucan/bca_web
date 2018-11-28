@@ -1,6 +1,6 @@
 class ElectiveSection(object):
 
-    def __init__(self, id, elective, section_nbr, tri, course_year, is_full, room_nbr, teacher, is_enrolled):
+    def __init__(self, id, elective, section_nbr, tri, course_year, is_full, room_nbr, teacher, is_enrolled, times):
         self.id = id
 
         self.elective = elective
@@ -13,7 +13,7 @@ class ElectiveSection(object):
 
         self.room_nbr = room_nbr
 
-        self.times = []
+        self.times = [times]
 
         self.teacher = teacher
         self.is_enrolled = is_enrolled

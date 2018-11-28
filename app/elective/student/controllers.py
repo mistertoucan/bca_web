@@ -28,12 +28,14 @@ def drop_section(usr_id, section_id):
 # Get all of a users elective sections
 def get_user_sections(usr_id, year, tri):
     sections = query(DB.ELECTIVE,
-                     'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, t.usr_first_name, t.usr_last_name '
-                     'FROM elective_section section, elective e, user t, elective_user_xref x '
+                     'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.section_nbr, section.room_nbr, section.teacher_id, t.usr_first_name, t.usr_last_name, etime.time_short_desc '
+                     'FROM elective_section section, elective e, user t, elective_user_xref x, elective_section_time_xref estx, elective_time etime '
                      'WHERE x.usr_id = %s '
                      'AND x.section_id = section.section_id '
                      'AND course_year = %s '
                      'AND tri = %s '
+                     'AND section.section_id = estx.section_id '
+                     'AND estx.time_id = etime.time_id '
                      'AND e.elective_id = section.elective_id '
                      'AND t.usr_id = section.teacher_id', [int(usr_id), year, int(tri)])
 
@@ -41,9 +43,14 @@ def get_user_sections(usr_id, year, tri):
     formatted_sections = []
 
     for section in sections:
+        # Elective(id, name, desc, req)
+        # ElectiveSection(id, elective, section_nbr, tri, course_year, is_full, room_nbr, teacher, is_enrolled)
+        # ElectiveTeacher(id, name)
+        # (section id, elective id, elective name, elective desc, elective req,
+        # section nbr, room nbr, teacher id, first name, last name)
         elective = Elective(section[1], section[2], section[3], section[4])
-        formatted_sections.append(ElectiveSection(section[0], elective, section[5], tri, year, False, section[7],
-                                          ElectiveTeacher(section[8], (section[9], section[10])), True))
+        formatted_sections.append(ElectiveSection(section[0], elective, section[5], tri, year, False, section[6],
+                                          ElectiveTeacher(section[7], (section[8], section[9])), True, section[10]))
 
     return formatted_sections
 
