@@ -84,6 +84,6 @@ def get_current_info():
     current_tri = query_one(DB.ELECTIVE, 'SELECT tri_nbr FROM atcsdevb_dev_shared.trimester ' +
                                          'WHERE NOW() <= end_dt ' +
                                          'AND NOW() >= start_dt' +
-                                         'AND ps_year = %d' +
+                                         'AND ps_year = %d ' +
                                          'ORDER BY end_dt', [formatted_year])[0]
     return [current_year, current_tri]

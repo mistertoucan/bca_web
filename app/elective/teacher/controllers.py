@@ -107,7 +107,7 @@ def remove_student(section_id, user_id):
 
 
 def get_sections(user_id):
-    elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.elective_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id, e.name, e.desc, e.course_id, e.prereq "
+    elective_sections = query(DB.ELECTIVE, "SELECT es.section_id, es.elective_id, es.section_nbr, es.tri, es.course_year, es.max, es.room_nbr, es.teacher_id, e.name, e.desc, e.course_id, e.prereq, es.enrolled_count "
                                            "FROM elective_section es, elective e "
                                            "WHERE es.teacher_id = %s "
                                            "AND e.elective_id = es.section_id "
@@ -143,8 +143,7 @@ def get_sections(user_id):
 
         section.times = get_times_by_section_id(section_id)
 
-        section.enrolled = query_one(DB.ELECTIVE, "SELECT COUNT(*) FROM elective_user_xref "
-                                                  "WHERE section_id=%s", [section_id])[0]
+        section.enrolled = result[12]
 
         sections.append(section)
 

@@ -32,8 +32,11 @@ def index():
 
     current_info = get_current_info()
 
+    print(g.user.get_id() )
+
     if enrollment_open(g.user.get_grade_level()):
-        sections = get_sections(current_info[0], current_info[1])
+        # sections = get_sections(current_info[0], current_info[1])
+        sections = []
 
         return render_template('elective/student/enroll.html', sections=sections)
     else:
@@ -56,6 +59,7 @@ def enroll(id):
     # Then checks whether elective enroll is open and section is valid
     # If section isn't full and valid
     # If enroll, adds user to section otherwise removes user from section
+    # To access request JSON data
     pass
 
 @student_mod.route('/enroll/update', methods=['PUT'])
