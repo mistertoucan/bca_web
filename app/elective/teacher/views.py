@@ -49,6 +49,7 @@ def create():
 
     return render_template("elective/teacher/create.html", electives=get_sections(g.user.get_id()))
 
+
 @teacher_mod.route('/edit/<int:id>/section/', methods=['GET', 'POST', 'DELETE'])
 def section(id):
     data = request.get_json(force=True, silent=True)
@@ -74,6 +75,7 @@ def section(id):
 
         return jsonify({"Info": "You don't have permission to delete this elective!"}), 403
     return jsonify({"error": "Invalid route"})
+
 
 @teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
 @register_breadcrumb(teacher_mod, '.edit_students', "Add Students")

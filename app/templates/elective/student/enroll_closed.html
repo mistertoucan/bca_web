@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{ super() }}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/elective/main.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript">
+
+    </script>
+{% endblock %}
+
+{% block content %}
+<section class="main view">
+
+            <div class="view-signup enrollment">
+                <div class="row">
+                <ul class="collapsible popout left-align">
+                            <li class="">
+                        <h6 class="title center-align black-text" styleflask="font-weight: bolder; padding-top: 15px;">Welcome to Elective Enroll!</h6>
+                        <div class="collapsible-header">
+                            <h6 class="blue-text center-align">New to this page?</h6>
+                        </div>
+                        <div class="collapsible-body" style="display: none; font-size: 14px;">
+                            <h6 class="grey-text text-darken-2 center-align">Instructions:</h6>
+                            <!--
+
+                            TODO add some useful p tags here for instructions
+
+                            -->
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="row">
+                <div class="col s10 offset-l1">
+                    <table class="centered">
+                        <thead>
+                          <tr>
+                              <th>Sec #</th>
+                              <th>Elective</th>
+                              <th>Tri/Course Year</th>
+                              <th>Days</th>
+                              <th>Room</th>
+                              <th>Students</th>
+                              <th>Actions</th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                          {% for section in sections %}
+                              <tr id="{{ section.id }}">
+
+                                    <td>{{ section.section_nbr }}</td>
+                                    <td>{{ section.elective.name }}</td>
+                                    <td>{{ "Tri: %d - %s" % (section.tri, section.course_year) }}</td>
+                                    <td>{{ section.getTimes() }}</td>
+                                    <td>{{ section.room_nbr }}</td>
+                                    <td>{{ section.enrolled }}/{{ section.max }}</td>
+                                    <td>
+                                        <a class="waves-effect waves-light btn modal-trigger" href="" style="background-color: deepskyblue;">+ Section</a>
+                                    </td>
+                              </tr>
+
+                          {% endfor %}
+                        </tbody>
+                  </table>
+                </div>
+            </div>
+
+            <div class="fixed-action-btn">
+              <a class="btn-floating btn-large red" href="{{ url_for('elective_teacher.query_elective') }}">
+                <i class="large material-icons">add</i>
+              </a>
+            </div>
+
+        </div>
+
+        </section>
+
+    </div>
+
+
+{% endblock %}
+
