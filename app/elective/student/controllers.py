@@ -24,6 +24,14 @@ def drop_section(usr_id, section_id):
     return True
 
 
+def is_section_full(section_id):
+
+    section_info = query_one(DB.ELECTIVE, "SELECT enrolled_count, max "
+                                     "FROM elective_section "
+                                     "WHERE section_id = %d", section_id)
+
+    return section_info[0] >= section_info[1]
+
 # TODO: Check whether a section is full by adding enroll_count field to section
 # Get all of a users elective sections
 def get_user_sections(usr_id, year, tri):
