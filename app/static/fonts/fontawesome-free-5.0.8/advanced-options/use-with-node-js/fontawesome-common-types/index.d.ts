@@ -338,7 +338,7 @@ export type IconName = 'address-book' |
   'cube' | 
   'cubes' | 
   'cut' | 
-  'database' | 
+  'db' |
   'deaf' | 
   'desktop' | 
   'dna' | 

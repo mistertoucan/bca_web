@@ -32,11 +32,10 @@ def index():
 
     current_info = get_current_info()
 
-
     if enrollment_open(g.user.get_grade_level()):
         sections = get_sections(current_info[0], current_info[1])
 
-        return render_template('elective/student/enroll.html', sections=sections)
+        return render_template('elective/student/index.html', sections=sections)
     else:
         sections = get_user_sections(g.user.get_id(), current_info[0], current_info[1])
 

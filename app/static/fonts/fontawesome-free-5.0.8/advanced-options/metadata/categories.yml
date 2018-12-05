@@ -546,7 +546,7 @@ interfaces:
     - cogs
     - copy
     - cut
-    - database
+    - db
     - dot-circle
     - download
     - edit

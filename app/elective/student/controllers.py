@@ -7,7 +7,7 @@ from datetime import datetime
 # TODO: Add enrollment_open table with start/end dates/times
 # Make Query to DB to check whether enrollment is open for grade level
 def enrollment_open(grade_level):
-    pass
+    return True
 
 
 # Enroll a user in an elective section
@@ -55,13 +55,13 @@ def get_user_sections(usr_id, year, tri):
     return formatted_sections
 
 
-# TODO: Chekck whether a section is full by adding enroll_count field to section
+# TODO: Check whether a section is full by adding enroll_count field to section
 # Get all current elective sections for a tri/year
 def get_sections(year, tri):
     sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, t.usr_id, t.usr_first_name, t.usr_last_name '
                                   'FROM elective_section section, elective e, user t '
                                   'WHERE course_year = %s '
-                                  'AND tri = %d '
+                                  'AND tri = %s '
                                   'AND e.elective_id = section.elective_id '
                                   'AND t.usr_id = section.teacher_id ', [year, tri])
 
@@ -69,10 +69,9 @@ def get_sections(year, tri):
 
     for section in sections:
         elective = Elective(section[1], section[2], section[3], section[4])
-        e_sections.append(ElectiveSection(section[0], elective, section[5], tri, year, False, section[7], ElectiveTeacher(section[8], (section[9], section[10])), False))
+        e_sections.append(ElectiveSection(section[0], elective, section[5], tri, year, False, section[7], ElectiveTeacher(section[8], (section[9], section[10])), False, []))
 
     return e_sections
-
 
 # Returns the current school year formatted in "YEAR-END_YEAR" form
 def get_current_year():
