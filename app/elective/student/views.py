@@ -3,7 +3,7 @@ from app.elective.student import student_mod
 from app.shared.controllers import requires_token
 from app.elective.student.controllers import *
 
-from flask import g, redirect, url_for, render_template
+from flask import g, redirect, url_for, render_template, request, jsonify
 
 # Explanation:
 # This file is a sub app for the elective enroll application
@@ -50,13 +50,25 @@ def index():
 
 @student_mod.route('/enroll/<int:id>', methods=['PUT'])
 def enroll(id):
-    # TODO:
-    # PUT:
-    # Accepts JSON param: section_id: Int, enroll: Boolean
-    # Then checks whether elective enroll is open and section is valid
-    # If section isn't full and valid
-    # If enroll, adds user to section otherwise removes user from section
-    pass
+    data = request.get_json(force=True, silent=True)
+    section_id = data['section_id']
+    usr_id = data['usr_id']
+    enroll = data['enroll']
+    if enrollment_open(g.user.get_grade_level()):
+        if enroll:
+            if not is_Section_Full(section_id):
+                enroll(usr_id, section_id)
+                return jsonify({"has_enrolled": True, "Error": None})
+
+            else:
+                return jsonify({"has_enrolled": False, "Error": "Elective Section Full."})
+        else:
+            drop_section(usr_id, section_id)
+            return jsonify({"has_enrolled": False, "Error": None})
+
+    else:
+        return jsonify({"has_enrolled": False, "Error": "Enrollment Not Open"})
+
 
 @student_mod.route('/enroll/update', methods=['PUT'])
 def ping():
