@@ -59,6 +59,7 @@ def enroll(id):
             if not is_Section_Full(section_id):
                 enroll(usr_id, section_id)
                 return jsonify({"has_enrolled": True, "Error": None})
+
             else:
                 return jsonify({"has_enrolled": False, "Error": "Elective Section Full."})
         else:
