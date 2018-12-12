@@ -23,6 +23,12 @@ def drop_section(usr_id, section_id):
 
     return True
 
+def is_Section_Full(section_id):
+    sections = query(DB.ELECTIVE,
+                     'SELECT enrolled_count, max'
+                     'FROM atcsdevb_dev_electives.elective_section section'
+                     'WHERE section')
+
 
 def is_section_full(section_id):
 

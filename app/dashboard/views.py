@@ -46,7 +46,7 @@ def test():
                 elif choice =='Login STD':
                     g.token = create_token(usr_id_std, request.remote_addr)
                 else:
-                    return redirect("dashboard/test.html", code=400)
+                    return redirect(url_for('dashboard.test'), code=400)
 
             else:
                 admins = get_admins()
