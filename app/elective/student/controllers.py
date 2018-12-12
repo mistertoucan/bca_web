@@ -9,13 +9,11 @@ from datetime import datetime
 def enrollment_open(grade_level):
     return True
 
-
 # Enroll a user in an elective section
 def enroll(usr_id, section_id):
     insert(DB.ELECTIVE, 'INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%d, %d)', [section_id, usr_id])
 
     return True
-
 
 # Remove a user from an elective_section
 def drop_section(usr_id, section_id):
@@ -23,7 +21,7 @@ def drop_section(usr_id, section_id):
 
     return True
 
-
+# Returns whether an elective
 def is_section_full(section_id):
 
     section_info = query_one(DB.ELECTIVE, "SELECT enrolled_count, max "
@@ -32,41 +30,47 @@ def is_section_full(section_id):
 
     return section_info[0] >= section_info[1]
 
-# TODO: Check whether a section is full by adding enroll_count field to section
 # Get all of a users elective sections
 def get_user_sections(usr_id, year, tri):
     sections = query(DB.ELECTIVE,
-                     'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.section_nbr, section.room_nbr, section.teacher_id, t.usr_first_name, t.usr_last_name, etime.time_short_desc '
-                     'FROM elective_section section, elective e, user t, elective_user_xref x, elective_section_time_xref estx, elective_time etime '
-                     'WHERE x.usr_id = %s '
-                     'AND x.section_id = section.section_id '
-                     'AND course_year = %s '
-                     'AND tri = %s '
-                     'AND section.section_id = estx.section_id '
-                     'AND estx.time_id = etime.time_id '
+                     'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name, '
+                     '(SELECT count(*) FROM elective_user_xref x WHERE x.section_id = section.section_id AND x.usr_id=13 ) '
+                     'FROM elective_section section, elective e, user t '
+                     'WHERE course_year = 2019 '
+                     'AND tri = 1 '
                      'AND e.elective_id = section.elective_id '
-                     'AND t.usr_id = section.teacher_id', [int(usr_id), year, int(tri)])
+                     'AND t.usr_id = section.teacher_id ', [int(usr_id), year, int(tri)])
 
-
-    formatted_sections = []
+    e_sections = []
 
     for section in sections:
-        # Elective(id, name, desc, req)
-        # ElectiveSection(id, elective, section_nbr, tri, course_year, is_full, room_nbr, teacher, is_enrolled)
-        # ElectiveTeacher(id, name)
-        # (section id, elective id, elective name, elective desc, elective req,
-        # section nbr, room nbr, teacher id, first name, last name)
-        elective = Elective(section[1], section[2], section[3], section[4])
-        formatted_sections.append(ElectiveSection(section[0], elective, section[5], tri, year, False, section[6],
-                                          ElectiveTeacher(section[7], (section[8], section[9])), True, section[10]))
+        elective_id = section[1]
+        elective_name = section[2]
+        elective_desc = section[3]
+        elective_prereq = section[4]
 
-    return formatted_sections
+        section_id = section[0]
+        section_room_nbr = section[5]
+        section_max = section[6]
+        section_enrolled = section[7]
+        section_nbr = section[8]
 
+        teacher_id = section[9]
+        teacher_first_name = section[10]
+        teacher_last_name = section[11]
 
-# TODO: Check whether a section is full by adding enroll_count field to section
+        elective = Elective(elective_id, elective_name, elective_desc, elective_prereq)
+        teacher = ElectiveTeacher(teacher_id, teacher_first_name, teacher_last_name)
+        times = get_times(section_id)
+
+        e_sections.append(ElectiveSection(section_id, elective, section_nbr, tri, year, section_enrolled, section_max,
+                                          section_room_nbr, teacher, times, False))
+
+    return e_sections
+
 # Get all current elective sections for a tri/year
 def get_sections(year, tri):
-    sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, t.usr_id, t.usr_first_name, t.usr_last_name '
+    sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
                                   'FROM elective_section section, elective e, user t '
                                   'WHERE course_year = %s '
                                   'AND tri = %s '
@@ -76,8 +80,28 @@ def get_sections(year, tri):
     e_sections = []
 
     for section in sections:
-        elective = Elective(section[1], section[2], section[3], section[4])
-        e_sections.append(ElectiveSection(section[0], elective, section[5], tri, year, False, section[7], ElectiveTeacher(section[8], (section[9], section[10])), False, []))
+
+        elective_id = section[1]
+        elective_name = section[2]
+        elective_desc = section[3]
+        elective_prereq = section[4]
+
+        section_id = section[0]
+        section_room_nbr = section[5]
+        section_max = section[6]
+        section_enrolled = section[7]
+        section_nbr = section[8]
+
+        teacher_id = section[9]
+        teacher_first_name = section[10]
+        teacher_last_name = section[11]
+
+
+        elective = Elective(elective_id, elective_name, elective_desc, elective_prereq)
+        teacher = ElectiveTeacher(teacher_id, teacher_first_name, teacher_last_name)
+        times = get_times(section_id)
+
+        e_sections.append(ElectiveSection(section_id, elective, section_nbr, tri, year, section_enrolled, section_max, section_room_nbr, teacher, times, False))
 
     return e_sections
 
@@ -85,6 +109,17 @@ def get_sections(year, tri):
 def get_current_year():
     return '%d-%d' % (datetime.utcnow().year, datetime.utcnow().year + 1)
 
+# Temporary solution for getting the corresponding times for a section
+def get_times(section_id):
+    result = query(DB.ELECTIVE, "SELECT time_short_desc "
+                                   "FROM elective_time time, elective_section_time_xref x "
+                                   "WHERE x.section_id = %s "
+                                   "AND time.time_id = x.time_id", [section_id])
+    times = []
+    for time in result:
+        times.append(time)
+
+    return times
 
 # Returns the current '%d-%d' year string and trimester
 def get_current_info():
