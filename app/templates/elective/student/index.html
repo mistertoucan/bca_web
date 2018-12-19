@@ -1,44 +1,60 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    {{ super() }}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/student/main.css') }}">
+
+{% endblock %}
+
 {% block content %}
 
-    <?php if($canSignup){?>
-        <h1 class="center-align black-text title">Project Enroll for Trimester <?php echo $tri_nbr . ", ". $course_year?></h1>
-        <h6 class="center-align black-text close"> Project registration closes on <?php echo date("l, F jS, Y", $end_date). " at " . date("g:i a", $end_date) . "."?></h6>
-    <?php } else if($signup_dates == null) {?>
-        <h1 class="center-align black-text title">Seniors do not enroll in projects. </h1>
-        <h6 class="center-align black-text close">Click on the sidebar to go to senior experience.</h6>
-    <?php } else { ?>
-    <h1 class="center-align black-text title">Project registration opens on <?php echo date("l, F jS, Y", $start_date) . " at " . date("g:i a", $start_date) . "."?></h1>
-    <?php }?>
+    <div class="center-align">
 
-<div class="main container white z-depth-2">
-    <div class="row head">
-        <div id="project_current">
-            <div class="row valign-wrapper" style="margin-bottom: 0px;">
-                <div class="col s4 ">
-                    <h2 style="margin-top: 17px;">Current Project:</h2>
-                </div>
-                <div class="col s4">
-                    <div class="center-align">
-                        <h2 style="margin-top: 17px;" id="curr_project_label"><b><?php echo get_current_project($usr_id)['project_name']; if (empty(get_current_project($usr_id))) {?> None <?php } ?></b>
-                        </h2>
+        {% if enroll_open %}
+            <h1 class="center-align black-text title">Elective Enroll for Trimester <?php echo $tri_nbr . ", ". $course_year?></h1>
+            <h6 class="center-align black-text close">Elective registration closes on <?php echo date("l, F jS, Y", $end_date). " at " . date("g:i a", $end_date) . "."?></h6>
+        {% else %}
+            <h1 class="center-align black-text title">Elective registration opens on <?php echo date("l, F jS, Y", $start_date) . " at " . date("g:i a", $start_date) . "."?></h1>
+        {% endif %}
+
+    </div>
+
+    {%  if sections %}
+        <div class="main container white z-depth-2">
+            <div class="row head">
+                <div id="project_current">
+
+                    <div class="row">
+                        <div class="col s6 ">
+                            <h3 style="margin-top: 17px;">My Electives:</h3>
+                        </div>
                     </div>
-                </div>
-                <div class="col s4">
-                    <div class="center-align">
-                        <a class="disenroll btn red lighten-3" id="disenroll" onclick="submitProject(<?php echo get_current_project($usr_id)['project_id'] ?>, 'disenroll')">Disenroll
-                        </a>
+
+                    <div class="row valign-wrapper" style="margin-bottom: 0px;">
+
+                        <div class="col s6">
+                            <div class="center-align">
+                                <h2 style="margin-top: 17px;" id="curr_project_label"><b><?php echo get_current_project($usr_id)['project_name']; if (empty(get_current_project($usr_id))) {?> None <?php } ?></b></h2>
+                            </div>
+                        </div>
+
+                        <div class="col s6">
+                            <div class="center-align">
+                                <a class="disenroll btn red lighten-3" id="disenroll" onclick="submitProject(<?php echo get_current_project($usr_id)['project_id'] ?>, 'disenroll')">Disenroll</a>
+                            </div>
+                        </div>
+
+
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    {% endif %}
 
 <div class="main container white z-depth-2">
     <div class="section" id="project_list">
-        <h2>Available Projects</h2>
+        <h3 class="center-align">Available Electives</h3>
         <table class="highlight responsive-table centered">
             <thead>
             <tr>
@@ -85,11 +101,11 @@
 </script>
 <script>
     $(document).ready(function () {
-        var signup = (<?php echo json_encode($canSignup) ?>);
-        var enroll = (<?php echo json_encode($canEnroll)?>);
+        let signup = ({{ enroll_open }});
+        let enroll = ({{ enroll_open }});
 
-        if (signup == true) {
-            if (enroll == true) {
+        if (signup) {
+            if (enroll) {
                 $(".enroll").removeClass("disabled");
                 $(".disenroll").addClass("disabled");
             } else {

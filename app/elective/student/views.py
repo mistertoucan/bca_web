@@ -32,32 +32,24 @@ def index():
 
     current_info = get_current_info()
 
-    if enrollment_open(g.user.get_grade_level()):
-        sections = get_sections(current_info[0], current_info[1])
+    sections = get_user_sections(g.user.get_id(), current_info[0], current_info[1])
+    enroll_open = enrollment_open(g.user.get_grade_level())
 
-        return render_template('elective/student/index.html', sections=sections)
-    else:
-        sections = get_user_sections(g.user.get_id(), current_info[0], current_info[1])
-
-        return render_template('elective/student/enroll_closed.html', sections=sections)
-
-    # TODO:
-    # GET:
-    # Make a query to the SHARED db to table Variable to check whether variable ELECTIVE_ENROLLMENT_OPEN is true
-    # If true, render the template elective/student/enroll.html and display all currently open elective section
-    # Otherwise, render the template elective/student/enroll_closed.html and display the user's current electives
-    pass
+    return render_template("elective/student/index.html", enroll_open=enroll_open, sections=sections)
 
 @student_mod.route('/enroll/<int:id>', methods=['PUT'])
 def enroll(id):
     data = request.get_json(force=True, silent=True)
+
     section_id = data['section_id']
     usr_id = data['usr_id']
     enroll = data['enroll']
+
     if enrollment_open(g.user.get_grade_level()):
         if enroll:
-            if not is_Section_Full(section_id):
+            if not is_section_full(section_id):
                 enroll(usr_id, section_id)
+
                 return jsonify({"has_enrolled": True, "Error": None})
 
             else:

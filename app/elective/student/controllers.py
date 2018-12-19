@@ -4,10 +4,15 @@ from app.elective.student.models import ElectiveSection, Elective, ElectiveTeach
 
 from datetime import datetime
 
-# TODO: Add enrollment_open table with start/end dates/times
 # Make Query to DB to check whether enrollment is open for grade level
 def enrollment_open(grade_level):
-    return True
+    result = query_one(DB.SHARED, "SELECT * "
+                                  "FROM atcsdevb_dev_electives.signup_dates t "
+                                  "WHERE t.grade_lvl = %s "
+                                  "AND NOW() >= t.start "
+                                  "AND NOW() <= t.end", [grade_level])
+
+    return (not result is None)
 
 # Enroll a user in an elective section
 def enroll(usr_id, section_id):
@@ -34,10 +39,10 @@ def is_section_full(section_id):
 def get_user_sections(usr_id, year, tri):
     sections = query(DB.ELECTIVE,
                      'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name, '
-                     '(SELECT count(*) FROM elective_user_xref x WHERE x.section_id = section.section_id AND x.usr_id=13 ) '
+                     '(SELECT count(*) FROM elective_user_xref x WHERE x.section_id = section.section_id AND x.usr_id=%s ) '
                      'FROM elective_section section, elective e, user t '
-                     'WHERE course_year = 2019 '
-                     'AND tri = 1 '
+                     'WHERE course_year = %s '
+                     'AND tri = %s '
                      'AND e.elective_id = section.elective_id '
                      'AND t.usr_id = section.teacher_id ', [int(usr_id), year, int(tri)])
 
