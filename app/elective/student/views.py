@@ -64,9 +64,18 @@ def enroll(id):
 
 @student_mod.route('/enroll/update', methods=['PUT'])
 def ping():
-    # TODO:
-    # PUT:
-    # section_ids: []
-    # Pings server to check whether any elective_enrollment counts have changed/closed
-    # If so returns the ids of the ones that have been fulled up
-    pass
+    data = request.get_json(force=True, silent=True)
+
+    section_ids = data['section_ids']
+
+    if(section_ids):
+
+        amount_left = {}
+
+        for i in range(len(section_ids)):
+            amount_left[section_ids[i]] = get_amount_left(section_ids[i])
+
+        return jsonify(amount_left)
+
+    else:
+        return jsonify({"Error": "Invalid parameters"})
