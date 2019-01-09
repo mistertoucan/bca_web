@@ -150,3 +150,10 @@ def get_current_info():
                                          'AND ps_year = %s ' +
                                          'ORDER BY end_dt', [formatted_year])[0]
     return [current_year, current_tri]
+
+def get_amount_left(section_id):
+    section_info = query_one(DB.ELECTIVE, "SELECT es.max - es.enrolled_count "
+                                          "FROM elective_section es "
+                                          "WHERE section_id = %d", [section_id])[0]
+
+    return section_info
