@@ -2,17 +2,24 @@ from app.db import DB, query
 
 from app.dashboard.models import *
 
-def get_admins():
-    return get_users("ADM")
+def get_admins(app_cde):
+    return get_users("ADM", app_cde)
 
-def get_teachers():
-    return get_users("TCH")
+def get_teachers(app_cde):
+    return get_users("TCH", app_cde)
 
-def get_students():
-    return get_users("STD")
+def get_students(app_cde):
+    return get_users("STD", app_cde)
 
-def get_users(role):
-    queryUsers = query(DB.SHARED, "SELECT usr_first_name, usr_last_name, usr_id, usr_grade_lvl, usr_type_cde FROM user WHERE usr_type_cde = %s", [role])
+def get_users(role, app_cde):
+
+    queryUsers = []
+
+    if app_cde:
+        queryUsers = query(DB.SHARED, "SELECT u.usr_first_name, u.usr_last_name, u.usr_id, u.usr_grade_lvl, u.usr_type_cde FROM user u, role_application_user_xref x WHERE u.usr_id = x.usr_id AND x.app_cde = %s AND x.usr_role_cde=%s", [app_cde, role])
+    else:
+        queryUsers = query(DB.SHARED, "SELECT u.usr_first_name, u.usr_last_name, u.usr_id, u.usr_grade_lvl, u.usr_type_cde FROM user u WHERE u.usr_type_cde=%s", [role])
+
     roleUsers = []
 
     for user in queryUsers:

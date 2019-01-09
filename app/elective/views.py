@@ -12,7 +12,7 @@ def check_auth():
 
 @elective_mod.route('/')
 def index():
-    type_code = g.user.get_type_code()
+    type_code = g.user.get_role('ELEN')
 
     if type_code == 'STD':
         return redirect(url_for('elective_student.index'))

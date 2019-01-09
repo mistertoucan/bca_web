@@ -22,7 +22,7 @@ import time
 @student_mod.before_request
 @requires_token
 def check_teacher():
-    if g.user.get_type_code() != 'STD':
+    if g.user.get_role('ELEN') != 'STD':
         return redirect(url_for('elective'))
 
 # pages

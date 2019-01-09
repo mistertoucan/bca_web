@@ -24,8 +24,6 @@ class User(object):
 
     # returns a list of menu items the user has access to
     def get_apps(self):
-        typeCode = self.get_type_code()
-
         apps = query(DB.SHARED, 'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon, app_type '
                                 'FROM menu_item m, menu_item_user_type_xref ux '
                                 'WHERE m.menu_id = ux.menu_id '
@@ -53,9 +51,15 @@ class User(object):
             userRoles[role[0]] = role[1]
         return userRoles
 
-    def get_role(self, app_id):
-        return self.appRoles[app_id]
-
+    def get_role(self, app_cde):
+        role = query(DB.SHARED, 'SELECT usr_role_cde '
+                                'FROM role_application_user_xref '
+                                'WHERE usr_id=%s '
+                                'AND app_cde=%s', [self.__usr_id__, app_cde])
+        if role:
+            return role[0]
+        else:
+            return self.get_type_code()
 
     @staticmethod
     def get(id):

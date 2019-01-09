@@ -12,7 +12,7 @@ import collections
 @teacher_mod.before_request
 @requires_token
 def check_teacher():
-    if g.user.get_type_code() != 'TCH':
+    if g.user.get_role('ELEN') != 'TCH':
         return redirect('elective')
 
 # pages
