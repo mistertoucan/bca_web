@@ -52,6 +52,7 @@ def test():
                 admins = get_admins('DSH')
                 teachers = get_teachers(None)
                 students = get_students(None)
+
                 return render_template("dashboard/test.html", admins=admins, teachers=teachers, students=students)
         return redirect(url_for('dashboard.about'))
     return redirect('http://' + Config.PHP_DOMAIN + "/bca-apps")

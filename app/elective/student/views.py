@@ -33,14 +33,11 @@ def index():
 
     current_info = get_current_info()
 
-    sections = get_user_sections(g.user.get_id(), current_info[0], current_info[1])
+    enrolled_sections = get_enrolled_sections(g.user.get_id(), current_info[0], current_info[1])
+    sections = get_sections(g.user.get_id(), current_info[0], current_info[1])
     enroll_info = get_enrollment_time(g.user.get_grade_level())
 
-    current_milli_time = lambda: int(round(time.time() * 1000))
-
-    print(current_milli_time)
-
-    return render_template("elective/student/index.html", sections=sections, enroll_info=enroll_info)
+    return render_template("elective/student/index.html", sections=sections, enroll_info=enroll_info, enrolled_sections=enrolled_sections)
 
 @student_mod.route('/enroll/<int:id>', methods=['PUT'])
 def enroll(id):

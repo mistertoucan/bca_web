@@ -21,7 +21,7 @@
     </div>
 
     {%  if sections %}
-        <div class="main container white z-depth-2">
+        <div class="main container white z-depth-2" style="padding-right: 25px; padding-left: 25px;">
             <div class="row head">
                 <div id="project_current">
 
@@ -52,7 +52,7 @@
         </div>
     {% endif %}
 
-<div class="main container white z-depth-2">
+<div class="main container white z-depth-2" style="padding: 0 25px;">
     <div class="section" id="project_list">
         <h3 class="center-align">Available Electives</h3>
         <table class="highlight responsive-table centered">
@@ -62,35 +62,36 @@
                 <th>Name</th>
                 <th>Teacher</th>
                 <th>Room</th>
-                <th>Max</th>
+                <th>Enrolled/Max</th>
             </tr>
             </thead>
-            <?php foreach ($projectsList as $project) { ?>
-                <?php if (($curr_project['project_id'] != $project['project_id'])) {?>
-                <tr style="font-weight: 300;">
-                    <td><a class="modal-trigger" href="#modal<?php echo $project['project_id'] ?>"><i class="material-icons tiny">info_outline</i></a></td>
-                    <td><?php echo $project['project_name'] ?></td>
-                    <td><?php echo $project['teacher'] ?></td>
-                    <td><?php echo $project['room_nbr'] ?></td>
-                    <td><?php echo $project['max_nbr'] ?></td>
-                    <td>
-                        <a class="enroll btn green lighten-3" id="enroll" onclick="submitProject(<?php echo $project['project_id'] ?>, 'enroll')">Enroll</a>
-                    </td>
-                </tr>
+            {% for section in sections %}
+                {% if section.id not in enrolled_sections %}
+                    <tr style="font-weight: 300;">
+                        <td><a class="modal-trigger" href="#modal<?php echo $project['project_id'] ?>"><i class="material-icons tiny">info_outline</i></a></td>
+                        <td><?php echo $project['project_name'] ?></td>
+                        <td><?php echo $project['teacher'] ?></td>
+                        <td><?php echo $project['room_nbr'] ?></td>
+                        <td><?php echo $project['max_nbr'] ?></td>
+                        <td>
+                            <a class="enroll btn green lighten-3" id="enroll" onclick="submitProject(<?php echo $project['project_id'] ?>, 'enroll')">Enroll</a>
+                        </td>
+                    </tr>
 
-                <div class="modal" id="modal<?php echo $project['project_id']?>">
-                    <div class="modal-content">
-                        <h1><?php echo $project['project_name'] ?></h1>
-                        <h5><?php echo $project['teacher'] ?></h5>
-                        <p class="flow-text">Project Description:&nbsp;<?php echo $project['project_desc'] ?></p>
-                        <p class="flow-text">Prerequisites:&nbsp;<?php echo $project['prereq'] ?></p>
+                    <div class="modal" id="modal<?php echo $project['project_id']?>">
+                        <div class="modal-content">
+                            <h1><?php echo $project['project_name'] ?></h1>
+                            <h5><?php echo $project['teacher'] ?></h5>
+                            <p class="flow-text">Project Description:&nbsp;<?php echo $project['project_desc'] ?></p>
+                            <p class="flow-text">Prerequisites:&nbsp;<?php echo $project['prereq'] ?></p>
+                        </div>
+                        <div class="modal-footer">
+
+                        </div>
                     </div>
-                    <div class="modal-footer">
+                {% endfor %}
 
-                    </div>
-                </div>
-
-            <?php } } ?>
+            {% endfor %}
         </table>
     </div>
 </div>

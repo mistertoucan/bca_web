@@ -6,16 +6,20 @@ from datetime import datetime
 
 # Make Query to DB to check whether enrollment is open for grade level
 def get_enrollment_time(grade_level):
-    result = query_one(DB.SHARED, "SELECT * "
-                                  "FROM atcsdevb_dev_electives.signup_dates t "
+    result = query_one(DB.ELECTIVE, "SELECT * "
+                                  "FROM signup_dates t "
                                   "WHERE t.grade_lvl = %s "
                                   "AND NOW() > t.start", [grade_level])
 
-    return EnrollmentTime(result[0], result[1], result[2], result[3], result[4])
+
+    if result:
+        return EnrollmentTime(result[0], result[1], result[2], result[3], result[4])
+    else:
+        return EnrollmentTime(grade_level, None, None, get_current_year(), '-1')
 
 def enrollment_open(grade_level):
-    result = query_one(DB.SHARED, "SELECT * "
-                                  "FROM atcsdevb_dev_electives.signup_dates t "
+    result = query_one(DB.ELECTIVE, "SELECT * "
+                                  "FROM signup_dates t "
                                   "WHERE t.grade_lvl = %s "
                                   "AND NOW() >= t.start "
                                   "AND NOW() <= t.end", [grade_level])
@@ -31,7 +35,7 @@ def enroll(usr_id, section_id):
 
 # Remove a user from an elective_section
 def drop_section(usr_id, section_id):
-    delete(DB.SHARED, 'DELETE FROM elective_user_xref WHERE usr_id=%s AND section_id=%s', [usr_id, section_id])
+    delete(DB.ELECTIVE, 'DELETE FROM elective_user_xref WHERE usr_id=%s AND section_id=%s', [usr_id, section_id])
 
     return True
 
@@ -44,8 +48,19 @@ def is_section_full(section_id):
 
     return section_info[0] >= section_info[1]
 
+def get_enrolled_sections(usr_id, year, tri):
+    sections = query(DB.ELECTIVE,
+                     'SELECT section.section_id '
+                     'FROM elective_section section, elective e, user t '
+                     'WHERE course_year = %s '
+                     'AND tri = %s '
+                     'AND e.elective_id = section.elective_id '
+                     'AND t.usr_id = section.teacher_id ', [int(usr_id), year, int(tri)])
+
+    return [x[0] for x in sections]
+
 # Get all of a users elective sections
-def get_user_sections(usr_id, year, tri):
+def get_sections(usr_id, year, tri):
     sections = query(DB.ELECTIVE,
                      'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name, '
                      '(SELECT count(*) FROM elective_user_xref x WHERE x.section_id = section.section_id AND x.usr_id=%s ) '
@@ -141,14 +156,16 @@ def get_current_info():
 
     formatted_year = str(current_year.split('-')[0])
 
+    print(formatted_year)
+
     # ps_year format - Ex: 2018 = 28
     formatted_year = formatted_year[0] + formatted_year[-1]
 
     current_tri = query_one(DB.ELECTIVE, 'SELECT tri_nbr FROM atcsdevb_dev_shared.trimester ' +
                                          'WHERE NOW() <= end_dt ' +
                                          'AND NOW() >= start_dt ' +
-                                         'AND ps_year = %s ' +
-                                         'ORDER BY end_dt', [formatted_year])[0]
+    #                                    'AND ps_year = %s ' +
+                                         'ORDER BY end_dt')[0]
     return [current_year, current_tri]
 
 def get_amount_left(section_id):
