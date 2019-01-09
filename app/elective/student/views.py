@@ -4,6 +4,7 @@ from app.shared.controllers import requires_token
 from app.elective.student.controllers import *
 
 from flask import g, redirect, url_for, render_template, request, jsonify
+import time
 
 # Explanation:
 # This file is a sub app for the elective enroll application
@@ -33,15 +34,19 @@ def index():
     current_info = get_current_info()
 
     sections = get_user_sections(g.user.get_id(), current_info[0], current_info[1])
-    enroll_open = enrollment_open(g.user.get_grade_level())
+    enroll_info = get_enrollment_time(g.user.get_grade_level())
 
-    return render_template("elective/student/index.html", enroll_open=enroll_open, sections=sections)
+    current_milli_time = lambda: int(round(time.time() * 1000))
+
+    print(current_milli_time)
+
+    return render_template("elective/student/index.html", sections=sections, enroll_info=enroll_info)
 
 @student_mod.route('/enroll/<int:id>', methods=['PUT'])
 def enroll(id):
     data = request.get_json(force=True, silent=True)
 
-    section_id = data['section_id']
+    section_id = id
     usr_id = data['usr_id']
     enroll = data['enroll']
 

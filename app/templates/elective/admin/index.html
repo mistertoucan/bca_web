@@ -1,1 +1,74 @@
 {% extends "base.html" %}
+
+{% block styles %}
+    {{ super() }}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/elective/main.css') }}">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript">
+        let electives = {
+            {% for elective in electives %}
+                {% if elective.course_id %}
+                    "{{ "%s : %s" % (elective.name, elective.course_id) }}" : null,
+                {% else %}
+                    "{{ "%s" % (elective.name) }}" : null,
+                {% endif %}
+            {% endfor %}
+        };
+
+        let ids = {
+            {% for elective in electives %}
+                {% if elective.course_id %}
+                    "{{ "%s : PowerSchool ID: %s" % (elective.name, elective.course_id) }}" : {{ elective.id }},
+                {% else %}
+                    "{{ "%s" % (elective.name) }}" : {{ elective.id }},
+                {% endif %}
+            {% endfor %}
+        };
+
+        $(document).ready(function() {
+            $('#search.autocomplete').autocomplete({
+                data: electives,
+                minLength: 1,
+                onAutocomplete: function(val) {
+                    console.log('called');
+                    location.href = `http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/${ids[val]}`;
+                },
+                minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
+            });
+        });
+
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <div id="box" class="container">
+
+        <div class="row">
+            <div class="col s12 center-align">
+                <h3 class="title">Edit Existing Elective</h3>
+            </div>
+        </div>
+
+        <div class="row" style="margin-bottom: 0;">
+            <div class="input-field col s8 offset-s2" style="margin-top: 25px">
+                <i class="material-icons prefix">search</i>
+                <input autocomplete="off" type="text" id="search" class="autocomplete" placeholder="Enter an Elective Name...">
+                <label for="search">Elective Search</label>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 0">
+            <div class="col s6 offset-s3">
+                <p>Don't See An Elective? Create Your Own <a href="http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/create">Here</a></p>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

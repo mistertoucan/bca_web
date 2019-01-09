@@ -11,7 +11,7 @@
 
     <div class="center-align">
 
-        {% if enroll_open %}
+        {% if True %}
             <h1 class="center-align black-text title">Elective Enroll for Trimester <?php echo $tri_nbr . ", ". $course_year?></h1>
             <h6 class="center-align black-text close">Elective registration closes on <?php echo date("l, F jS, Y", $end_date). " at " . date("g:i a", $end_date) . "."?></h6>
         {% else %}
@@ -94,12 +94,42 @@
         </table>
     </div>
 </div>
-<script>
-    function submitProject(project_id, action) {
-        window.location.href = "index.php?action=project_" + action + "&project_id=" + project_id;
+
+<script type="text/javascript">
+
+    // updates a user's status in an elective section
+    function update_status(section_id, enroll) {
+
+        let requestData = {};
+        requestData.usr_id = {{ g.user.get_id() }};
+        requestData.enroll = enroll;
+
+        $.ajax({
+            url: 'http://{{ config.LOCAL_DOMAIN }}/elective_enroll/student/' + section_id,
+            type: 'PUT',
+            data: JSON.stringify(requestData),
+            contentType: 'application/json',
+            dataType: "json"
+
+        }).done(function(data) {
+            console.log(data);
+            console.log("Returned");
+            alertify.success("Updated elective status " + section_name);
+            $("#" + section_id).hide('fade');
+
+        }).fail(function(data) {
+            console.log(data);
+        });
     }
+
+    function asyncUpdateSections() {
+
+    }
+
+
 </script>
-<script>
+
+<script type="text/javascript">
     $(document).ready(function () {
         let signup = ({{ enroll_open }});
         let enroll = ({{ enroll_open }});
@@ -112,14 +142,17 @@
                 $(".enroll").addClass("disabled");
                 $(".disenroll").removeClass("disabled");
             }
-        }
-        else {
+        } else {
             $(".enroll").addClass("disabled");
             $(".disenroll").addClass("disabled");
         }
+
+        // update the electives every 15 seconds to remove filled ones/update counts
+        setTimeout(asyncUpdateSections(), 15*1000);
     });
 </script>
-<script>
+
+<script type="text/javascript">
     $('.modal').modal({
         inDuration: 100, // Transition in duration
         outDuration: 100 // Transition out duration

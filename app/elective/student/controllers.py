@@ -1,10 +1,18 @@
 from app.db import DB, insert, insertmany, query_one, query, delete, update
 
-from app.elective.student.models import ElectiveSection, Elective, ElectiveTeacher
+from app.elective.student.models import ElectiveSection, Elective, ElectiveTeacher, EnrollmentTime
 
 from datetime import datetime
 
 # Make Query to DB to check whether enrollment is open for grade level
+def get_enrollment_time(grade_level):
+    result = query_one(DB.SHARED, "SELECT * "
+                                  "FROM atcsdevb_dev_electives.signup_dates t "
+                                  "WHERE t.grade_lvl = %s "
+                                  "AND NOW() > t.start", [grade_level])
+
+    return EnrollmentTime(result[0], result[1], result[2], result[3], result[4])
+
 def enrollment_open(grade_level):
     result = query_one(DB.SHARED, "SELECT * "
                                   "FROM atcsdevb_dev_electives.signup_dates t "
@@ -13,6 +21,7 @@ def enrollment_open(grade_level):
                                   "AND NOW() <= t.end", [grade_level])
 
     return (not result is None)
+
 
 # Enroll a user in an elective section
 def enroll(usr_id, section_id):

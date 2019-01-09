@@ -29,7 +29,6 @@ class User(object):
         apps = query(DB.SHARED, 'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon, app_type '
                                 'FROM menu_item m, menu_item_user_type_xref ux '
                                 'WHERE m.menu_id = ux.menu_id '
-                                'AND ux.usr_type_cde = %s '
                                 'AND active = 1 '
                                 'union '
                                 'SELECT m.menu_id, title, descr, link, sort_order, target, fa_icon, app_type '
@@ -39,7 +38,7 @@ class User(object):
                                 'and ur.app_cde = ax.app_cde '
                                 'and ax.usr_id = %s '
                                 'AND active = 1 '
-                                'ORDER BY sort_order ', [typeCode, self.__usr_id__])
+                                'ORDER BY sort_order ', [self.__usr_id__])
         return apps
 
     def get_type_code(self):
