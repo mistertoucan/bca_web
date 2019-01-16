@@ -3,7 +3,7 @@
 {% block styles %}
     {{ super() }}
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/elective/main.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/admin/main.css') }}">
 {% endblock %}
 
 {% block scripts %}
@@ -47,28 +47,65 @@
 
 {% block content %}
 
-    <div id="box" class="container">
+    <div class="container">
+    <h3 class="center-align">Admin Tools</h3>
+    <ul class="collection with-header">
 
-        <div class="row">
-            <div class="col s12 center-align">
-                <h3 class="title">Edit Existing Elective</h3>
-            </div>
-        </div>
+        <a href="project_monitor" class="collection-item avatar">
+            <i class="material-icons circle red">business</i>
+            <h6 class="title">Monitor Projects</h6>
+            <p class="small-text">Modify, add, and review projects.</p>
+        </a>
 
-        <div class="row" style="margin-bottom: 0;">
-            <div class="input-field col s8 offset-s2" style="margin-top: 25px">
-                <i class="material-icons prefix">search</i>
-                <input autocomplete="off" type="text" id="search" class="autocomplete" placeholder="Enter an Elective Name...">
-                <label for="search">Elective Search</label>
-            </div>
-        </div>
+        <a href="powerschool_courses" class="collection-item avatar">
+            <i class="material-icons circle red">assignment</i>
+            <h6 class="title">Powerschool Courses</h6>
+            <p class="small-text">Modify, add, and review all courses.</p>
+        </a>
 
-        <div class="row" style="margin-top: 0">
-            <div class="col s6 offset-s3">
-                <p>Don't See An Elective? Create Your Own <a href="http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/create">Here</a></p>
-            </div>
-        </div>
+        <a href="mimic_user" class="collection-item avatar">
+            <i class="material-icons circle red">person</i>
+            <h6 class="title">Mimic User</h6>
+            <p class="small-text">Log in as any user in the database and use the app as if you were them.</p>
+        </a>
 
-    </div>
+        <a href="audit_viewer" class="collection-item avatar">
+            <i class="material-icons circle red">edit</i>
+            <h6 class="title">Audit Viewer</h6>
+            <p class="small-text">View all database audits from the past week.</p>
+        </a>
+
+        <a href="log_viewer" class="collection-item avatar">
+            <i class="material-icons circle red">report_problem</i>
+            <h6 class="title">Log Viewer</h6>
+            <p class="small-text">View the application log.</p>
+        </a>
+
+        <a href="signup_dates" class="collection-item avatar">
+            <i class="material-icons circle red">access_time</i>
+            <h6 class="title">Signup Dates</h6>
+            <p class="small-text">View and edit signup deadlines by grade.</p>
+        </a>
+
+        <a href="roles" class="collection-item avatar">
+            <i class="material-icons circle red">person_add</i>
+            <h6 class="title">Roles</h6>
+            <p class="small-text">Set and manage roles for projects.</p>
+        </a>
+
+        <a href="variables" class="collection-item avatar">
+            <i class="material-icons circle red">view_quilt</i>
+            <h6 class="title">Variables</h6>
+            <p class="small-text">Set and manage variables for projects.</p>
+        </a>
+
+
+        <!--<a href="roles" class="collection-item avatar">
+            <i class="material-icons circle red">person_add</i>
+            <h6 class="title">Roles</h6>
+            <p class="small-text">Set roles for proctoring.</p>
+        </a>-->
+    </ul>
+</div>
 
 {% endblock %}
