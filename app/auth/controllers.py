@@ -4,7 +4,7 @@ from app.shared.models import User
 
 from werkzeug.contrib.cache import SimpleCache
 
-import ldap
+from ldap3 import Server, Connection, ALL, NTLM
 import jwt
 import datetime
 
@@ -20,16 +20,12 @@ def authenticate_user(ip_address, username, password):
     if resultID:
         resultID = resultID[0]
 
-        conn = ldap.initialize('ldap://168.229.1.240:3268')
-        conn.protocol_version = 3
-        conn.set_option(ldap.OPT_REFERRALS, 0)
-        try:
-            conn.simple_bind_s(username, password)
-        except StandardError:
-            return None
-        finally:
-            return create_token(resultID, ip_address)
-    return None
+        server = Server('168.229.1.240:3268', get_info=ALL)
+
+        conn = Connection(server, user=username, password=password, authentication=NTLM)
+
+        # TODO: Update LDAP
+        return create_token(resultID, ip_address)
 
 
 def validate_token(token, ip_address, decoded=True):

@@ -8,12 +8,12 @@ Flask-Menu==0.7.0
 Flask-MySQL==1.4.0
 itsdangerous==1.1.0
 Jinja2==2.10
+ldap3==2.5.2
 MarkupSafe==1.1.0
 mysqlclient==1.4.0rc3
 pyasn1==0.4.5
 pyasn1-modules==0.2.3
 PyJWT==1.7.1
 PyMySQL==0.9.3
-python-ldap==3.1.0
 six==1.12.0
 Werkzeug==0.14.1

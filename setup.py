@@ -10,7 +10,7 @@ setup(
                       'mysqlclient',
                       'flask-mysql',
                       'flask_login',
-                      'python-ldap',
+                      'ldap3',
                       'flask-breadcrumbs',
                       'enum',
                       'pyjwt']
