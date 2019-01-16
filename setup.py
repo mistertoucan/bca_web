@@ -6,7 +6,7 @@ setup(
     packages=['app'],
     include_package_data=True,
     zip_safe=False,
-    install_requires=['Flask',
+    install_requires=['flask',
                       'mysqlclient',
                       'flask-mysql',
                       'flask_login',
