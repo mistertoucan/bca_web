@@ -33,23 +33,23 @@ def test():
         if not request.cookies.get('bca_token'):
             if request.method == 'POST':
 
-                usr_id_tch = request.form["usr_id_tch"]
-                usr_id_adm = request.form["usr_id_adm"]
-                usr_id_std = request.form["usr_id_std"]
-
                 choice = request.form["choice"]
 
                 if choice == 'Login ADM':
+                    usr_id_adm = request.form["usr_id_adm"]
                     g.token =  create_token(usr_id_adm, request.remote_addr)
                 elif choice == 'Login TCH':
+                    usr_id_tch = request.form["usr_id_tch"]
                     g.token = create_token(usr_id_tch, request.remote_addr)
                 elif choice =='Login STD':
+                    usr_id_std = request.form["usr_id_std"]
                     g.token = create_token(usr_id_std, request.remote_addr)
                 else:
                     return redirect(url_for('dashboard.test'), code=400)
 
             else:
                 admins = get_admins('DSH')
+                print(admins)
                 teachers = get_teachers(None)
                 students = get_students(None)
 
