@@ -8,7 +8,7 @@
               <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
               <ul id="nav-mobile" class="right hide-on-med-and-down">
                   <li><a id="dash-name" class="nav-text black-text" href="#" style="float: left;">{{ "%s %s" % (g.user.get_name()[0], g.user.get_name()[1]) }}</a></li>
-                  <li><a><i class="material-icons black-text">settings</i></a></li>
+                  <li><a href="{{ config.PHP_DOMAIN }}/dashboard/profile"><i class="material-icons black-text">settings</i></a></li>
                 <li><a class="nav-text black-text" href="{{ url_for('auth.logout') }}">Log out</a></li>
               </ul>
             </div>
@@ -34,7 +34,7 @@
 
             <div id="nav-top-bar">
                 <li>
-                    <a id="head" href="http://{{ config.PHP_DOMAIN }}/bca-apps" class="center">BCA
+                    <a id="head" href="{{ config.PHP_DOMAIN }}/bca-apps" class="center">BCA
                         <p class="center subtext">
 
                             {% set typeCode = g.user.get_type_code() %}
@@ -64,7 +64,7 @@
 {#                        {% endif %}#}
                         {% set url = app[3] %}
                         {% set type = app[7] %}
-                        {% set domain = ("http://" + config.PHP_DOMAIN) if type == "php" else (("http://" + config.LOCAL_DOMAIN) if type == "flask" else "") %}
+                        {% set domain = (config.PHP_DOMAIN) if type == "php" else ((config.LOCAL_DOMAIN) if type == "flask" else "") %}
 
                         <a class="nav-link" style="color: #e0e0e0;" href="{{ domain }}{{ url }}" target="{{ app[5] }}"><i class="fa fa-lg {{ app[6] }}" aria-hidden="true"></i>{{ app[1].replace("&nbsp", " ") }}</a>
 

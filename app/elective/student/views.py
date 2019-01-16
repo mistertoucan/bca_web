@@ -34,7 +34,7 @@ def index():
     current_info = get_current_info()
 
     enrolled_sections = get_enrolled_sections(g.user.get_id(), current_info[0], current_info[1])
-    sections = get_sections(g.user.get_id(), current_info[0], current_info[1])
+    sections = get_sections(current_info[0], current_info[1])
     enroll_info = get_enrollment_time(g.user.get_grade_level())
 
     return render_template("elective/student/index.html", sections=sections, enroll_info=enroll_info, enrolled_sections=enrolled_sections)

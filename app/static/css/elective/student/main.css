@@ -6,6 +6,10 @@
   font-weight: 300;
 }
 
+td {
+  margin: 10px;
+}
+
 img, legend {
   border: 0; }
 
@@ -802,5 +806,3 @@ nav.navbar {
     .error button:hover {
       color: #f6db6f;
       border: 1px solid #f6db6f; }
-
-

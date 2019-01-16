@@ -33,15 +33,11 @@
 
                     <div class="row valign-wrapper" style="margin-bottom: 0px;">
 
-                        <div class="col s6">
-                            <div class="center-align">
-                                <h2 style="margin-top: 17px;" id="curr_project_label"><b><?php echo get_current_project($usr_id)['project_name']; if (empty(get_current_project($usr_id))) {?> None <?php } ?></b></h2>
-                            </div>
-                        </div>
+
 
                         <div class="col s6">
                             <div class="center-align">
-                                <a class="disenroll btn red lighten-3" id="disenroll" onclick="submitProject(<?php echo get_current_project($usr_id)['project_id'] ?>, 'disenroll')">Disenroll</a>
+                                <a class="disenroll btn red lighten-3" id="disenroll" onclick="update_status('1', 'disenroll')">Disenroll</a>
                             </div>
                         </div>
 
@@ -55,26 +51,34 @@
 <div class="main container white z-depth-2" style="padding: 0 25px;">
     <div class="section" id="project_list">
         <h3 class="center-align">Available Electives</h3>
+
+        <div class="row head search-wr">
+            <div class="col s6 offset-s3">
+                <i class="material-icons" style="position: absolute; padding-top: 10px;">search</i>
+                <input id="search" style="display: block; font-weight: 300; margin-left: 25px; margin-right: -25px;" placeholder="Search"/>
+            </div>
+        </div>
+
         <table class="highlight responsive-table centered">
             <thead>
             <tr>
                 <th></th>
-                <th>Name</th>
-                <th>Teacher</th>
-                <th>Room</th>
-                <th>Enrolled/Max</th>
+                <th><strong>Name</strong></th>
+                <th><strong>Teacher</strong></th>
+                <th><strong>Room</strong></th>
+                <th><strong>Enrolled/Max</strong></th>
             </tr>
             </thead>
             {% for section in sections %}
                 {% if section.id not in enrolled_sections %}
                     <tr style="font-weight: 300;">
                         <td><a class="modal-trigger" href="#modal<?php echo $project['project_id'] ?>"><i class="material-icons tiny">info_outline</i></a></td>
-                        <td><?php echo $project['project_name'] ?></td>
-                        <td><?php echo $project['teacher'] ?></td>
-                        <td><?php echo $project['room_nbr'] ?></td>
-                        <td><?php echo $project['max_nbr'] ?></td>
+                        <td>{{ section.elective.name }}</td>
+                        <td>{{ section.teacher.first_name }}, {{ section.teacher.last_name }}</td>
+                        <td>{{ section.room_nbr }}</td>
+                        <td>{{ section.enrolled_count }}/{{ section.max }}</td>
                         <td>
-                            <a class="enroll btn green lighten-3" id="enroll" onclick="submitProject(<?php echo $project['project_id'] ?>, 'enroll')">Enroll</a>
+                            <a class="enroll btn green lighten-3" id="enroll" onclick="update_status({{ section.id }}, true)">Enroll</a>
                         </td>
                     </tr>
 
@@ -89,7 +93,7 @@
 
                         </div>
                     </div>
-                {% endfor %}
+                {% endif %}
 
             {% endfor %}
         </table>
