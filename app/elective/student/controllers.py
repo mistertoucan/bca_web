@@ -57,11 +57,12 @@ def is_section_full(section_id):
 def get_enrolled_sections(usr_id, year, tri):
 
     sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
-                                      'FROM elective_section section, elective e, user t '
-                                      'WHERE course_year = %s '
-                                      'AND tri = %s '
-                                      'AND e.elective_id = section.elective_id '
-                                      'AND t.usr_id = section.teacher_id ', [year, int(tri)])
+                                  'FROM elective_section section, elective e, user t '
+                                  'WHERE e.elective_id = section.elective_id '
+                                  'AND section.course_year = %s '
+                                  'AND section.tri = %s '
+                                  'AND section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s) '
+                                  'AND t.usr_id = section.teacher_id ', [year, int(tri), usr_id])
 
     e_sections = []
 
@@ -186,7 +187,6 @@ def get_sections(year, tri):
         s.teacher = teacher
 
         e_sections.append(s)
-
 
     return e_sections
 

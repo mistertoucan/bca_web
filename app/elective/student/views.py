@@ -30,13 +30,15 @@ def check_teacher():
 # A route for the student_mod app
 @student_mod.route('/')
 def index():
-
-    current_info = get_current_info()
-
-    enrolled_sections = get_enrolled_sections(g.user.get_id(), current_info[0], current_info[1])
-
-    available_sections = get_sections(current_info[0], current_info[1])
     enroll_info = get_enrollment_time(g.user.get_grade_level())
+
+    enrolled_sections = []
+    available_sections = []
+
+    if not enroll_info.start_time is None:
+
+        enrolled_sections = get_enrolled_sections(g.user.get_id(), enroll_info.course_year, enroll_info.tri_nbr)
+        available_sections = get_sections(enroll_info.course_year, enroll_info.tri_nbr)
 
     return render_template("elective/student/index.html", sections=available_sections, enroll_info=enroll_info, enrolled_sections=enrolled_sections)
 
