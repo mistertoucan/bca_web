@@ -22,9 +22,11 @@ def authenticate_user(ip_address, username, password):
 
         server = Server('168.229.1.240:3268', get_info=ALL)
 
-        conn = Connection(server, user=username, password=password, authentication=NTLM)
+        conn = Connection(server, user=username, password=password)
 
-        # TODO: Update LDAP
+        if not conn.bind:
+            return None
+
         return create_token(resultID, ip_address)
 
 
