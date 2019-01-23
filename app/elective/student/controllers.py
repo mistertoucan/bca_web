@@ -2,6 +2,8 @@ from app.db import DB, insert, insertmany, query_one, query, delete, update
 
 from app.elective.student.models import ElectiveSection, Elective, ElectiveTeacher, EnrollmentTime
 
+from util import datetime_from_string, us_format
+
 from datetime import datetime
 
 # Make Query to DB to check whether enrollment is open for grade level
@@ -9,11 +11,15 @@ def get_enrollment_time(grade_level):
     result = query_one(DB.ELECTIVE, "SELECT * "
                                   "FROM signup_dates t "
                                   "WHERE t.grade_lvl = %s "
-                                  "AND NOW() > t.start", [grade_level])
-
+                                  "AND NOW() >= t.start "
+                                  "AND NOW() < t.end", [grade_level])
 
     if result:
-        return EnrollmentTime(result[0], result[1], result[2], result[3], result[4])
+
+        start_time = result[1]
+        end_time = result[2]
+
+        return EnrollmentTime(result[0], start_time, end_time, result[3], result[4])
     else:
         return EnrollmentTime(grade_level, None, None, get_current_year(), '-1')
 
@@ -49,26 +55,13 @@ def is_section_full(section_id):
     return section_info[0] >= section_info[1]
 
 def get_enrolled_sections(usr_id, year, tri):
-    sections = query(DB.ELECTIVE,
-                     'SELECT section.section_id '
-                     'FROM elective_section section, elective e, user t '
-                     'WHERE course_year = %s '
-                     'AND tri = %s '
-                     'AND e.elective_id = section.elective_id '
-                     'AND t.usr_id = section.teacher_id ', [year, int(tri)])
 
-    return [x[0] for x in sections]
-
-# Get all of a users elective sections
-def get_sections(usr_id, year, tri):
-    sections = query(DB.ELECTIVE,
-                     'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name, '
-                     '(SELECT count(*) FROM elective_user_xref x WHERE x.section_id = section.section_id AND x.usr_id=%s ) '
-                     'FROM elective_section section, elective e, user t '
-                     'WHERE course_year = %s '
-                     'AND tri = %s '
-                     'AND e.elective_id = section.elective_id '
-                     'AND t.usr_id = section.teacher_id ', [int(usr_id), year, int(tri)])
+    sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
+                                      'FROM elective_section section, elective e, user t '
+                                      'WHERE course_year = %s '
+                                      'AND tri = %s '
+                                      'AND e.elective_id = section.elective_id '
+                                      'AND t.usr_id = section.teacher_id ', [year, int(tri)])
 
     e_sections = []
 
@@ -97,19 +90,22 @@ def get_sections(usr_id, year, tri):
 
     return e_sections
 
-# Get all current elective sections for a tri/year
-def get_sections(year, tri):
+# Get all sections available for a user
+def get_sections(user_id, year, tri):
 
     sections = []
 
-    if year == -1 and tri == -1:
+    if year != -1 and tri != -1:
 
-        sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
-                                      'FROM elective_section section, elective e, user t '
-                                      'WHERE course_year = %s '
-                                      'AND tri = %s '
-                                      'AND e.elective_id = section.elective_id '
-                                      'AND t.usr_id = section.teacher_id ', [year, tri])
+        sections = query(DB.ELECTIVE,
+                         'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
+                         'FROM elective_section section, elective e, user t '
+                         'WHERE course_year = %s '
+                         'AND tri = %s '
+                         'AND e.elective_id = section.elective_id '
+                         'AND section.enrolled_count < section.max '
+                         'AND t.usr_id = section.teacher_id ', [year, tri])
+
     else:
 
         sections = query(DB.ELECTIVE,
@@ -117,6 +113,47 @@ def get_sections(year, tri):
                          'FROM elective_section section, elective e, user t '
                          'WHERE e.elective_id = section.elective_id '
                          'AND t.usr_id = section.teacher_id ')
+
+    e_sections = []
+
+    for section in sections:
+        print(section)
+
+        elective_id = section[1]
+        elective_name = section[2]
+        elective_desc = section[3]
+        elective_prereq = section[4]
+
+        section_id = section[0]
+        section_room_nbr = section[5]
+        section_enrolled = section[6]
+        section_nbr = section[7]
+        section_max = section[8]
+
+        teacher_id = section[9]
+        teacher_first_name = section[10]
+        teacher_last_name = section[11]
+
+        elective = Elective(elective_id, elective_name, elective_desc, elective_prereq)
+        teacher = ElectiveTeacher(teacher_id, teacher_first_name, teacher_last_name)
+        times = get_times(section_id)
+
+        s = ElectiveSection(section_id, elective, section_nbr, tri, year, section_enrolled, section_max,
+                            section_room_nbr, teacher, times, False)
+
+        s.teacher = teacher
+
+        e_sections.append(s)
+
+    return e_sections
+
+# Get all current elective sections for a tri/year
+def get_sections(year, tri):
+
+    sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
+                                      'FROM elective_section section, elective e, user t '
+                                      'WHERE e.elective_id = section.elective_id '
+                                      'AND t.usr_id = section.teacher_id ')
 
     e_sections = []
 

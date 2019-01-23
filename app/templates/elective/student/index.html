@@ -3,6 +3,7 @@
 {% block styles %}
     {{ super() }}
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/student/main.css') }}">
 
 {% endblock %}
@@ -12,10 +13,10 @@
     <div class="center-align">
 
         {% if True %}
-            <h1 class="center-align black-text title">Elective Enroll for Trimester <?php echo $tri_nbr . ", ". $course_year?></h1>
-            <h6 class="center-align black-text close">Elective registration closes on <?php echo date("l, F jS, Y", $end_date). " at " . date("g:i a", $end_date) . "."?></h6>
+            <h1 class="center-align black-text title">Elective Enroll for Trimester {{ enroll_info.tri_nbr }}</h1>
+            <h6 class="center-align black-text close">Elective registration closes on {{ enroll_info.end_time }}</h6>
         {% else %}
-            <h1 class="center-align black-text title">Elective registration opens on <?php echo date("l, F jS, Y", $start_date) . " at " . date("g:i a", $start_date) . "."?></h1>
+            <h1 class="center-align black-text title">Elective registration opens on {{ enroll_info.start_time }}</h1>
         {% endif %}
 
     </div>
@@ -31,18 +32,28 @@
                         </div>
                     </div>
 
-                    <div class="row valign-wrapper" style="margin-bottom: 0px;">
+{#                    {% for section_id in enrolled_section_ids %}#}
+{##}
+{#                        <div class="row valign-wrapper" style="margin-bottom: 0px;">#}
+{##}
+{#                            <div class="col s6">#}
+{##}
+{#                                {% set section = sections[section_id] %}#}
+{##}
+{#                                <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>#}
+{#                                <td>{{ section.elective.name }}</td>#}
+{#                                <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>#}
+{#                                <td>{{ section.room_nbr }}</td>#}
+{#                                <td>{{ section.enrolled_count }}/{{ section.max }}</td>#}
+{##}
+{#                                <td><a class="disenroll btn red lighten-3" id="disenroll" onclick="update_status('1', 'disenroll')">Disenroll</a></td>#}
+{##}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{##}
+{#                    {% endfor %}#}
 
-
-
-                        <div class="col s6">
-                            <div class="center-align">
-                                <a class="disenroll btn red lighten-3" id="disenroll" onclick="update_status('1', 'disenroll')">Disenroll</a>
-                            </div>
-                        </div>
-
-
-                    </div>
                 </div>
             </div>
         </div>
@@ -72,22 +83,22 @@
             {% for section in sections %}
                 {% if section.id not in enrolled_sections %}
                     <tr style="font-weight: 300;">
-                        <td><a class="modal-trigger" href="#modal<?php echo $project['project_id'] ?>"><i class="material-icons tiny">info_outline</i></a></td>
+                        <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>
                         <td>{{ section.elective.name }}</td>
-                        <td>{{ section.teacher.first_name }}, {{ section.teacher.last_name }}</td>
+                        <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>
                         <td>{{ section.room_nbr }}</td>
                         <td>{{ section.enrolled_count }}/{{ section.max }}</td>
                         <td>
-                            <a class="enroll btn green lighten-3" id="enroll" onclick="update_status({{ section.id }}, true)">Enroll</a>
+                            <a class="enroll btn green lighten-2" id="enroll" onclick="update_status({{ section.id }}, true)">Enroll</a>
                         </td>
                     </tr>
 
-                    <div class="modal" id="modal<?php echo $project['project_id']?>">
+                    <div class="modal" id="modal{{ section.id }}">
                         <div class="modal-content">
-                            <h1><?php echo $project['project_name'] ?></h1>
-                            <h5><?php echo $project['teacher'] ?></h5>
-                            <p class="flow-text">Project Description:&nbsp;<?php echo $project['project_desc'] ?></p>
-                            <p class="flow-text">Prerequisites:&nbsp;<?php echo $project['prereq'] ?></p>
+                            <h1>{{ section.elective.name }}</h1>
+                            <h5>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</h5>
+                            <p class="flow-text">Project Description:&nbsp;{{ section.elective.description }}</p>
+                            <p class="flow-text">Prerequisites:&nbsp;{{ section.elective.prereqs if section.elective.prereqs != "" else "Na" }}</p>
                         </div>
                         <div class="modal-footer">
 
@@ -128,7 +139,7 @@
     }
 
     function asyncUpdateSections() {
-
+        console.log("updating...");
     }
 
 
