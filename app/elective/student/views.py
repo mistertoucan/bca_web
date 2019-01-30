@@ -4,7 +4,6 @@ from app.shared.controllers import requires_token
 from app.elective.student.controllers import *
 
 from flask import g, redirect, url_for, render_template, request, jsonify
-import time
 
 # Explanation:
 # This file is a sub app for the elective enroll application
@@ -48,12 +47,12 @@ def enroll(id):
 
     section_id = id
     usr_id = data['usr_id']
-    enroll = data['enroll']
+    will_enroll = data['enroll']
 
     if enrollment_open(g.user.get_grade_level()):
-        if enroll:
+        if will_enroll:
             if not is_section_full(section_id):
-                enroll(usr_id, section_id)
+                enroll_user(usr_id, section_id)
 
                 return jsonify({"has_enrolled": True, "Error": None})
 

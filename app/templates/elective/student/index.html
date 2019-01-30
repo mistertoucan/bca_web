@@ -121,7 +121,7 @@
         requestData.enroll = enroll;
 
         $.ajax({
-            url: 'http://{{ config.LOCAL_DOMAIN }}/elective_enroll/student/' + section_id,
+            url: '{{ config.LOCAL_DOMAIN }}/elective_enroll/student/enroll/' + section_id,
             type: 'PUT',
             data: JSON.stringify(requestData),
             contentType: 'application/json',
@@ -130,7 +130,7 @@
         }).done(function(data) {
             console.log(data);
             console.log("Returned");
-            alertify.success("Updated elective status " + section_name);
+            alertify.success("Updated elective status " + section_id);
             $("#" + section_id).hide('fade');
 
         }).fail(function(data) {

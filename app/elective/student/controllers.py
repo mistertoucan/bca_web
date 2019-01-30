@@ -24,7 +24,7 @@ def get_enrollment_time(grade_level):
         return EnrollmentTime(grade_level, None, None, get_current_year(), '-1')
 
 def enrollment_open(grade_level):
-    result = query_one(DB.ELECTIVE, "SELECT grade_lvl, start, end, course_year, tri_nbr "
+    result = query_one(DB.ELECTIVE, "SELECT * "
                                   "FROM signup_dates t "
                                   "WHERE t.grade_lvl = %s "
                                   "AND NOW() >= t.start "
@@ -34,8 +34,8 @@ def enrollment_open(grade_level):
 
 
 # Enroll a user in an elective section
-def enroll(usr_id, section_id):
-    insert(DB.ELECTIVE, 'INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%d, %d)', [section_id, usr_id])
+def enroll_user(usr_id, section_id):
+    insert(DB.ELECTIVE, 'INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%s, %s)', [section_id, usr_id])
 
     return True
 
@@ -50,7 +50,7 @@ def is_section_full(section_id):
 
     section_info = query_one(DB.ELECTIVE, "SELECT enrolled_count, max "
                                      "FROM elective_section "
-                                     "WHERE section_id = %d", section_id)
+                                     "WHERE section_id = %s", section_id)
 
     return section_info[0] >= section_info[1]
 
