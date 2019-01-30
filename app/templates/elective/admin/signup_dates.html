@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block styles %}
+    {{ super() }}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/admin/main.css') }}">
+{% endblock %}
+
+
+{% block content %}
+<div class="container" style="text-align:center;width:90%">
+    <h3>Signup Dates</h3>
+</div>
+
+<table class="highlight" style="text-align: center; width: 80%;  margin-left: auto; margin-right: auto;">
+    <thead>
+    <tr>
+        <th>Grade Level</th>
+        <th>Course Year</th>
+        <th>Trimester</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+    </tr>
+    </thead>
+
+    <?php foreach ($signup_dates as $signup) {?>
+
+    <tr>
+        <input type="hidden" name="hdGrade[]" value="<?php echo ($signup['grade_lvl']);?>">
+
+        <div class="row">
+            <td style="text-align: center"><?php echo ($signup['grade_lvl']);?></td>
+            <td class="small_column">
+                <div class="input-field col s6">
+                    <input type="text" id="course_year" name="course_year[]" value="<?php echo $signup['course_year'] ?>">
+                </div>
+            </td>
+            <td class="small_column">
+                <div class="input-field col s6">
+                    <input type="text" id="tri_nbr" name="tri_nbr[]" value="<?php echo $signup['tri_nbr'] ?>">
+                </div>
+            </td>
+            <td class="small_column">
+                <div class="input-field col s6">
+                    <input type="text" id="start_date" name="start_date[]" class="datepicker" value="<?php echo $signup['start'] ?>">
+                </div>
+            </td>
+            <td class="small_column">
+                <div class="input-field col s6">
+                    <input type="text" id=end_date name="end_date[]" class="datepicker" value="<?php echo $signup['end'] ?>">
+                </div>
+            </td>
+        </div>
+    </tr>
+
+    <?php } ?>
+
+</table>
+
+<div class="button-wrap" style="text-align:center;">
+    <button style="cursor: pointer" class="waves-effect waves-light btn" type="submit" name="choice"
+            value="Update Dates">
+        Submit
+    </button>
+    <button id="return_home" style="cursor: pointer" class="waves-effect waves-light btn" type="submit" name="choice"
+            value="Back" formnovalidate>
+        Cancel
+    </button>
+</div>
+</form>
+
+{% endblock %}

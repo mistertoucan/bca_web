@@ -6,62 +6,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/admin/main.css') }}">
 {% endblock %}
 
-{% block scripts %}
-    {{ super() }}
-
-    <script type="text/javascript">
-        let electives = {
-            {% for elective in electives %}
-                {% if elective.course_id %}
-                    "{{ "%s : %s" % (elective.name, elective.course_id) }}" : null,
-                {% else %}
-                    "{{ "%s" % (elective.name) }}" : null,
-                {% endif %}
-            {% endfor %}
-        };
-
-        let ids = {
-            {% for elective in electives %}
-                {% if elective.course_id %}
-                    "{{ "%s : PowerSchool ID: %s" % (elective.name, elective.course_id) }}" : {{ elective.id }},
-                {% else %}
-                    "{{ "%s" % (elective.name) }}" : {{ elective.id }},
-                {% endif %}
-            {% endfor %}
-        };
-
-        $(document).ready(function() {
-            $('#search.autocomplete').autocomplete({
-                data: electives,
-                minLength: 1,
-                onAutocomplete: function(val) {
-                    console.log('called');
-                    location.href = `http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/${ids[val]}`;
-                },
-                minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
-            });
-        });
-
-    </script>
-{% endblock %}
 
 {% block content %}
 
     <div class="container">
     <h3 class="center-align">Admin Tools</h3>
     <ul class="collection with-header">
-
-        <a href="project_monitor" class="collection-item avatar">
-            <i class="material-icons circle red">business</i>
-            <h6 class="title">Monitor Projects</h6>
-            <p class="small-text">Modify, add, and review projects.</p>
-        </a>
-
-        <a href="powerschool_courses" class="collection-item avatar">
-            <i class="material-icons circle red">assignment</i>
-            <h6 class="title">Powerschool Courses</h6>
-            <p class="small-text">Modify, add, and review all courses.</p>
-        </a>
 
         <a href="mimic_user" class="collection-item avatar">
             <i class="material-icons circle red">person</i>

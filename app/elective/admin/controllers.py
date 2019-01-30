@@ -8,5 +8,11 @@ from datetime import datetime
 def update_enroll_date(newDate, trimester_id, grade):
     pass
 
+def get_signup_dates():
+    result = query_one(DB.ELECTIVE, "SELECT * "
+                                    "FROM signup_dates ")
+    return result
+
+
 
 
