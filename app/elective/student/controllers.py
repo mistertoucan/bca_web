@@ -8,7 +8,7 @@ from datetime import datetime
 
 # Make Query to DB to check whether enrollment is open for grade level
 def get_enrollment_time(grade_level):
-    result = query_one(DB.ELECTIVE, "SELECT * "
+    result = query_one(DB.ELECTIVE, "SELECT grade_lvl, start, end, course_year, tri_nbr "
                                   "FROM signup_dates t "
                                   "WHERE t.grade_lvl = %s "
                                   "AND NOW() >= t.start "
@@ -24,7 +24,7 @@ def get_enrollment_time(grade_level):
         return EnrollmentTime(grade_level, None, None, get_current_year(), '-1')
 
 def enrollment_open(grade_level):
-    result = query_one(DB.ELECTIVE, "SELECT * "
+    result = query_one(DB.ELECTIVE, "SELECT grade_lvl, start, end, course_year, tri_nbr "
                                   "FROM signup_dates t "
                                   "WHERE t.grade_lvl = %s "
                                   "AND NOW() >= t.start "

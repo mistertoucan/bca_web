@@ -82,7 +82,7 @@
             </thead>
             {% for section in sections %}
                 {% if section.id not in enrolled_sections %}
-                    <tr style="font-weight: 300;">
+                    <tr name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
                         <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>
                         <td>{{ section.elective.name }}</td>
                         <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>
@@ -147,8 +147,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        let signup = ({{ enroll_open }});
-        let enroll = ({{ enroll_open }});
+        let signup = {{ 0 if not enroll_info.end_time else 1 }};
+        let enroll = {{ 0 if not enroll_info.end_time else 1 }};
 
         if (signup) {
             if (enroll) {
@@ -163,8 +163,23 @@
             $(".disenroll").addClass("disabled");
         }
 
-        // update the electives every 15 seconds to remove filled ones/update counts
-        setTimeout(asyncUpdateSections(), 15*1000);
+        $("#search").on("keyup", function() {
+
+            let query = $("#search").val().toLowerCase();
+
+            $("tbody tr").each(function() {
+                if($(this).attr("name_key").toLowerCase().indexOf(query) === -1 && $(this).attr("teacher_key").toLowerCase().indexOf(query) === -1) {
+                    $(this).hide();
+                } else {
+                    $(this).show();
+                }
+
+            });
+
+        });
+
+        // update the electives every 5 seconds to remove filled ones/update counts
+        setTimeout(asyncUpdateSections(), 5*1000);
     });
 </script>
 
