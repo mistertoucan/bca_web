@@ -16,3 +16,7 @@ def check_teacher():
 @admin_mod.route('/')
 def index():
     return render_template("./elective/admin/index.html", electives=get_electives())
+
+@admin_mod.route('/signup_dates')
+def signup_dates():
+    return render_template("./elective/admin/signup_dates.html")
