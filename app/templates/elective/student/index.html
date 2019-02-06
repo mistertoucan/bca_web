@@ -21,7 +21,7 @@
 
     </div>
 
-    {%  if enrolled_sections|length == 0 %}
+    {%  if enrolled_sections|length > 0 %}
         <div class="main container white z-depth-2" style="padding-right: 25px; padding-left: 25px;">
             <div class="row head">
                 <div id="project_current">
@@ -32,28 +32,47 @@
                         </div>
                     </div>
 
-{#                    {% for section_id in enrolled_section_ids %}#}
-{##}
-{#                        <div class="row valign-wrapper" style="margin-bottom: 0px;">#}
-{##}
-{#                            <div class="col s6">#}
-{##}
-{#                                {% set section = sections[section_id] %}#}
-{##}
-{#                                <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>#}
-{#                                <td>{{ section.elective.name }}</td>#}
-{#                                <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>#}
-{#                                <td>{{ section.room_nbr }}</td>#}
-{#                                <td>{{ section.enrolled_count }}/{{ section.max }}</td>#}
-{##}
-{#                                <td><a class="disenroll btn red lighten-3" id="disenroll" onclick="update_status('1', 'disenroll')">Disenroll</a></td>#}
-{##}
-{#                            </div>#}
-{##}
-{#                        </div>#}
-{##}
-{#                    {% endfor %}#}
+                    <table>
 
+{#                     <thead>#}
+{#                        <tr>#}
+{#                            <th></th>#}
+{#                            <th><strong>Name</strong></th>#}
+{#                            <th><strong>Teacher</strong></th>#}
+{#                            <th><strong>Room</strong></th>#}
+{#                            <th><strong>Action</strong></th>#}
+{#                        </tr>#}
+{#                     </thead>#}
+
+                    {% for section in enrolled_sections %}
+                            {% if section.id not in enrolled_sections %}
+                                <tr name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
+                                    <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>
+                                    <td>{{ section.elective.name }}</td>
+                                    <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>
+                                    <td>Rm {{ section.room_nbr }}</td>
+                                    <td></td>
+                                    <td>
+                                        <a class="enroll btn red lighten-2" id="enroll" onclick="update_status({{ section.id }}, false)">Remove</a>
+                                    </td>
+                                </tr>
+
+                                <div class="modal" id="modal{{ section.id }}">
+                                    <div class="modal-content">
+                                        <h1>{{ section.elective.name }}</h1>
+                                        <h5>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</h5>
+                                        <p class="flow-text">Elective Description:&nbsp;{{ section.elective.description }}</p>
+                                        <p class="flow-text">Prerequisites:&nbsp;{{ section.elective.prereqs if section.elective.prereqs != "" else "Na" }}</p>
+                                    </div>
+                                    <div class="modal-footer">
+
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                        {% endfor %}
+
+                    </table>
                 </div>
             </div>
         </div>
@@ -64,13 +83,16 @@
         <h3 class="center-align">Available Electives</h3>
 
         <div class="row head search-wr">
-            <div class="col s6 offset-s3">
+            <div class="col m6 offset-m1 s12">
                 <i class="material-icons" style="position: absolute; padding-top: 10px;">search</i>
                 <input id="search" style="display: block; font-weight: 300; margin-left: 25px; margin-right: -25px;" placeholder="Search"/>
             </div>
+            <div class="col m2 offset-m1 s12">
+                <button class="btn btn-block red">Filter</button>
+            </div>
         </div>
 
-        <table class="highlight responsive-table centered">
+        <table class="highlight centered">
             <thead>
             <tr>
                 <th></th>
@@ -82,7 +104,7 @@
             </thead>
             {% for section in sections %}
                 {% if section.id not in enrolled_sections %}
-                    <tr name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
+                    <tr class="available_elective" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
                         <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>
                         <td>{{ section.elective.name }}</td>
                         <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>
@@ -167,7 +189,7 @@
 
             let query = $("#search").val().toLowerCase();
 
-            $("tbody tr").each(function() {
+            $(".available_elective").each(function() {
                 if($(this).attr("name_key").toLowerCase().indexOf(query) === -1 && $(this).attr("teacher_key").toLowerCase().indexOf(query) === -1) {
                     $(this).hide();
                 } else {

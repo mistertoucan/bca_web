@@ -37,7 +37,7 @@ def index():
     if not enroll_info.start_time is None:
 
         enrolled_sections = get_enrolled_sections(g.user.get_id(), enroll_info.course_year, enroll_info.tri_nbr)
-        available_sections = get_sections(enroll_info.course_year, enroll_info.tri_nbr)
+        available_sections = get_sections(g.user.get_id(), enroll_info.course_year, enroll_info.tri_nbr)
 
     return render_template("elective/student/index.html", sections=available_sections, enroll_info=enroll_info, enrolled_sections=enrolled_sections)
 

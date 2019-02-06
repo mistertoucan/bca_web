@@ -2,6 +2,7 @@ from app.db import DB, insert, insertmany, query_one, query, delete, update
 
 from app.elective.student.models import ElectiveSection, Elective, ElectiveTeacher, EnrollmentTime
 
+from config import Config
 from util import datetime_from_string, us_format
 
 from datetime import datetime
@@ -35,15 +36,13 @@ def enrollment_open(grade_level):
 
 # Enroll a user in an elective section
 def enroll_user(usr_id, section_id):
-    insert(DB.ELECTIVE, 'INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%s, %s)', [section_id, usr_id])
-
-    return True
+    print(usr_id, section_id)
+    insert(DB.ELECTIVE, 'INSERT INTO elective_user_xref (section_id, usr_id) VALUES (%s, %s) '
+                        'ON DUPLICATE KEY UPDATE section_id=section_id', [section_id, usr_id])
 
 # Remove a user from an elective_section
 def drop_section(usr_id, section_id):
     delete(DB.ELECTIVE, 'DELETE FROM elective_user_xref WHERE usr_id=%s AND section_id=%s', [usr_id, section_id])
-
-    return True
 
 # Returns whether an elective
 def is_section_full(section_id):
@@ -62,7 +61,7 @@ def get_enrolled_sections(usr_id, year, tri):
                                   'AND section.course_year = %s '
                                   'AND section.tri = %s '
                                   'AND section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s) '
-                                  'AND t.usr_id = section.teacher_id ', [year, int(tri), usr_id])
+                                  'AND t.usr_id = section.teacher_id ', [str(year), int(tri), usr_id])
 
     e_sections = []
 
@@ -96,7 +95,7 @@ def get_sections(user_id, year, tri):
 
     sections = []
 
-    if year != -1 and tri != -1:
+    if year != -1 and tri != -1 and not Config.DEBUG:
 
         sections = query(DB.ELECTIVE,
                          'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
@@ -105,7 +104,8 @@ def get_sections(user_id, year, tri):
                          'AND tri = %s '
                          'AND e.elective_id = section.elective_id '
                          'AND section.enrolled_count < section.max '
-                         'AND t.usr_id = section.teacher_id ', [year, tri])
+                         'AND t.usr_id = section.teacher_id '
+                         'AND NOT (section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s))', [year, tri, user_id])
 
     else:
 
@@ -113,7 +113,8 @@ def get_sections(user_id, year, tri):
                          'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
                          'FROM elective_section section, elective e, user t '
                          'WHERE e.elective_id = section.elective_id '
-                         'AND t.usr_id = section.teacher_id ')
+                         'AND t.usr_id = section.teacher_id '
+                         'AND NOT (section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s))', [user_id])
 
     e_sections = []
 
@@ -149,7 +150,7 @@ def get_sections(user_id, year, tri):
     return e_sections
 
 # Get all current elective sections for a tri/year
-def get_sections(year, tri):
+def get_all_sections(year, tri):
 
     sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
                                       'FROM elective_section section, elective e, user t '
@@ -192,7 +193,7 @@ def get_sections(year, tri):
 
 # Returns the current school year formatted in "YEAR-END_YEAR" form
 def get_current_year():
-    return '%d-%d' % (datetime.utcnow().year, datetime.utcnow().year + 1)
+    return '%d-%s' % (datetime.utcnow().year, str(datetime.utcnow().year + 1)[2:])
 
 # Temporary solution for getting the corresponding times for a section
 def get_times(section_id):
