@@ -1,4 +1,4 @@
-class Signup_Dates(object):
+class SignupDate(object):
 
     def __init__(self, id, grade_lvl, start, end, course_year, tri_nbr):
         self.id = id
