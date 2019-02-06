@@ -15,7 +15,7 @@ def get_signup_dates():
     for result in results:
         signup_dates.append(SignupDate(result[0], result[1], result[2], result[3], result[4], result[5]))
 
-    return result
+    return results
 
 
 

@@ -2,8 +2,10 @@ from app.elective.admin import admin_mod
 
 from app.shared.controllers import requires_token
 from app.elective.teacher.controllers import get_electives
+from app.elective.admin.controllers import get_signup_dates
 
 from flask import g, redirect, url_for, render_template, request
+
 
 @admin_mod.before_request
 @requires_token
@@ -19,7 +21,8 @@ def index():
 
 @admin_mod.route('/signup_dates')
 def signup_dates():
-    return render_template("./elective/admin/signup_dates.html")
+
+    return render_template("./elective/admin/signup_dates.html", dates=get_signup_dates())
 
 @admin_mod.route('/signup_dates', methods=['PUT'])
 def ping():

@@ -23,37 +23,40 @@
     </tr>
     </thead>
 
-    <?php foreach ($signup_dates as $signup) {?>
-
+    {% for date in dates %}
+    <h1>
+        {{ date.__str__() }}
+    </h1>
+c
     <tr>
         <input type="hidden" name="hdGrade[]" value="<?php echo ($signup['grade_lvl']);?>">
 
         <div class="row">
-            <td style="text-align: center"><?php echo ($signup['grade_lvl']);?></td>
+            <td style="text-align: center">{{ date.grade_lvl }}</td>
             <td class="small_column">
                 <div class="input-field col s6">
-                    <input type="text" id="course_year" name="course_year[]" value="<?php echo $signup['course_year'] ?>">
+                    <input type="text" id="course_year" name="course_year[]" value="{{ date.course_year }}">
                 </div>
             </td>
             <td class="small_column">
                 <div class="input-field col s6">
-                    <input type="text" id="tri_nbr" name="tri_nbr[]" value="<?php echo $signup['tri_nbr'] ?>">
+                    <input type="text" id="tri_nbr" name="tri_nbr[]" value="{{ date.tri_nbr }}">
                 </div>
             </td>
             <td class="small_column">
                 <div class="input-field col s6">
-                    <input type="text" id="start_date" name="start_date[]" class="datepicker" value="<?php echo $signup['start'] ?>">
+                    <input type="text" id="start_date" name="start_date[]" class="datepicker" value="{{ date.start }}">
                 </div>
             </td>
             <td class="small_column">
                 <div class="input-field col s6">
-                    <input type="text" id=end_date name="end_date[]" class="datepicker" value="<?php echo $signup['end'] ?>">
+                    <input type="text" id=end_date name="end_date[]" class="datepicker" value="{{ date.end }}">
                 </div>
             </td>
         </div>
     </tr>
 
-    <?php } ?>
+    {% endfor %}
 
 </table>
 
