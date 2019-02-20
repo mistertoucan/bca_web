@@ -33,7 +33,6 @@ def enrollment_open(grade_level):
 
     return (not result is None)
 
-
 # Enroll a user in an elective section
 def enroll_user(usr_id, section_id):
     print(usr_id, section_id)
@@ -119,7 +118,6 @@ def get_sections(user_id, year, tri):
     e_sections = []
 
     for section in sections:
-        print(section)
 
         elective_id = section[1]
         elective_name = section[2]

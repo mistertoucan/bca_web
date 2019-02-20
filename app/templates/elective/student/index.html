@@ -46,7 +46,7 @@
 
                     {% for section in enrolled_sections %}
                             {% if section.id not in enrolled_sections %}
-                                <tr name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
+                                <tr section_id="{{ section.id }}" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
                                     <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>
                                     <td>{{ section.elective.name }}</td>
                                     <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>
@@ -88,7 +88,7 @@
                 <input id="search" style="display: block; font-weight: 300; margin-left: 25px; margin-right: -25px;" placeholder="Search"/>
             </div>
             <div class="col m2 offset-m1 s12">
-                <button class="btn btn-block red">Filter</button>
+                <button class="btn btn-block orange lighten-2">Filter</button>
             </div>
         </div>
 
@@ -98,14 +98,16 @@
                 <th></th>
                 <th><strong>Name</strong></th>
                 <th><strong>Teacher</strong></th>
-                <th><strong>Room</strong></th>
+                <th><strong>Section</strong></th>
                 <th><strong>Enrolled/Max</strong></th>
             </tr>
             </thead>
             {% for section in sections %}
                 {% if section.id not in enrolled_sections %}
-                    <tr class="available_elective" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
-                        <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>
+                    <tr class="available_elective" section_id="{{ section.id }}" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
+                        <td>
+                            <a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a>
+                        </td>
                         <td>{{ section.elective.name }}</td>
                         <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>
                         <td>{{ section.room_nbr }}</td>
@@ -119,8 +121,8 @@
                         <div class="modal-content">
                             <h1>{{ section.elective.name }}</h1>
                             <h5>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</h5>
-                            <p class="flow-text">Project Description:&nbsp;{{ section.elective.description }}</p>
-                            <p class="flow-text">Prerequisites:&nbsp;{{ section.elective.prereqs if section.elective.prereqs != "" else "Na" }}</p>
+                            <p>Project Description:&nbsp;{{ section.elective.description }}</p>
+                            <p>Prerequisites:&nbsp;{{ section.elective.prereqs if section.elective.prereqs != "" else "Na" }}</p>
                         </div>
                         <div class="modal-footer">
 
@@ -137,7 +139,6 @@
 
     // updates a user's status in an elective section
     function update_status(section_id, enroll) {
-
         let requestData = {};
         requestData.usr_id = {{ g.user.get_id() }};
         requestData.enroll = enroll;
