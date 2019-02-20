@@ -10,12 +10,12 @@ def update_enroll_date(newDate, trimester_id, grade):
 
 def get_signup_dates():
     signup_dates = []
-    results = query(DB.ELECTIVE, "SELECT * FROM signup_dates ")
+    results = query(DB.ELECTIVE, "SELECT * FROM signup_dates")
 
     for result in results:
         signup_dates.append(SignupDate(result[0], result[1], result[2], result[3], result[4], result[5]))
 
-    return results
+    return signup_dates
 
 
 

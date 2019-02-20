@@ -24,37 +24,33 @@
     </thead>
 
     {% for date in dates %}
-    <h1>
-        {{ date.__str__() }}
-    </h1>
-c
-    <tr>
-        <input type="hidden" name="hdGrade[]" value="<?php echo ($signup['grade_lvl']);?>">
+        <tr>
+            <input type="hidden" name="hdGrade[]" value="{{ date.grade_lvl }}">
 
-        <div class="row">
-            <td style="text-align: center">{{ date.grade_lvl }}</td>
-            <td class="small_column">
-                <div class="input-field col s6">
-                    <input type="text" id="course_year" name="course_year[]" value="{{ date.course_year }}">
-                </div>
-            </td>
-            <td class="small_column">
-                <div class="input-field col s6">
-                    <input type="text" id="tri_nbr" name="tri_nbr[]" value="{{ date.tri_nbr }}">
-                </div>
-            </td>
-            <td class="small_column">
-                <div class="input-field col s6">
-                    <input type="text" id="start_date" name="start_date[]" class="datepicker" value="{{ date.start }}">
-                </div>
-            </td>
-            <td class="small_column">
-                <div class="input-field col s6">
-                    <input type="text" id=end_date name="end_date[]" class="datepicker" value="{{ date.end }}">
-                </div>
-            </td>
-        </div>
-    </tr>
+            <div class="row">
+                <td style="text-align: center">{{ date.grade_lvl }}</td>
+                <td class="small_column">
+                    <div class="input-field col s6">
+                        <input type="text" id="course_year" name="course_year[]" value="{{ date.course_year }}">
+                    </div>
+                </td>
+                <td class="small_column">
+                    <div class="input-field col s6">
+                        <input type="text" id="tri_nbr" name="tri_nbr[]" value="{{ date.tri_nbr }}">
+                    </div>
+                </td>
+                <td class="small_column">
+                    <div class="input-field col s6">
+                        <input type="text" id="start_date" name="start_date[]" class="datepicker" value="{{ date.start }}">
+                    </div>
+                </td>
+                <td class="small_column">
+                    <div class="input-field col s6">
+                        <input type="text" id=end_date name="end_date[]" class="datepicker" value="{{ date.end }}">
+                    </div>
+                </td>
+            </div>
+        </tr>
 
     {% endfor %}
 
@@ -72,4 +68,11 @@ c
 </div>
 </form>
 
+<script type="text/javascript">
+    var data = {};
+    var originalData = {};
+
+</script>
+
 {% endblock %}
+

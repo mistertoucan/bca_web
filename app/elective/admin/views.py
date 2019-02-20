@@ -21,7 +21,6 @@ def index():
 
 @admin_mod.route('/signup_dates')
 def signup_dates():
-
     return render_template("./elective/admin/signup_dates.html", dates=get_signup_dates())
 
 @admin_mod.route('/signup_dates', methods=['PUT'])
