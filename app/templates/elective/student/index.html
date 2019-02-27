@@ -77,7 +77,7 @@
         <div class="row head search-wr">
             <div class="col m6 offset-m1 s12">
                 <div class="col s2" style="width: auto !important; padding-top: 10px;">
-                    <i class="material-icons" style="position: relative; display: inline-block;">search</i>
+                    <i class="material-icons" style="position: relative; display: inline-block; ">search</i>
                 </div>
                 <div class="col s10">
                     <input id="search" style="display: block; font-weight: 300;" placeholder="Search"/>
@@ -88,17 +88,17 @@
             </div>
         </div>
 
-        <table id="elective_list" class="highlight centered">
+        <table class="highlight centered">
             <thead>
-            <tr>
-                <th></th>
-                <th><strong>Name</strong></th>
-                <th><strong>Times</strong></th>
-                <th><strong>Room</strong></th>
-                <th><strong>Enrolled/Max</strong></th>
-            </tr>
+                <tr>
+                    <th></th>
+                    <th><strong>Name</strong></th>
+                    <th><strong>Times</strong></th>
+                    <th><strong>Room</strong></th>
+                    <th><strong>Enrolled/Max</strong></th>
+                </tr>
             </thead>
-            <tbody>
+            <tbody id="elective_list" >
                 {% for section in sections %}
                     {% if section.id not in enrolled_sections %}
                         <tr class="available_elective" section_id="{{ section.id }}" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">

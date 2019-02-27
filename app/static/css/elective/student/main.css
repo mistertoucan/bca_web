@@ -88,6 +88,12 @@ strong {
     font-weight: 600;
 }
 
+#elective_list  {
+    min-height: 300px;
+    max-height: 600px;
+    overflow-y: scroll;
+}
+
 @media only screen and (max-width: 950px) {
     .container {
           width: 100%;

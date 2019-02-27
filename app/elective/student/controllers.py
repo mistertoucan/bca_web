@@ -54,13 +54,13 @@ def is_section_full(section_id):
 
 def get_enrolled_sections(usr_id, year, tri):
 
-    sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.enrolled_count, section.section_nbr, section.max, t.usr_id, t.usr_first_name, t.usr_last_name '
+    sections = query(DB.ELECTIVE, 'SELECT section.section_id, section.elective_id, e.name, e.desc, e.prereq, section.room_nbr, section.max, section.enrolled_count, section.section_nbr, t.usr_id, t.usr_first_name, t.usr_last_name '
                                   'FROM elective_section section, elective e, user t '
                                   'WHERE e.elective_id = section.elective_id '
                                   'AND section.course_year = %s '
                                   'AND section.tri = %s '
                                   'AND section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s) '
-                                  'AND t.usr_id = section.teacher_id ', [str(year), int(tri), usr_id])
+                                  'AND t.usr_id = section.teacher_id ORDER BY e.name', [str(year), int(tri), usr_id])
 
     e_sections = []
 
@@ -103,7 +103,8 @@ def get_sections(user_id, year, tri):
                          'AND e.elective_id = section.elective_id '
                          'AND section.enrolled_count < section.max '
                          'AND t.usr_id = section.teacher_id '
-                         'AND NOT (section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s))', [year, tri, user_id])
+                         'AND NOT (section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s)) '
+                         'ORDER BY e.name', [year, tri, user_id])
 
     else:
 
@@ -112,7 +113,8 @@ def get_sections(user_id, year, tri):
                          'FROM elective_section section, elective e, user t '
                          'WHERE e.elective_id = section.elective_id '
                          'AND t.usr_id = section.teacher_id '
-                         'AND NOT (section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s))', [user_id])
+                         'AND NOT (section.section_id in (SELECT section_id FROM elective_user_xref WHERE usr_id=%s)) '
+                         'ORDER BY e.name', [user_id])
 
     e_sections = []
 
