@@ -91,7 +91,6 @@ def get_enrolled_sections(usr_id, year, tri):
 
 # Get all sections available for a user
 def get_sections(user_id, year, tri):
-
     sections = []
 
     if year != -1 and tri != -1 and not Config.DEBUG:
@@ -200,8 +199,9 @@ def get_times(section_id):
                                    "WHERE x.section_id = %s "
                                    "AND time.time_id = x.time_id", [section_id])
     times = []
+
     for time in result:
-        times.append(time)
+        times.append(time[0])
 
     return times
 

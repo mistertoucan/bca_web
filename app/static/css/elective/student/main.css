@@ -75,3 +75,41 @@ h4 {
 .collapsible {
     line-height: normal;
 }
+
+.modal-footer {
+    text-align: center !important;
+}
+
+strong {
+    font-weight: 500;
+}
+
+.modal-content h1 {
+    font-weight: 600;
+}
+
+@media only screen and (max-width: 950px) {
+    .container {
+          width: 100%;
+    }
+
+    #elective_list #enroll_button, #disenroll_button {
+        font-size: 0.5em;
+    }
+
+    #elective_list_container {
+        padding: 0 10px;
+    }
+
+    #elective_list {
+        padding: 0 15px;
+    }
+
+    thead tr th:nth-child(5) {
+        display: none;
+    }
+
+    tbody tr td:nth-child(5) {
+        display: none;
+    }
+}
