@@ -1,7 +1,16 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+    {{ super() }}
+
+    <script type="text/javascript" src="{{ url_for('static', filename='alertifyjs/alertify.min.js') }}"></script>
+{% endblock %}
+
 {% block styles %}
     {{ super() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='alertifyjs/css/alertify.min.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='alertifyjs/css/themes/default.css') }}"/>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/student/main.css') }}">
@@ -21,8 +30,8 @@
 
     </div>
 
-    {%  if enrolled_sections|length > 0 %}
-        <div class="main container white z-depth-2" style="padding-right: 25px; padding-left: 25px;">
+
+        <div class="main container white z-depth-2 {%  if enrolled_sections|length == 0 %} hide {% endif %}" style="padding-right: 25px; padding-left: 25px;">
             <div class="row head">
                 <div id="project_current">
 
@@ -33,15 +42,15 @@
                     </div>
 
                     <table>
-                        <tbody>
+                        <tbody id="current_enrolled_sections">
                             {% for section in enrolled_sections %}
                                     {% if section.id not in enrolled_sections %}
-                                        <tr section_id="{{ section.id }}" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
+                                        <tr id="{{ section.id }}" section_id="{{ section.id }}" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
                                             <td><a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a></td>
                                             <td>{{ section.elective.name }}</td>
-                                            <td>{{ section.teacher.last_name }}, {{ section.teacher.first_name }}</td>
+                                            <td>{{ ", ".join(section.times) }}</td>
                                             <td>{{ section.room_nbr }}</td>
-                                            <td>{{ section.enrolled_count }}/{{ section.max }}</td>
+                                            <td class="enrolled_count">{{ section.enrolled_count }}/{{ section.max }}</td>
                                             <td></td>
                                             <td>
                                                 <a class="enroll btn red lighten-2" id="disenroll_button" onclick="update_status({{ section.id }}, false)">Remove</a>
@@ -68,7 +77,6 @@
                 </div>
             </div>
         </div>
-    {% endif %}
 
 <div id="elective_list_container" class="main container white z-depth-2 col s12" style="padding: 0 25px;">
     <div class="section" id="project_list">
@@ -101,14 +109,14 @@
             <tbody id="elective_list" >
                 {% for section in sections %}
                     {% if section.id not in enrolled_sections %}
-                        <tr class="available_elective" section_id="{{ section.id }}" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
+                        <tr id="{{ section.id }}" class="available_elective" section_id="{{ section.id }}" name_key="{{ section.elective.name }}" teacher_key="{{ section.teacher.last_name }}, {{ section.teacher.first_name }}" style="font-weight: 300;">
                             <td>
                                 <a class="modal-trigger" href="#modal{{ section.id }}"><i class="material-icons tiny">info_outline</i></a>
                             </td>
                             <td>{{ section.elective.name }}</td>
                             <td>{{ ", ".join(section.times) }}</td>
                             <td>{{ section.room_nbr }}</td>
-                            <td>{{ section.enrolled_count }}/{{ section.max }}</td>
+                            <td class="enrolled_count">{{ section.enrolled_count }}/{{ section.max }}</td>
                             <td>
                                 <a class="enroll btn green lighten-2" id="enroll_button" onclick="update_status({{ section.id }}, true)">Enroll</a>
                             </td>
@@ -152,11 +160,94 @@
             console.log(data);
             console.log("Returned");
             alertify.success("Updated elective status " + section_id);
-            $("#" + section_id).hide('fade');
 
+            let sectionElement = $("#" + section_id);
+
+            if(!enroll) {
+
+                sectionElement.hide();
+                // remove "remove" button
+                sectionElement.children().last().remove();
+                sectionElement.children().last().remove();
+
+                // add "add" button
+                sectionElement.append("<td> <a class=\"enroll btn green lighten-2\" id=\"enroll_button\" onclick=\"update_status(" + section_id + ", true)\">Enroll</a></td>");
+
+                decreaseEnrolledCount(section_id);
+
+                sectionElement.show();
+
+                sectionElement.prependTo("#elective_list");
+            } else {
+
+                sectionElement.hide();
+                // remove add button
+                sectionElement.children().last().remove();
+                sectionElement.append("<td></td>");
+                sectionElement.append("<td> <a class=\"enroll btn red lighten-2\" id=\"disenroll_button\" onclick=\"update_status(" + section_id + ", false)\">Remove</a></td>");
+
+                increaseEnrolledCount(section_id);
+
+                sectionElement.show();
+
+                sectionElement.prependTo("#current_enrolled_sections");
+
+
+            }
+
+            updateEnrolled();
         }).fail(function(data) {
             console.log(data);
         });
+    }
+
+    function increaseEnrolledCount(section_id) {
+        let element = $("#" + section_id);
+
+        let textElement = element.children(".enrolled_count");
+        let text = textElement.text();
+        let num = parseInt(text.split("/")[0]);
+        let max = text.split("/")[text.split("/").length-1];
+
+        textElement.text(num+1 + "/" + max);
+    }
+
+    function decreaseEnrolledCount(section_id) {
+        let element = $("#" + section_id);
+
+        let textElement = element.children(".enrolled_count");
+        let text = textElement.text();
+        let num = parseInt(text.split("/")[0]);
+        let max = text.split("/")[text.split("/").length-1];
+
+        num = num-1 >= 0 ? num-1 : 0;
+
+        textElement.text(num + "/" + max);
+    }
+
+    function setEnrolledCount(section_id, new_count) {
+        let element = $("#" + section_id);
+
+        let textElement = element.children(".enrolled_count");
+        let text = textElement.text();
+        let max = text.split("/")[text.split("/").length-1];
+
+        textElement.text(new_count + "/" + max);
+    }
+
+    // Check whether to remove the enrolled board if it has no sections left
+    function updateEnrolled() {
+        let element = $("#current_enrolled_sections");
+
+        let container = element.parent().parent().parent().parent();
+
+        if(element.children().length <= 0) {
+            container.hide('fade');
+        } else if(!container.is(":visible")) {
+            container.hide();
+            container.removeClass('hide');
+            container.show();
+        }
     }
 
     function asyncUpdateSections() {
