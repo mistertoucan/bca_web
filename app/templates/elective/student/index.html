@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/main.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/student/main.css') }}">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/elective/teacher/create/main.css') }}">
+
 {% endblock %}
 
 {% block content %}
@@ -92,7 +94,7 @@
                 </div>
             </div>
             <div class="col m2 offset-m1 s12">
-                <button class="btn btn-block orange lighten-2">Filter</button>
+                <a data-target="filter_modal" class="btn btn-block orange lighten-2 modal-trigger">Filter</a>
             </div>
         </div>
 
@@ -141,7 +143,70 @@
     </div>
 </div>
 
+    <div id="filter_modal" class="modal" style="width: 800px !important; height: 90vh !important;">
+        <div class="modal-content" style="padding-bottom: 0;">
+            <h3 class="center-align">Filter</h3>
+
+            <div class="row" style="margin-bottom: 10px">
+                <h4 class="center-align">Select Mods</h4>
+
+                <table class="table-fill striped centered">
+                    <thead id="days">
+                        <tr class="table_tr">
+                            <th class="table_th">M</th>
+                            <th class="table_th">T</th>
+                            <th class="table_th">W</th>
+                            <th class="table_th">R</th>
+                            <th class="table_th">F</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% set mods = ['1-3', '4-6', '7-9', '10-12', '13-15', '16-18', '19-21', '22-24'] %}
+
+                        {%  for i in range(8) %}
+
+                            {% if i % 2 == 1 %}
+                                <tr class="table_tr even" id="{{ mods[i] }}">
+                            {% else %}
+                                <tr class="table_tr odd" id="{{ mods[i] }}">
+                            {% endif %}
+
+                                    {% for j in range(5) %}
+
+                                        {% set days = { 0: 'M', 1: 'T', 2: 'W', 3: 'R', 4: 'F' } %}
+
+                                        <td class="availability" style="cursor: pointer" data-chosen="false" id="{{ days[j % 5] }}">{{ mods[i] }}</td>
+
+                                    {% endfor %}
+                                </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <a href="#" class="modal-action modal-close waves-effect waves red btn-flat">Cancel</a>
+            <a href="#" class="modal-action modal-close waves-effect waves green btn-flat" onclick="add_section()">Submit</a>
+        </div>
+    </div>
+
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        function get_times() {
+            let selected_times = $("td[data-chosen='true']");
+            let time = "";
+
+            for (let i = 0; i < selected_times.length; i++)
+                time += (selected_times[i].id + " " + selected_times[i].innerHTML) + (i !== selected_times.length - 1 ? ', ' : '');
+
+            return time;
+        }
+
+
+    });
 
     // updates a user's status in an elective section
     function update_status(section_id, enroll) {
