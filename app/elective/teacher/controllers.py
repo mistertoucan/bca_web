@@ -112,7 +112,6 @@ def get_sections(user_id):
                                            "WHERE es.teacher_id = %s "
                                            "AND e.elective_id = es.section_id "
                                            "ORDER BY es.course_year DESC ", [user_id])
-
     sections = []
 
     for result in elective_sections:
@@ -134,7 +133,7 @@ def get_sections(user_id):
 
         section_teacher_id = result[6]
 
-        if int(section_year.split("-")[0]) < datetime.utcnow().year:
+        if int("20" + section_year.split("-")[1]) < datetime.utcnow().year:
             continue
 
         teacher = get_teacher(section_teacher_id)

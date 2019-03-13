@@ -23,9 +23,9 @@
         let ids = {
             {% for elective in electives %}
                 {% if elective.course_id %}
-                    "{{ "%s : PowerSchool ID: %s" % (elective.name, elective.course_id) }}" : {{ elective.id }},
+                    "{{ "%s : PowerSchool ID: %s" % (elective.name.lower(), elective.course_id) }}" : {{ elective.id }},
                 {% else %}
-                    "{{ "%s" % (elective.name) }}" : {{ elective.id }},
+                    "{{ "%s" % (elective.name.lower()) }}" : {{ elective.id }},
                 {% endif %}
             {% endfor %}
         };
@@ -35,8 +35,7 @@
                 data: electives,
                 minLength: 1,
                 onAutocomplete: function(val) {
-                    console.log('called');
-                    location.href = `http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/${ids[val]}`;
+                    location.href = `{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/${ids[val.toLowerCase()]}`;
                 },
                 minLength: 0, // The minimum length of the input for the autocomplete to start. Default: 1.
             });
@@ -65,7 +64,7 @@
 
         <div class="row" style="margin-top: 0">
             <div class="col s6 offset-s3">
-                <p>Don't See An Elective? Create Your Own <a href="http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/create">Here</a></p>
+                <p>Don't See An Elective? Create Your Own <a href="{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/create">Here</a></p>
             </div>
         </div>
 

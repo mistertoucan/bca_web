@@ -5,6 +5,7 @@
 {% block styles %}
     {{ super() }}
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/elective/main.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/elective/index/main.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='alertifyjs/css/alertify.min.css') }}"/>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='alertifyjs/css/themes/default.css') }}"/>
@@ -34,7 +35,7 @@
 
             <div class="row">
                 <div class="col s10 offset-l1">
-                    <table class="centered striped">
+                    <table class="centered striped responsive-table">
                         <thead>
                           <tr>
                               <th>Sec #</th>
@@ -99,12 +100,11 @@
 
 
         function deleteSection(section_name, elective_id, section_id) {
-
             let requestData = {'section_id': section_id};
 
             alertify.confirm("Are you sure you want to delete section " + section_name + "?", function() {
                 $.ajax({
-                    url: 'http://{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/' + elective_id + '/section',
+                    url: '{{ config.LOCAL_DOMAIN }}/elective_enroll/teacher/edit/' + elective_id + '/section',
                     type: 'DELETE',
                     data: JSON.stringify(requestData),
                     contentType: 'application/json',

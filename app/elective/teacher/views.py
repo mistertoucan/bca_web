@@ -36,7 +36,6 @@ def create():
         section_year = request.form.getlist('section_year')
         section_tri = request.form.getlist('section_tri')
 
-
         if elective_name and elective_desc and sections and section_room_nbr and section_year and section_tri:
             elective_id = create_elective(elective_name, elective_desc, elective_course_id, elective_prereq)
 
@@ -48,7 +47,6 @@ def create():
             return redirect(url_for('elective_teacher.index'))
 
     return render_template("elective/teacher/create.html", electives=get_sections(g.user.get_id()))
-
 
 @teacher_mod.route('/edit/<int:id>/section/', methods=['GET', 'POST', 'DELETE'])
 def section(id):
@@ -75,7 +73,6 @@ def section(id):
 
         return jsonify({"Info": "You don't have permission to delete this elective!"}), 403
     return jsonify({"error": "Invalid route"})
-
 
 @teacher_mod.route('/edit/<int:elective_id>/section/<int:section_id>/students', methods=['GET', 'POST', 'DELETE'])
 @register_breadcrumb(teacher_mod, '.edit_students', "Add Students")
