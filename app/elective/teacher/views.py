@@ -104,7 +104,6 @@ def edit(id):
     elective = get_elective(id)
 
     if elective:
-
         if request.method == 'POST':
 
             name = request.form.get('elective_name', None)

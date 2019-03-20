@@ -143,46 +143,54 @@
     </div>
 </div>
 
-     <div id="filter_modal" class="modal" style="width: 800px !important; height: 90vh !important;">
+     <div id="filter_modal" class="modal" style="width: 800px !important; height: 90vh !important; overflow: hidden;">
         <div class="modal-content" style="padding-bottom: 0;">
-            <h3 class="center-align">Create Section</h3>
+            <h1 class="black-text title">Mod Filter</h1>
 
-            <div class="row" style="margin-bottom: 10px">
-                <h4 class="center-align">Select Mods</h4>
+            <div class="row" style="margin-bottom: 10px; margin-top: 5%;">
+                <div class="column s12">
+                    <table class="table-fill striped centered">
+                        <thead id="days">
+                            <tr class="table_tr">
+                                <th class="table_th">M</th>
+                                <th class="table_th">T</th>
+                                <th class="table_th">W</th>
+                                <th class="table_th">R</th>
+                                <th class="table_th">F</th>
+                            </tr>
+                        </thead>
 
-                <table class="table-fill striped centered">
-                    <thead id="days">
-                        <tr class="table_tr">
-                            <th class="table_th">M</th>
-                            <th class="table_th">T</th>
-                            <th class="table_th">W</th>
-                            <th class="table_th">R</th>
-                            <th class="table_th">F</th>
-                        </tr>
-                    </thead>
+                        <tbody>
+                            {% set mods = ['1-3', '4-6', '7-9', '10-12', '13-15', '16-18', '19-21', '22-24'] %}
 
-                    <tbody>
-                        {% set mods = ['1-3', '4-6', '7-9', '10-12', '13-15', '16-18', '19-21', '22-24'] %}
+                            {%  for i in range(8) %}
 
-                        {%  for i in range(8) %}
+                                {% if i % 2 == 1 %}
+                                    <tr class="table_tr even" id="{{ mods[i] }}">
+                                {% else %}
+                                    <tr class="table_tr odd" id="{{ mods[i] }}">
+                                {% endif %}
 
-                            {% if i % 2 == 1 %}
-                                <tr class="table_tr even" id="{{ mods[i] }}">
-                            {% else %}
-                                <tr class="table_tr odd" id="{{ mods[i] }}">
-                            {% endif %}
+                                        {% for j in range(5) %}
 
-                                    {% for j in range(5) %}
+                                            {% set days = { 0: 'M', 1: 'T', 2: 'W', 3: 'R', 4: 'F' } %}
 
-                                        {% set days = { 0: 'M', 1: 'T', 2: 'W', 3: 'R', 4: 'F' } %}
+                                            <td class="availability" style="cursor: pointer" data-chosen="false" id="{{ days[j % 5] }}">{{ mods[i] }}</td>
 
-                                        <td class="availability" style="cursor: pointer" data-chosen="false" id="{{ days[j % 5] }}">{{ mods[i] }}</td>
+                                        {% endfor %}
+                                    </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-                                    {% endfor %}
-                                </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="modal-footer" style="margin-top: 5%;">
+                <div class="row">
+                    <a id="filter_update" class="disabled enroll btn orange lighten-2" onclick="applyFilters()">Update Filter</a>
+                    <br/>
+                    <a id="filter_remove" class="hide enroll btn red lighten-2">Remove</a>
+                </div>
             </div>
         </div>
      </div>
@@ -361,10 +369,15 @@
         outDuration: 100 // Transition out duration
     });
 
+    let filters = [];
+    let new_filters = [];
+
     $('.availability').click(function() {
         if ($(this).attr('data-chosen') === 'false'){
             $(this).css("background","#46D946");
             $(this).attr("data-chosen", 'true');
+
+            updateFilterState();
 
         } else {
             if($(this).parents('.even').length) {
@@ -373,17 +386,45 @@
                 $(this).css("background","#EBEBEB");
             }
             $(this).attr("data-chosen", "false");
+
+            updateFilterState();
         }
     });
 
+    function updateFilterState() {
+        if (new_filters !== filters) {
+            $("#filter_update").removeClass('disabled');
+        } else {
+            $("#filter_update").addClass('disabled');
+        }
+    }
+
+    function applyFilters() {
+        filters = new_filters;
+
+        let searchStr = filters.join(', ');
+
+        $(".available_elective").forEach(function(element) {
+
+            if(element.children()[2].text().indexOf(searchStr) == -1) {
+                element.addClass("hide");
+            } else {
+                element.removeClass("hide");
+            }
+
+        });
+
+        $("#filter_modal").modal();
+    }
+
     function get_times() {
         let selected_times = $("td[data-chosen='true']");
-        let time = "";
+        let times = [];
 
         for (let i = 0; i < selected_times.length; i++)
-            time += (selected_times[i].id + " " + selected_times[i].innerHTML) + (i !== selected_times.length - 1 ? ', ' : '');
+            times += (selected_times[i].id + " " + selected_times[i].innerHTML) + (i !== selected_times.length - 1 ? ', ' : '');
 
-        return time;
+        return times.sort();
     }
 
 </script>

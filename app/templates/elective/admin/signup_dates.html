@@ -8,7 +8,7 @@
 
 
 {% block content %}
-<div class="container" style="text-align:center;width:90%">
+<div class="container" style="text-align:center; width:90%; margin: 0 25px;">
     <h3>Signup Dates</h3>
 </div>
 
@@ -23,54 +23,96 @@
     </tr>
     </thead>
 
-    {% for date in dates %}
-        <tr>
-            <input type="hidden" name="hdGrade[]" value="{{ date.grade_lvl }}">
+    <tbody>
+        {% for date in dates %}
 
-            <div class="row">
+            <tr>
+                <input type="hidden" name="hdGrade[]" value="{{ date.grade_lvl }}">
+
                 <td style="text-align: center">{{ date.grade_lvl }}</td>
                 <td class="small_column">
                     <div class="input-field col s6">
-                        <input type="text" id="course_year" name="course_year[]" value="{{ date.course_year }}">
+                        <input type="text" class="course_year" name="course_year[]" value="{{ date.course_year }}">
                     </div>
                 </td>
                 <td class="small_column">
                     <div class="input-field col s6">
-                        <input type="text" id="tri_nbr" name="tri_nbr[]" value="{{ date.tri_nbr }}">
+                        <input type="text" class="tri_nbr" name="tri_nbr[]" value="{{ date.tri_nbr }}">
                     </div>
                 </td>
                 <td class="small_column">
                     <div class="input-field col s6">
-                        <input type="text" id="start_date" name="start_date[]" class="datepicker" value="{{ date.start }}">
+                        <input type="text" class="start_date" name="start_date[]" value="{{ date.start }}">
                     </div>
                 </td>
                 <td class="small_column">
                     <div class="input-field col s6">
-                        <input type="text" id=end_date name="end_date[]" class="datepicker" value="{{ date.end }}">
+                        <input type="text" class="end_date" name="end_date[]" value="{{ date.end }}">
                     </div>
                 </td>
-            </div>
-        </tr>
-
-    {% endfor %}
-
+            </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
-<div class="button-wrap" style="text-align:center;">
-    <button style="cursor: pointer" class="waves-effect waves-light btn" type="submit" name="choice"
+<div class="row" style="text-align:center; margin-bottom: 50px;">
+    <button style="cursor: pointer" class="waves-effect waves-light btn" id="submit"
             value="Update Dates">
         Submit
     </button>
-    <button id="return_home" style="cursor: pointer" class="waves-effect waves-light btn" type="submit" name="choice"
-            value="Back" formnovalidate>
+    <a id="return_home" style="cursor: pointer; text-decoration: none;" class="waves-effect waves-light btn" type="submit" name="choice"
+            value="Back" href="{{ url_for('elective_admin.index') }}">
         Cancel
-    </button>
+    </a>
 </div>
-</form>
 
 <script type="text/javascript">
-    var data = {};
-    var originalData = {};
+
+    $(document).ready(function() {
+
+        $("#submit").click(function() {
+
+            $("#submit").addClass("disable");
+
+            let grades = {9: {}, 10: {}, 11: {}, 12: {}};
+
+            let gr = 9;
+
+            for(course in $(".course_year")) {
+                grades[gr].course_year = course.val();
+                gr++;
+            }
+
+            gr = 9;
+
+            for(tri_nbr in $(".tri_nbr")) {
+                grades[gr].tri_nbr = tri_nbr.val();
+                gr++;
+            }
+
+            gr = 9;
+
+            for(start in $(".start_date")) {
+                grades[gr].start = start.val();
+                gr++;
+            }
+
+            gr = 9;
+
+            for(end in $(".end_date")) {
+                grades[gr].end = end.val();
+                gr++;
+            }
+
+            $.ajax('{{ url_for('elective_admin.update_dates') }}',
+                {
+                    method: 'PUT',
+
+                })
+        });
+
+
+    });
 
 </script>
 

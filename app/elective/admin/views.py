@@ -2,9 +2,9 @@ from app.elective.admin import admin_mod
 
 from app.shared.controllers import requires_token
 from app.elective.teacher.controllers import get_electives
-from app.elective.admin.controllers import get_signup_dates
+from app.elective.admin.controllers import get_signup_dates, update_enroll_date
 
-from flask import g, redirect, url_for, render_template, request
+from flask import g, redirect, url_for, render_template, request, jsonify, make_response
 
 
 @admin_mod.before_request
@@ -24,7 +24,24 @@ def signup_dates():
     return render_template("./elective/admin/signup_dates.html", dates=get_signup_dates())
 
 @admin_mod.route('/signup_dates', methods=['PUT'])
-def ping():
+def update_dates():
     data = request.get_json(force=True, silent=True)
 
-    date = data['section_ids']
+    grades = data['grades']
+
+    if len(grades) > 0:
+
+        for grade in grades:
+
+            grade_lvl = grade
+            tri_nbr = grades[grade]['tri_nbr']
+            course_year = grades[grade]['course_year']
+            start = grades[grade]['start']
+            end = grades[grade]['end']
+
+            update_enroll_date(grade_lvl, tri_nbr, course_year, start, end)
+
+        return make_response(jsonify({'Info': 'Successfully updated.'}), 200)
+    else:
+        return make_response(jsonify({'Info': 'Missing parameters!'}), 401)
+
